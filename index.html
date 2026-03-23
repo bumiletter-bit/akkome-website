@@ -222,11 +222,10 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
    MAIN BANNER (45vh)
    ══════════════════════════════ */
 .main-banner{width:100%;height:45vh;min-height:200px;max-height:320px;overflow:hidden;position:relative}
-.banner-track{display:flex;width:300%;height:100%;transition:transform .4s cubic-bezier(.25,.8,.25,1);cursor:grab}
-.banner-track:active{cursor:grabbing}
+.banner-track{display:flex;width:300%;height:100%;transition:transform .4s cubic-bezier(.25,.8,.25,1)}
 .banner-slide{
   width:calc(100%/3);height:100%;position:relative;flex-shrink:0;
-  display:flex;align-items:flex-end;overflow:hidden
+  display:flex;align-items:flex-end;overflow:hidden;cursor:pointer
 }
 .banner-slide .banner-bg{
   position:absolute;inset:0;background-size:cover;background-position:center;
@@ -550,33 +549,15 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <!-- ═══ MAIN BANNER (45vh) ═══ -->
 <section class="main-banner" id="mainBanner">
   <div class="banner-track" id="bannerTrack">
-    <div class="banner-slide">
+    <a href="https://smartstore.naver.com/akkome" target="_blank" class="banner-slide banner-link">
       <div class="banner-bg"><img src="images/상품사진/꼬마한라봉_MO.jpg" alt="꼬마 한라봉"></div>
-      <div class="banner-overlay"></div>
-      <div class="banner-content">
-        <h2>지금 꼬마 한라봉<br><em>절정입니다</em> 🍊</h2>
-        <p>작지만 알이 꽉 찬 한라봉, 당도 최고!</p>
-        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">구매하기 →</a>
-      </div>
-    </div>
-    <div class="banner-slide">
+    </a>
+    <a href="https://smartstore.naver.com/akkome" target="_blank" class="banner-slide banner-link">
       <div class="banner-bg"><img src="images/상품사진/레드향_MO.jpg" alt="천혜향"></div>
-      <div class="banner-overlay"></div>
-      <div class="banner-content">
-        <h2>천혜향<br><em>골든타임</em> 🍋</h2>
-        <p>과즙 터지는 달콤함, 지금이 제일 맛있어요</p>
-        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">구매하기 →</a>
-      </div>
-    </div>
-    <div class="banner-slide">
+    </a>
+    <a href="https://smartstore.naver.com/akkome" target="_blank" class="banner-slide banner-link">
       <div class="banner-bg"><img src="images/상품사진/제주아꼼이네_감귤체험장.jpg" alt="감귤체험"></div>
-      <div class="banner-overlay"></div>
-      <div class="banner-content">
-        <h2>제주 감귤체험<br><em>예약</em> 🌿</h2>
-        <p>온 가족 함께하는 특별한 제주 체험</p>
-        <a href="#experience" class="btn-banner">예약하기 →</a>
-      </div>
-    </div>
+    </a>
   </div>
   <div class="banner-dots" id="bannerDots">
     <span class="active"></span><span></span><span></span>
@@ -777,7 +758,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   /* ── 배너 스와이프 (터치 + 마우스 드래그) ── */
   var track=document.getElementById('bannerTrack'),
       dots=document.getElementById('bannerDots').children,
-      cur=0,total=3,sx=0,df=0,drag=false;
+      cur=0,total=3,sx=0,df=0,drag=false,moved=false;
   var slideW=100/total;
   function goTo(i){
     cur=((i%total)+total)%total;
@@ -785,17 +766,21 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     for(var d=0;d<dots.length;d++)dots[d].className=d===cur?'active':'';
   }
   function resetAuto(){clearInterval(auto);auto=setInterval(function(){goTo(cur+1);},4000);}
+  /* 드래그 중 링크 클릭 방지 */
+  track.querySelectorAll('.banner-link').forEach(function(a){
+    a.addEventListener('click',function(e){if(moved)e.preventDefault();});
+  });
   /* 터치 */
-  track.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;drag=true;track.style.transition='none';},{passive:true});
-  track.addEventListener('touchmove',function(e){if(drag)df=e.touches[0].clientX-sx;},{passive:true});
+  track.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;drag=true;moved=false;track.style.transition='none';},{passive:true});
+  track.addEventListener('touchmove',function(e){if(drag){df=e.touches[0].clientX-sx;if(Math.abs(df)>10)moved=true;}},{passive:true});
   track.addEventListener('touchend',function(){
     if(!drag)return;drag=false;
     track.style.transition='transform .4s cubic-bezier(.25,.8,.25,1)';
     if(df<-40)goTo(cur+1);else if(df>40)goTo(cur-1);else goTo(cur);df=0;resetAuto();
   });
   /* 마우스 드래그 */
-  track.addEventListener('mousedown',function(e){sx=e.clientX;drag=true;track.style.transition='none';e.preventDefault();});
-  document.addEventListener('mousemove',function(e){if(drag)df=e.clientX-sx;});
+  track.addEventListener('mousedown',function(e){sx=e.clientX;drag=true;moved=false;track.style.transition='none';e.preventDefault();});
+  document.addEventListener('mousemove',function(e){if(drag){df=e.clientX-sx;if(Math.abs(df)>10)moved=true;}});
   document.addEventListener('mouseup',function(){
     if(!drag)return;drag=false;
     track.style.transition='transform .4s cubic-bezier(.25,.8,.25,1)';
