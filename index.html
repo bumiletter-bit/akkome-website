@@ -36,7 +36,7 @@ var PRODUCTS = [
     buyers: 3842,
     badge: '무료배송',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',           // 실제 상품 이미지 URL (비우면 이모지 표시)
+    img: 'images/상품사진/한라봉_MO.jpg',
     emoji: '🍊'
   },
   {
@@ -48,7 +48,7 @@ var PRODUCTS = [
     buyers: 2156,
     badge: '무료배송',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',
+    img: 'images/상품사진/레드향_MO.jpg',
     emoji: '🍋'
   },
   {
@@ -60,7 +60,7 @@ var PRODUCTS = [
     buyers: 1847,
     badge: '무료배송',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',
+    img: 'images/상품사진/카라향_MO.jpg',
     emoji: '🍊'
   },
   {
@@ -72,7 +72,7 @@ var PRODUCTS = [
     buyers: 987,
     badge: '무료배송',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',
+    img: 'images/상품사진/수라향_MO.jpg',
     emoji: '🫐'
   },
   {
@@ -84,7 +84,7 @@ var PRODUCTS = [
     buyers: 1523,
     badge: '무료배송',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',
+    img: 'images/상품사진/레몬_MO.jpg',
     emoji: '🍋'
   },
   {
@@ -96,7 +96,7 @@ var PRODUCTS = [
     buyers: 762,
     badge: '무료배송',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',
+    img: 'images/상품사진/블러드오렌지_MO.jpg',
     emoji: '🍊'
   },
   {
@@ -108,7 +108,7 @@ var PRODUCTS = [
     buyers: 431,
     badge: '선물용',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',
+    img: 'images/상품사진/황금향_MO.jpg',
     emoji: '🎁'
   },
   {
@@ -120,7 +120,7 @@ var PRODUCTS = [
     buyers: 634,
     badge: '무료배송',
     link: 'https://smartstore.naver.com/akkome',
-    img: '',
+    img: 'images/상품사진/하귤_MO.jpg',
     emoji: '🍊'
   }
 ];
@@ -128,7 +128,7 @@ var PRODUCTS = [
 /* ── 숏클립 영상 섹션 ── */
 var SHORTCLIPS = [
   {
-    thumbnail: '',     // 세로형 썸네일 이미지 URL (비우면 기본 배경)
+    thumbnail: 'images/상품사진/꼬마한라봉_MO.jpg',
     caption: '한라봉 수확 현장!',
     farmName: '제주아꼼이네',
     productName: '꼬마 하우스 한라봉',
@@ -137,7 +137,7 @@ var SHORTCLIPS = [
     emoji: '🍊'
   },
   {
-    thumbnail: '',
+    thumbnail: 'images/상품사진/레드향_MO.jpg',
     caption: '천혜향 언박싱 후기',
     farmName: '제주아꼼이네',
     productName: '제주 천혜향',
@@ -146,7 +146,7 @@ var SHORTCLIPS = [
     emoji: '🍋'
   },
   {
-    thumbnail: '',
+    thumbnail: 'images/상품사진/제주아꼼이네_감귤체험장.jpg',
     caption: '감귤체험 현장 브이로그',
     farmName: '제주아꼼이네',
     productName: '감귤체험 예약',
@@ -155,7 +155,7 @@ var SHORTCLIPS = [
     emoji: '🌿'
   },
   {
-    thumbnail: '',
+    thumbnail: 'images/상품사진/레몬_MO.jpg',
     caption: '레몬청 만들기 꿀팁',
     farmName: '제주아꼼이네',
     productName: '제주 레몬',
@@ -230,8 +230,9 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 }
 .banner-slide .banner-bg{
   position:absolute;inset:0;background-size:cover;background-position:center;
-  display:flex;align-items:center;justify-content:center
+  display:flex;align-items:center;justify-content:center;overflow:hidden
 }
+.banner-slide .banner-bg img{width:100%;height:100%;object-fit:cover}
 .banner-slide:nth-child(1) .banner-bg{background:linear-gradient(160deg,#E8B800,#F5C800)}
 .banner-slide:nth-child(2) .banner-bg{background:linear-gradient(160deg,#FF8C00,#FFB347)}
 .banner-slide:nth-child(3) .banner-bg{background:linear-gradient(160deg,#2D6A2D,#4CAF50)}
@@ -251,11 +252,8 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   padding:8px 16px;border-radius:20px;font-weight:700;font-size:12px
 }
 .banner-content .btn-banner:active{transform:scale(.96)}
-/* 1번 슬라이드: 노랑배경 → 네이비 텍스트 */
-.banner-slide:nth-child(1) .banner-content{color:var(--navy)}
-.banner-slide:nth-child(1) .banner-content h2{text-shadow:none}
-.banner-slide:nth-child(1) .banner-content h2 em{color:var(--orange)}
-.banner-slide:nth-child(1) .banner-overlay{background:linear-gradient(to top,rgba(255,255,255,.3) 0%,transparent 60%)}
+/* 1번 슬라이드: 실제 사진 위 흰색 텍스트 */
+.banner-slide:nth-child(1) .banner-content h2 em{color:var(--yellow)}
 .banner-dots{
   position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
   display:flex;gap:5px;z-index:10
@@ -553,7 +551,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <section class="main-banner" id="mainBanner">
   <div class="banner-track" id="bannerTrack">
     <div class="banner-slide">
-      <div class="banner-bg"></div>
+      <div class="banner-bg"><img src="images/상품사진/꼬마한라봉_MO.jpg" alt="꼬마 한라봉"></div>
       <div class="banner-overlay"></div>
       <div class="banner-content">
         <h2>지금 꼬마 한라봉<br><em>절정입니다</em> 🍊</h2>
@@ -562,7 +560,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       </div>
     </div>
     <div class="banner-slide">
-      <div class="banner-bg"></div>
+      <div class="banner-bg"><img src="images/상품사진/레드향_MO.jpg" alt="천혜향"></div>
       <div class="banner-overlay"></div>
       <div class="banner-content">
         <h2>천혜향<br><em>골든타임</em> 🍋</h2>
@@ -571,7 +569,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       </div>
     </div>
     <div class="banner-slide">
-      <div class="banner-bg"></div>
+      <div class="banner-bg"><img src="images/상품사진/제주아꼼이네_감귤체험장.jpg" alt="감귤체험"></div>
       <div class="banner-overlay"></div>
       <div class="banner-content">
         <h2>제주 감귤체험<br><em>예약</em> 🌿</h2>
@@ -630,16 +628,13 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   <p class="sec-desc">온라인뿐만 아니라 오프라인에서도 아꼼이네를 만나보세요! 제주여행 필수코스!</p>
   <div class="exp-imgs">
     <div class="exp-img span2">
-      <div class="img-guide"><span>📸 사진 교체</span><p>체험장 전경 사진</p></div>
-      <span style="position:relative;z-index:1">🌿</span>
+      <img src="images/상품사진/제주아꼼이네_감귤체험장.jpg" alt="감귤체험장 전경" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
     </div>
     <div class="exp-img">
-      <div class="img-guide"><span>📸</span><p>체험 중인 가족</p></div>
-      <span style="position:relative;z-index:1">🍊</span>
+      <img src="images/상품사진/감귤체험_PC.jpg" alt="감귤체험 현장" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
     </div>
     <div class="exp-img">
-      <div class="img-guide"><span>📸</span><p>포토존 사진</p></div>
-      <span style="position:relative;z-index:1">📸</span>
+      <img src="images/상품사진/타이벡감귤_MO.jpg" alt="타이벡 감귤" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
     </div>
   </div>
   <div class="exp-features">
@@ -731,40 +726,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       <span class="top-logo-text" style="color:#fff">🍊 제주아꼼이네</span>
     </div>
     <p>제주가 키우고, 아꼼이네가 고릅니다.<br>정직하고 맛있는 제주 과일을 약속합니다.</p>
-    <div class="foot-sns">
-      <a href="https://blog.naver.com/bumiletter" target="_blank"><i class="xi-blogger"></i></a>
-      <a href="https://instagram.com/jeju_akkome/" target="_blank"><i class="xi-instagram"></i></a>
-      <a href="https://youtube.com/channel/UCj8H1-bSuCSWNdiaDo5tgCA" target="_blank"><i class="xi-youtube-play"></i></a>
-      <a href="https://pf.kakao.com/_IbJLs" target="_blank"><i class="xi-kakaotalk"></i></a>
-    </div>
-  </div>
-  <div class="foot-links">
-    <div class="foot-col">
-      <h4>쇼핑</h4>
-      <ul>
-        <li><a href="https://smartstore.naver.com/akkome" target="_blank">네이버 스마트스토어</a></li>
-        <li><a href="https://smartstore.naver.com/akkome" target="_blank">한라봉</a></li>
-        <li><a href="https://smartstore.naver.com/akkome" target="_blank">천혜향</a></li>
-        <li><a href="https://smartstore.naver.com/akkome" target="_blank">선물 세트</a></li>
-      </ul>
-    </div>
-    <div class="foot-col">
-      <h4>고객센터</h4>
-      <ul>
-        <li><a href="tel:0648059181">064-805-9181</a></li>
-        <li><a href="mailto:bumiletter@naver.com">이메일 문의</a></li>
-        <li><a href="https://talk.naver.com/WCFDPM" target="_blank">네이버 톡톡</a></li>
-        <li><a href="https://pf.kakao.com/_IbJLs" target="_blank">카카오 채널</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="foot-bank">
-    <strong>입금계좌</strong><br>
-    제주은행 700-102-656101<br>
-    예금주: 제주아꼼이네 농업회사법인(주)
   </div>
   <div class="foot-bottom">
-    <p>법인명 : 제주아꼬이네 농업회사법인 주식회사 | 대표자 : 전승범 | 사업자등록번호 : 422-81-04127 | 통신판매업 신고 : 2026-제주삼양-0002 | 주소 : 제주특별자치도 제주시 연삼로 1066-31 | 개인정보관리책임 : 전승범 (bumiletter@naver.com)</p>
+    <p>법인명 : 제주아꼬이네 농업회사법인 주식회사 | 대표자 : 전승범 | 사업자등록번호 : 422-81-04127 | 주소 : 제주특별자치도 제주시 연삼로 1066-31</p>
     <p class="foot-copy">© 2026 제주아꼼이네. All rights reserved.</p>
   </div>
 </footer>
