@@ -246,30 +246,25 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 /* ══════════════════════════════
    사장님 추천 랭킹
    ══════════════════════════════ */
-.ranking-section{padding:20px 16px;background:var(--yellow-light);border-bottom:8px solid #f0e8c8}
-.akkome-pick-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.akkome-pick-img{width:120px;height:120px;object-fit:contain;flex-shrink:0}
-.akkome-pick-text{display:flex;flex-direction:column;gap:2px}
-.akkome-pick-sub{font-size:13px;color:var(--navy);font-weight:500}
-.akkome-pick-title{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy)}
-/* ranking-header 미사용 */
-.ranking-list{display:flex;flex-direction:column;gap:10px}
+.ranking-section{padding:12px 16px;background:var(--yellow-light);border-bottom:8px solid #f0e8c8}
+.akkome-pick-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.akkome-pick-title{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:900;color:var(--navy)}
+.akkome-pick-img{width:50px;height:50px;object-fit:contain;flex-shrink:0}
+.ranking-list{display:flex;gap:8px}
 .ranking-item{
-  display:flex;align-items:center;gap:12px;
-  padding:14px 16px;border-radius:var(--radius);
-  background:var(--off-white);border:1.5px solid #f0f0f0;
-  transition:border-color .2s
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:12px 6px;border-radius:var(--radius);
+  background:#fff;border:1px solid var(--yellow);
+  text-align:center;cursor:pointer;transition:all .2s
 }
-.ranking-item:active{border-color:var(--yellow)}
-.ranking-item.gold{background:linear-gradient(135deg,#FFFBEA,#FFF3CD);border-color:#F5C800}
-.ranking-item.silver{background:linear-gradient(135deg,#F8F9FA,#E9ECEF);border-color:#C0C0C0}
-.ranking-item.bronze{background:linear-gradient(135deg,#FFF5EE,#FFECD2);border-color:#CD7F32}
-.ranking-medal{font-size:32px;flex-shrink:0;line-height:1}
-.ranking-info{flex:1;min-width:0}
-.ranking-rank{font-size:10px;font-weight:700;color:var(--accent);margin-bottom:2px}
-.ranking-name{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:2px}
-.ranking-desc{font-size:11px;color:var(--text-mid)}
-.ranking-arrow{font-size:16px;color:var(--text-light);flex-shrink:0}
+.ranking-item:active{transform:scale(.97);box-shadow:0 2px 8px rgba(245,200,0,.3)}
+.ranking-item.gold,.ranking-item.silver,.ranking-item.bronze{background:#fff}
+.ranking-medal{font-size:28px;line-height:1;margin-bottom:6px}
+.ranking-info{width:100%}
+.ranking-rank{display:none}
+.ranking-name{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;line-height:1.3}
+.ranking-desc{font-size:11px;color:var(--text-mid);line-height:1.3}
+.ranking-arrow{display:none}
 
 /* ══════════════════════════════
    상품 2열 그리드
@@ -588,11 +583,8 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <!-- ═══ 사장님 추천 랭킹 ═══ -->
 <section class="ranking-section" id="ranking">
   <div class="akkome-pick-header">
+    <span class="akkome-pick-title">제철 아꼼이 추천 pick 🍊</span>
     <img src="images/제철 아꼼이 추천 pick.png" alt="아꼼이 캐릭터" class="akkome-pick-img">
-    <div class="akkome-pick-text">
-      <span class="akkome-pick-sub">제철 아꼼이</span>
-      <span class="akkome-pick-title">추천 pick 🍊</span>
-    </div>
   </div>
   <div class="ranking-list" id="rankingList"></div>
 </section>
