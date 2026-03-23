@@ -99,7 +99,7 @@ var CUTOFF_HOUR = 8;
   --accent:#ec9621;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:auto;-webkit-text-size-adjust:100%}
 body{
   font-family:'Noto Sans KR',sans-serif;color:var(--text-dark);
   background:var(--white);overflow-x:hidden;
@@ -506,7 +506,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 }
 </style>
 </head>
-<body>
+<body onload="window.scrollTo(0,0)">
 
 <!-- ═══ 롤링 공지 배너 ═══ -->
 <div class="notice-bar" id="noticeBar">
@@ -919,6 +919,17 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   });
 
 })();
+</script>
+
+<script>
+  window.onload = function() {
+    window.scrollTo(0, 0);
+  };
+  window.onpageshow = function(e) {
+    if (e.persisted) {
+      window.scrollTo(0, 0);
+    }
+  };
 </script>
 
 </body>
