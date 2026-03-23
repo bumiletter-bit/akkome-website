@@ -131,19 +131,34 @@ var SHORTCLIPS = [
     title: '제주 청귤 이야기 🍊',
     videoSrc: 'images/제주아꼼이네청귤풋귤.mp4',
     reelLink: 'https://www.instagram.com/reel/DSHNXv8Eqsi/',
-    productLink: 'https://akkome.com/product/제주-비가림-감귤/33/'
+    productLink: 'https://akkome.com/product/제주-비가림-감귤/33/',
+    farm: '제주아꼼이네 직접 재배',
+    prodName: '제주 비가림 감귤',
+    orgPrice: '93,800원',
+    salePrice: '32,800원',
+    discount: '65%'
   },
   {
     title: '제주 감귤 체험 🌿',
     videoSrc: 'images/제주아꼼이네_비바람(인스타).mp4',
     reelLink: 'https://www.instagram.com/reel/DSCId6pEga9/',
-    productLink: 'https://akkome.com/product/제주-감귤-체험-농장/47/'
+    productLink: 'https://akkome.com/product/제주-감귤-체험-농장/47/',
+    farm: '제주아꼼이네 감귤체험농장',
+    prodName: '제주 감귤 체험 농장',
+    orgPrice: '28,000원',
+    salePrice: '12,000원',
+    discount: '57%'
   },
   {
     title: '천혜향 골든타임 🍋',
     videoSrc: 'images/제주아꼼이네_트렁크SNS.mp4',
     reelLink: 'https://www.instagram.com/reel/DRjUe2uEjb5/',
-    productLink: 'https://akkome.com/product/제주-천혜향/32/'
+    productLink: 'https://akkome.com/product/제주-천혜향/32/',
+    farm: '제주아꼼이네 직접 재배',
+    prodName: '제주 천혜향',
+    orgPrice: '160,000원',
+    salePrice: '32,500원',
+    discount: '80%'
   }
 ];
 
@@ -338,7 +353,8 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .clip-card{
   flex-shrink:0;width:55%;max-width:220px;
   border-radius:var(--radius);overflow:hidden;
-  position:relative;scroll-snap-align:start;cursor:pointer;display:block
+  position:relative;scroll-snap-align:start;cursor:pointer;display:block;
+  background:#fff;border:1.5px solid #f0f0f0
 }
 .clip-card:active{opacity:.9}
 .clip-video-wrap{
@@ -357,14 +373,20 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
   color:#fff;line-height:1.3;margin-bottom:8px;
   text-shadow:0 1px 4px rgba(0,0,0,.4)
 }
-.clip-product-btn{
-  display:block;text-align:center;
-  background:rgba(255,255,255,.2);backdrop-filter:blur(4px);
-  border:1px solid rgba(255,255,255,.4);color:#fff;
-  padding:8px 0;border-radius:8px;font-size:11px;font-weight:700;
-  cursor:pointer;transition:background .2s
+.clip-info{
+  padding:10px 10px 12px;background:#fff
 }
-.clip-product-btn:active{background:rgba(255,255,255,.35)}
+.clip-info .ci-farm{font-size:10px;color:var(--text-light);margin-bottom:3px}
+.clip-info .ci-name{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;line-height:1.3}
+.clip-info .ci-price-row{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
+.clip-info .ci-discount{font-size:14px;font-weight:700;color:var(--accent)}
+.clip-info .ci-sale{font-size:14px;font-weight:700;color:var(--text-dark)}
+.clip-info .ci-org{font-size:11px;color:var(--text-light);text-decoration:line-through}
+.clip-info .ci-badge{
+  display:inline-block;margin-top:6px;
+  font-size:9px;font-weight:700;color:var(--green);
+  background:#E8F5E9;padding:2px 6px;border-radius:4px
+}
 
 /* ══════════════════════════════
    감귤체험
@@ -831,13 +853,22 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   /* ── 숏클립 렌더 (mp4 자동재생) ── */
   var cg=document.getElementById('clipsGrid'),ch='';
   SHORTCLIPS.forEach(function(c){
-    ch+='<a href="'+c.reelLink+'" target="_blank" class="clip-card">'
+    ch+='<a href="'+c.productLink+'" target="_blank" class="clip-card">'
       +'<div class="clip-video-wrap">'
       +'<video autoplay muted loop playsinline preload="metadata" src="'+c.videoSrc+'"></video>'
       +'<div class="clip-overlay">'
       +'<div class="clip-title">'+c.title+'</div>'
-      +'<span class="clip-product-btn" onclick="event.preventDefault();event.stopPropagation();window.open(\''+c.productLink+'\',\'_blank\')">상품 바로가기 →</span>'
-      +'</div></div></a>';
+      +'</div></div>'
+      +'<div class="clip-info">'
+      +'<div class="ci-farm">'+c.farm+'</div>'
+      +'<div class="ci-name">'+c.prodName+'</div>'
+      +'<div class="ci-price-row">'
+      +'<span class="ci-discount">'+c.discount+'</span>'
+      +'<span class="ci-sale">'+c.salePrice+'</span>'
+      +'<span class="ci-org">'+c.orgPrice+'</span>'
+      +'</div>'
+      +'<span class="ci-badge">무료배송</span>'
+      +'</div></a>';
   });
   cg.innerHTML=ch;
 
