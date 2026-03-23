@@ -92,11 +92,11 @@ var CUTOFF_HOUR = 8;
 :root{
   --yellow:#F5C800;--yellow-dark:#E8B800;--yellow-light:#FFFBEA;
   --navy:#1B3A6B;--navy-dark:#122B52;--navy-light:#2D5499;
-  --orange:#FF6B00;--white:#fff;--off-white:#FFFBEA;
-  --text-dark:#1A1A1A;--text-mid:#555;--text-light:#999;
-  --green:#2D6A2D;--radius:15px;
+  --orange:#FF6B00;--white:#fff;--off-white:#F8F8F8;
+  --text-dark:#1A1A1A;--text-mid:#888;--text-light:#aaa;
+  --green:#00A651;--red:#FF3B30;--radius:15px;
   --bottom-h:72px;--header-h:52px;--notice-h:36px;--cattab-h:40px;
-  --accent:#ec9621;
+  --accent:#FF3B30;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:auto;-webkit-text-size-adjust:100%}
@@ -116,9 +116,9 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
    ══════════════════════════════ */
 .top-header{
   position:fixed;top:var(--notice-h);left:0;right:0;z-index:1000;
-  background:var(--yellow);height:var(--header-h);
+  background:#fff;height:var(--header-h);
   display:flex;align-items:center;padding:0 12px;gap:10px;
-  border-bottom:1px solid var(--yellow-dark);transition:all .2s
+  box-shadow:0 1px 4px rgba(0,0,0,.06);transition:all .2s
 }
 body.notice-hidden .top-header{top:0}
 body.notice-hidden{padding-top:calc(var(--header-h) + var(--cattab-h))}
@@ -134,7 +134,7 @@ body.notice-hidden{padding-top:calc(var(--header-h) + var(--cattab-h))}
    ══════════════════════════════ */
 .notice-bar{
   position:fixed;top:0;left:0;right:0;z-index:1001;
-  background:var(--navy);height:var(--notice-h);
+  background:var(--yellow);height:var(--notice-h);
   display:flex;align-items:center;overflow:hidden
 }
 body.notice-hidden .notice-bar{display:none}
@@ -146,18 +146,18 @@ body.notice-hidden .notice-bar{display:none}
   animation:noticeScroll 20s linear infinite;white-space:nowrap
 }
 .notice-marquee span{
-  font-size:11px;color:#fff;flex-shrink:0
+  font-size:11px;color:var(--navy);flex-shrink:0
 }
-.notice-marquee em{color:var(--yellow);font-style:normal;font-weight:700}
+.notice-marquee em{color:var(--navy);font-style:normal;font-weight:700}
 @keyframes noticeScroll{
   0%{transform:translateX(0)}
   100%{transform:translateX(-50%)}
 }
 .notice-close{
   width:var(--notice-h);height:var(--notice-h);display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.5);font-size:14px;flex-shrink:0;cursor:pointer
+  color:rgba(27,58,107,.4);font-size:14px;flex-shrink:0;cursor:pointer
 }
-.notice-close:active{color:#fff}
+.notice-close:active{color:var(--navy)}
 
 /* ══════════════════════════════
    카테고리 탭바
@@ -182,6 +182,14 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .cat-tab.active::after{
   content:'';position:absolute;bottom:0;left:12px;right:12px;
   height:2.5px;background:var(--yellow);border-radius:2px 2px 0 0
+}
+
+/* ══════════════════════════════
+   무료배송 보장 배너
+   ══════════════════════════════ */
+.free-ship-bar{
+  background:var(--off-white);padding:10px 16px;text-align:center;
+  font-size:11px;color:var(--text-mid);border-bottom:1px solid #eee
 }
 
 /* ══════════════════════════════
@@ -241,12 +249,12 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .countdown-bar .msg{font-size:10px;color:var(--yellow);font-weight:700}
 
 /* ── 카운트다운 아래 배경 ── */
-.reviews-sec{padding:40px 16px;background:var(--yellow-light)}
+.reviews-sec{padding:40px 16px;background:var(--off-white)}
 
 /* ══════════════════════════════
    사장님 추천 랭킹
    ══════════════════════════════ */
-.ranking-section{padding:12px 16px;background:var(--yellow-light);border-bottom:8px solid #f0e8c8}
+.ranking-section{padding:12px 16px;background:#fff;border-bottom:1px solid #eee}
 .akkome-pick-header{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin-bottom:12px}
 .akkome-pick-title{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:900;color:var(--navy)}
 .akkome-pick-img{width:50px;height:50px;object-fit:contain;flex-shrink:0}
@@ -254,7 +262,7 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .ranking-item{
   flex:1;display:flex;flex-direction:column;align-items:center;
   padding:12px 6px;border-radius:var(--radius);
-  background:#fff;border:1px solid var(--yellow);
+  background:#fff;border:1px solid #eee;
   text-align:center;cursor:pointer;transition:all .2s
 }
 .ranking-item:active{transform:scale(.97);box-shadow:0 2px 8px rgba(245,200,0,.3)}
@@ -269,13 +277,13 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 /* ══════════════════════════════
    상품 2열 그리드
    ══════════════════════════════ */
-.products-section{padding:20px 16px;background:var(--white);border-bottom:8px solid #f0e8c8}
+.products-section{padding:20px 16px;background:var(--off-white);border-bottom:1px solid #eee}
 .products-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
 .products-header h2{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:900;color:var(--navy)}
 .products-header a{font-size:11px;color:var(--text-light)}
 .prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.prod-card{border-radius:var(--radius);overflow:hidden;background:var(--white);display:block}
-.prod-card:active{opacity:.85}
+.prod-card{border-radius:var(--radius);overflow:hidden;background:#fff;display:block;border:1px solid #eee;transition:transform .2s,box-shadow .2s}
+.prod-card:active{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
 .prod-thumb{
   width:100%;padding-bottom:100%;position:relative;border-radius:var(--radius);
   overflow:hidden;background:#f5f5f5
@@ -287,18 +295,18 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 }
 .prod-thumb .prod-badge{
   position:absolute;top:8px;left:8px;font-size:10px;font-weight:700;
-  padding:3px 8px;border-radius:8px;background:var(--green);color:#fff;z-index:2
+  padding:3px 8px;border-radius:8px;background:var(--yellow);color:var(--navy);z-index:2
 }
-.prod-thumb .prod-badge.gift{background:#C62828}
+.prod-thumb .prod-badge.gift{background:var(--red);color:#fff}
 .prod-info{padding:10px 2px}
 .prod-farm{font-size:10px;color:var(--text-light);margin-bottom:3px}
 .prod-name{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;line-height:1.3}
 .prod-price-row{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
 .prod-org-price{font-size:11px;color:var(--text-light);text-decoration:line-through}
 .prod-sale-price{font-size:15px;font-weight:700;color:var(--text-dark)}
-.prod-discount{font-size:13px;font-weight:700;color:var(--accent)}
+.prod-discount{font-size:13px;font-weight:700;color:var(--red)}
 .prod-meta{display:flex;align-items:center;gap:8px;margin-top:6px}
-.prod-buyers{font-size:10px;color:var(--accent);font-weight:600}
+.prod-buyers{font-size:10px;color:var(--red);font-weight:600}
 .prod-free-ship{
   font-size:9px;font-weight:700;color:var(--green);
   background:#E8F5E9;padding:2px 6px;border-radius:4px
@@ -307,7 +315,7 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 /* ══════════════════════════════
    숏클립 영상 섹션
    ══════════════════════════════ */
-.clips-section{padding:20px 16px;background:var(--yellow-light);border-bottom:8px solid #f0e8c8}
+.clips-section{padding:20px 16px;background:#fff;border-bottom:1px solid #eee}
 .clips-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
 .clips-header h2{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:900;color:var(--navy)}
 .clips-scroll{
@@ -344,7 +352,7 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .clip-info .ci-farm{font-size:10px;color:var(--text-light);margin-bottom:3px}
 .clip-info .ci-name{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;line-height:1.3}
 .clip-info .ci-price-row{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap}
-.clip-info .ci-discount{font-size:14px;font-weight:700;color:var(--accent)}
+.clip-info .ci-discount{font-size:14px;font-weight:700;color:var(--red)}
 .clip-info .ci-sale{font-size:14px;font-weight:700;color:var(--text-dark)}
 .clip-info .ci-org{font-size:11px;color:var(--text-light);text-decoration:line-through}
 .clip-info .ci-badge{
@@ -484,7 +492,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 }
 .bnav-item svg{width:24px;height:24px;stroke:#aaa;fill:none;stroke-width:1.8;transition:stroke .15s}
 .bnav-item.active{color:var(--navy);font-weight:700}
-.bnav-item.active svg{stroke:var(--navy)}
+.bnav-item.active svg{stroke:var(--yellow)}
 .bnav-item:active{color:var(--orange)}
 .bnav-item:active svg{stroke:var(--orange)}
 .bnav-cart-wrap{position:relative}
@@ -543,6 +551,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   <a href="https://akkome.com/board/gallery/list.html?board_no=8" target="_blank" class="cat-tab">스토리</a>
   <a href="https://akkome.com/coupon/coupon_zone.html" target="_blank" class="cat-tab">혜택</a>
 </nav>
+
+<!-- ═══ 무료배송 보장 배너 ═══ -->
+<div class="free-ship-bar">🚚 전국 무료배송 · 오전 8시 전 당일발송 · 맛없으면 무료반품</div>
 
 <!-- ═══ MAIN BANNER (45vh) ═══ -->
 <section class="main-banner" id="mainBanner">
@@ -634,15 +645,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     </div>
     <div class="exp-feat">
       <div class="exp-feat-icon">📸</div>
-      <div><h4>인생샷 포토존</h4><p>귤밭 속 예쁜 포토존에서 특별한 추억을</p></div>
-    </div>
-    <div class="exp-feat">
-      <div class="exp-feat-icon">👨‍👩‍👧‍👦</div>
-      <div><h4>가족 단체 체험 가능</h4><p>어린이부터 어르신까지 온 가족이 함께</p></div>
-    </div>
-    <div class="exp-feat">
-      <div class="exp-feat-icon">🎁</div>
-      <div><h4>VIP 고객 무료 혜택</h4><p>스토어 단골 고객님께 감귤체험 무료 제공(1인)</p></div>
+      <div><h4>인생샷 포토존</h4><p>귤밭 속 예쁜 포토존에서 특별한 추억을 남기세요</p></div>
     </div>
   </div>
   <div class="exp-info-cards">
@@ -696,16 +699,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       <p class="rev-text">싱싱하고 너무 맛있어요. 세박스 시켰는데 다먹고 또 먹고 싶네요. 제철이니 얼른 더 주문해서 먹을려구요.</p>
       <div class="rev-author"><div class="rev-avatar">네</div><div><div class="rev-name">네이버페이 구매고객</div><div class="rev-date">2026.02.23</div></div></div>
     </div>
-    <div class="rev-card">
-      <div class="rev-stars">★★★★★</div>
-      <p class="rev-text">세번째 구매해서 먹고있네용 맛있어요. 설에 이모집도 보내드리고 맛있다고 좋아하시네요.</p>
-      <div class="rev-author"><div class="rev-avatar">네</div><div><div class="rev-name">네이버페이 구매고객</div><div class="rev-date">2026.02.14</div></div></div>
-    </div>
-    <div class="rev-card">
-      <div class="rev-stars">★★★★★</div>
-      <p class="rev-text">천혜향은 아꼼이네 건 진짜 달고 과즙이 달라요! 마트 것과 비교 불가. 재구매 확정입니다.</p>
-      <div class="rev-author"><div class="rev-avatar">네</div><div><div class="rev-name">네이버페이 구매고객</div><div class="rev-date">2026.02.21</div></div></div>
-    </div>
+  </div>
+  <div style="text-align:center;margin-top:16px">
+    <a href="https://akkome.com/board/product/list.html?board_no=4" target="_blank" style="display:inline-block;padding:10px 24px;border-radius:24px;border:1px solid #eee;font-size:13px;font-weight:600;color:var(--navy)">후기 더보기 →</a>
   </div>
 </section>
 
@@ -734,7 +730,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
     <span>홈</span>
   </a>
-  <a href="#products" class="bnav-item" data-target="products">
+  <a href="https://akkome.com/product/list.html?cate_no=42" target="_blank" class="bnav-item">
     <svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
     <span>상품</span>
   </a>
