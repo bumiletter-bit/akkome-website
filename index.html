@@ -128,40 +128,16 @@ var PRODUCTS = [
 /* ── 숏클립 영상 섹션 ── */
 var SHORTCLIPS = [
   {
-    thumbnail: 'images/상품사진/꼬마한라봉_MO.jpg',
-    caption: '한라봉 수확 현장!',
-    farmName: '제주아꼼이네',
-    productName: '꼬마 하우스 한라봉',
-    price: '24,000원~',
-    link: 'https://akkome.com/product/제주-꼬마한라봉/37/',
-    emoji: '🍊'
+    title: '제주 감귤 이야기 🍊',
+    videoLink: 'https://view.shoppinglive.naver.com/shortclips/10188248?fm=store&offFeature=contentLayer&sn=ltlsc&swipe=%7B%22sortType%22%3A%22LATEST%22%2C%22pagerType%22%3A%22ALL%22%2C%22channelId%22%3A55401%2C%22referrerType%22%3A%22STORE%22%2C%22referrerKey%22%3A%2255401%22%7D&tr=ltlsc',
+    productLink: 'https://akkome.com/product/제주-비가림-감귤/33/',
+    bgColor: 'linear-gradient(160deg,#F5C800,#FFE066)'
   },
   {
-    thumbnail: 'images/상품사진/레드향_MO.jpg',
-    caption: '천혜향 언박싱 후기',
-    farmName: '제주아꼼이네',
-    productName: '제주 천혜향',
-    price: '32,500원~',
-    link: 'https://akkome.com/product/제주-천혜향/32/',
-    emoji: '🍋'
-  },
-  {
-    thumbnail: 'images/상품사진/제주아꼼이네_감귤체험장.jpg',
-    caption: '감귤체험 현장 브이로그',
-    farmName: '제주아꼼이네',
-    productName: '감귤체험 예약',
-    price: '전화문의',
-    link: 'https://akkome.com/product/제주-감귤-체험-농장/47/',
-    emoji: '🌿'
-  },
-  {
-    thumbnail: 'images/상품사진/레몬_MO.jpg',
-    caption: '레몬청 만들기 꿀팁',
-    farmName: '제주아꼼이네',
-    productName: '제주 레몬',
-    price: '33,000원~',
-    link: 'https://akkome.com/product/제주-레몬/24/',
-    emoji: '🍋'
+    title: '천혜향 골든타임 🍋',
+    videoLink: 'https://view.shoppinglive.naver.com/replays/1851698?fm=store&offFeature=contentLayer&sn=ltlsc&swipe=%7B%22sortType%22%3A%22LATEST%22%2C%22pagerType%22%3A%22ALL%22%2C%22channelId%22%3A55401%2C%22referrerType%22%3A%22STORE%22%2C%22referrerKey%22%3A%2255401%22%7D&tr=lim',
+    productLink: 'https://akkome.com/product/제주-천혜향/32/',
+    bgColor: 'linear-gradient(160deg,#FF8C00,#FFB347)'
   }
 ];
 
@@ -349,37 +325,41 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .clips-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
 .clips-header h2{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:900;color:var(--navy)}
 .clips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.clip-card{border-radius:var(--radius);overflow:hidden;position:relative;display:block}
-.clip-card:active{opacity:.85}
-.clip-thumb{
-  width:100%;padding-bottom:168%;position:relative;
-  border-radius:var(--radius);overflow:hidden;background:#222
+.clip-card{
+  border-radius:var(--radius);overflow:hidden;position:relative;display:block;
+  cursor:pointer;text-decoration:none
 }
-.clip-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.clip-thumb .placeholder{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:56px;background:linear-gradient(160deg,var(--navy),var(--navy-light))
+.clip-card:active{opacity:.85;transform:scale(.98)}
+.clip-body{
+  width:100%;padding-bottom:178%;position:relative;
+  border-radius:var(--radius);overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center
 }
-.clip-thumb .play-icon{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:44px;height:44px;border-radius:50%;
-  background:rgba(255,255,255,.25);backdrop-filter:blur(4px);
+.clip-play{
+  position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:50%;
+  background:rgba(255,255,255,.3);backdrop-filter:blur(6px);
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;color:#fff;z-index:3
+  z-index:3;border:2px solid rgba(255,255,255,.5)
 }
-.clip-caption{
-  position:absolute;top:12px;left:10px;right:10px;z-index:3;
-  font-size:12px;font-weight:700;color:#fff;
-  text-shadow:0 1px 4px rgba(0,0,0,.5);line-height:1.4
+.clip-play svg{width:28px;height:28px;fill:#fff;margin-left:3px}
+.clip-title{
+  position:absolute;top:16px;left:12px;right:12px;z-index:3;
+  font-family:'Noto Serif KR',serif;font-size:15px;font-weight:900;
+  color:var(--navy);line-height:1.4
 }
-.clip-bottom{
-  position:absolute;bottom:0;left:0;right:0;z-index:3;
-  padding:24px 10px 10px;
-  background:linear-gradient(to top,rgba(0,0,0,.6),transparent)
+.clip-watch{
+  position:absolute;bottom:68px;left:0;right:0;z-index:3;
+  text-align:center;font-size:13px;font-weight:700;color:var(--navy);opacity:.7
 }
-.clip-farm{font-size:9px;color:rgba(255,255,255,.7);margin-bottom:2px}
-.clip-product{font-size:12px;font-weight:700;color:#fff;margin-bottom:2px}
-.clip-price{font-size:13px;font-weight:700;color:var(--yellow)}
+.clip-product-btn{
+  position:absolute;bottom:12px;left:12px;right:12px;z-index:4;
+  display:block;text-align:center;
+  background:var(--navy);color:#fff;
+  padding:10px 0;border-radius:10px;font-size:12px;font-weight:700;
+  cursor:pointer;transition:background .2s
+}
+.clip-product-btn:active{background:var(--navy-light)}
 
 /* ══════════════════════════════
    감귤체험
@@ -599,7 +579,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   <div class="clips-header">
     <h2>🎬 아꼼이네 숏클립</h2>
   </div>
-  <div class="clips-grid" id="clipsGrid"></div>
+  <div class="clips-grid" id="clipsGrid">
+    <!-- JS로 렌더링 -->
+  </div>
 </section>
 
 <!-- ═══ 감귤체험 ═══ -->
@@ -844,19 +826,14 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   /* ── 숏클립 렌더 ── */
   var cg=document.getElementById('clipsGrid'),ch='';
   SHORTCLIPS.forEach(function(c){
-    var thumb=c.thumbnail
-      ?'<img src="'+c.thumbnail+'" alt="'+c.caption+'" loading="lazy">'
-      :'<div class="placeholder">'+c.emoji+'</div>';
-    ch+='<a href="'+c.link+'" target="_blank" class="clip-card">'
-      +'<div class="clip-thumb">'+thumb
-      +'<div class="play-icon"><i class="xi-play"></i></div>'
-      +'</div>'
-      +'<div class="clip-caption">'+c.caption+'</div>'
-      +'<div class="clip-bottom">'
-      +'<div class="clip-farm">'+c.farmName+'</div>'
-      +'<div class="clip-product">'+c.productName+'</div>'
-      +'<div class="clip-price">'+c.price+'</div>'
-      +'</div></a>';
+    ch+='<div class="clip-card" style="position:relative">'
+      +'<a href="'+c.videoLink+'" target="_blank" class="clip-body" style="background:'+c.bgColor+'">'
+      +'<div class="clip-title">'+c.title+'</div>'
+      +'<div class="clip-play"><svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg></div>'
+      +'<div class="clip-watch">영상 보기 →</div>'
+      +'</a>'
+      +'<a href="'+c.productLink+'" target="_blank" class="clip-product-btn" onclick="event.stopPropagation()">상품 바로가기</a>'
+      +'</div>';
   });
   cg.innerHTML=ch;
 
