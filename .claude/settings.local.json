@@ -5,7 +5,8 @@
       "Read(//tmp/**)",
       "Bash(curl -s --list-only \"ftp://ftp.cafe24.com/web/mobile/\" --user \"akkome:wldms8420!!\" --connect-timeout 15)",
       "Bash(curl -v --list-only \"ftp://ftp.cafe24.com/\" --user \"akkome:wldms8420!!\" --connect-timeout 15)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(ls:*)"
     ]
   }
 }
