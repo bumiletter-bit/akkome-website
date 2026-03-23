@@ -176,10 +176,10 @@ var CUTOFF_HOUR = 8;
 :root{
   --yellow:#F5C800;--yellow-dark:#E8B800;--yellow-light:#FFFBEA;
   --navy:#1B3A6B;--navy-dark:#122B52;--navy-light:#2D5499;
-  --orange:#FF6B00;--white:#fff;--off-white:#FAFAF5;
+  --orange:#FF6B00;--white:#fff;--off-white:#FFFBEA;
   --text-dark:#1A1A1A;--text-mid:#555;--text-light:#999;
   --green:#2D6A2D;--radius:15px;
-  --bottom-h:56px;--header-h:52px;
+  --bottom-h:72px;--header-h:52px;
   --accent:#ec9621;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -200,22 +200,21 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
    ══════════════════════════════ */
 .top-header{
   position:fixed;top:0;left:0;right:0;z-index:1000;
-  background:var(--white);height:var(--header-h);
+  background:var(--yellow);height:var(--header-h);
   display:flex;align-items:center;padding:0 12px;gap:10px;
-  border-bottom:1px solid #f0f0f0;transition:box-shadow .2s
+  border-bottom:1px solid var(--yellow-dark);transition:box-shadow .2s
 }
-.top-header.scrolled{box-shadow:0 2px 12px rgba(0,0,0,.08)}
-.top-logo{display:flex;align-items:center;gap:7px;flex-shrink:0}
-.top-logo-icon{width:30px;height:30px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
-.top-logo-text{font-family:'Noto Serif KR',serif;font-size:14px;font-weight:700;color:var(--navy);letter-spacing:-.5px}
+.top-header.scrolled{box-shadow:0 2px 12px rgba(0,0,0,.12)}
+.top-logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.top-logo-text{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:900;color:var(--navy);letter-spacing:-.5px}
 .top-search{
   flex:1;display:flex;align-items:center;gap:7px;
-  background:#f5f5f5;border-radius:22px;padding:8px 12px;
-  font-size:12px;color:var(--text-light)
+  background:rgba(255,255,255,.6);border-radius:22px;padding:8px 12px;
+  font-size:12px;color:var(--navy)
 }
-.top-search i{font-size:16px;flex-shrink:0}
-.top-search span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top-search:active{background:#eee}
+.top-search i{font-size:16px;flex-shrink:0;color:var(--navy)}
+.top-search span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-mid)}
+.top-search:active{background:rgba(255,255,255,.8)}
 .top-icons{display:flex;gap:6px;flex-shrink:0}
 .top-icons a{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--navy);position:relative}
 
@@ -223,19 +222,19 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
    MAIN BANNER (45vh)
    ══════════════════════════════ */
 .main-banner{width:100%;height:45vh;min-height:200px;max-height:320px;overflow:hidden;position:relative}
-.banner-track{display:flex;width:400%;height:100%;transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+.banner-track{display:flex;width:300%;height:100%;transition:transform .4s cubic-bezier(.25,.8,.25,1);cursor:grab}
+.banner-track:active{cursor:grabbing}
 .banner-slide{
-  width:25%;height:100%;position:relative;flex-shrink:0;
+  width:calc(100%/3);height:100%;position:relative;flex-shrink:0;
   display:flex;align-items:flex-end;overflow:hidden
 }
 .banner-slide .banner-bg{
   position:absolute;inset:0;background-size:cover;background-position:center;
   display:flex;align-items:center;justify-content:center
 }
-.banner-slide:nth-child(1) .banner-bg{background:linear-gradient(160deg,#1B3A6B,#2D5499)}
+.banner-slide:nth-child(1) .banner-bg{background:linear-gradient(160deg,#E8B800,#F5C800)}
 .banner-slide:nth-child(2) .banner-bg{background:linear-gradient(160deg,#FF8C00,#FFB347)}
 .banner-slide:nth-child(3) .banner-bg{background:linear-gradient(160deg,#2D6A2D,#4CAF50)}
-.banner-slide:nth-child(4) .banner-bg{background:linear-gradient(160deg,#8B4513,#D2691E)}
 .banner-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 60%)}
 .banner-content{
   position:relative;z-index:2;color:#fff;padding:0 16px 16px;width:100%
@@ -248,10 +247,15 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .banner-content p{font-size:11px;opacity:.85;margin-bottom:10px;font-weight:300}
 .banner-content .btn-banner{
   display:inline-flex;align-items:center;gap:4px;
-  background:var(--yellow);color:var(--navy);
+  background:var(--navy);color:var(--yellow);
   padding:8px 16px;border-radius:20px;font-weight:700;font-size:12px
 }
 .banner-content .btn-banner:active{transform:scale(.96)}
+/* 1번 슬라이드: 노랑배경 → 네이비 텍스트 */
+.banner-slide:nth-child(1) .banner-content{color:var(--navy)}
+.banner-slide:nth-child(1) .banner-content h2{text-shadow:none}
+.banner-slide:nth-child(1) .banner-content h2 em{color:var(--orange)}
+.banner-slide:nth-child(1) .banner-overlay{background:linear-gradient(to top,rgba(255,255,255,.3) 0%,transparent 60%)}
 .banner-dots{
   position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
   display:flex;gap:5px;z-index:10
@@ -275,10 +279,13 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .countdown-bar .emoji{font-size:13px}
 .countdown-bar .msg{font-size:10px;color:var(--yellow);font-weight:700}
 
+/* ── 카운트다운 아래 배경 ── */
+.reviews-sec{padding:40px 16px;background:var(--yellow-light)}
+
 /* ══════════════════════════════
    사장님 추천 랭킹
    ══════════════════════════════ */
-.ranking-section{padding:20px 16px;background:var(--white);border-bottom:8px solid #f5f5f5}
+.ranking-section{padding:20px 16px;background:var(--yellow-light);border-bottom:8px solid #f0e8c8}
 .ranking-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
 .ranking-header h2{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:900;color:var(--navy)}
 .ranking-header .sub{font-size:10px;color:var(--text-light)}
@@ -303,7 +310,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 /* ══════════════════════════════
    상품 2열 그리드
    ══════════════════════════════ */
-.products-section{padding:20px 16px;background:var(--white);border-bottom:8px solid #f5f5f5}
+.products-section{padding:20px 16px;background:var(--white);border-bottom:8px solid #f0e8c8}
 .products-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
 .products-header h2{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:900;color:var(--navy)}
 .products-header a{font-size:11px;color:var(--text-light)}
@@ -341,7 +348,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 /* ══════════════════════════════
    숏클립 영상 섹션
    ══════════════════════════════ */
-.clips-section{padding:20px 16px;background:var(--white);border-bottom:8px solid #f5f5f5}
+.clips-section{padding:20px 16px;background:var(--yellow-light);border-bottom:8px solid #f0e8c8}
 .clips-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
 .clips-header h2{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:900;color:var(--navy)}
 .clips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -423,7 +430,7 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 /* ══════════════════════════════
    고객 후기
    ══════════════════════════════ */
-.reviews-sec{padding:40px 16px;background:var(--off-white)}
+/* reviews-sec 정의는 위에서 완료 */
 .reviews-header{text-align:center;margin-bottom:20px}
 .reviews-header .sec-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:6px}
 .reviews-header h2{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:900;color:var(--navy);margin-bottom:6px}
@@ -498,23 +505,24 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   position:fixed;bottom:0;left:0;right:0;z-index:1000;
   background:var(--white);height:var(--bottom-h);
   display:flex;align-items:center;justify-content:space-around;
-  border-top:1px solid #f0f0f0;box-shadow:0 -2px 10px rgba(0,0,0,.05);
+  border-top:1px solid #e8e8e8;
   padding-bottom:env(safe-area-inset-bottom)
 }
 .bnav-item{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  font-size:9px;color:var(--text-light);font-weight:500;padding:4px 10px;min-width:48px
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:10px;color:#aaa;font-weight:500;padding:8px 10px;min-width:52px;
+  transition:color .15s
 }
-.bnav-item i{font-size:20px}
+.bnav-item svg{width:24px;height:24px;stroke:#aaa;fill:none;stroke-width:1.8;transition:stroke .15s}
 .bnav-item.active{color:var(--navy);font-weight:700}
-.bnav-item.active i{color:var(--navy)}
+.bnav-item.active svg{stroke:var(--navy)}
 .bnav-item:active{color:var(--orange)}
-.bnav-item:active i{color:var(--orange)}
-.bnav-cart{position:relative}
-.bnav-cart::after{
-  content:'N';position:absolute;top:-2px;right:-4px;
+.bnav-item:active svg{stroke:var(--orange)}
+.bnav-cart-wrap{position:relative}
+.bnav-cart-wrap::after{
+  content:'N';position:absolute;top:-3px;right:-6px;
   background:#03C75A;color:#fff;font-size:7px;font-weight:700;
-  width:13px;height:13px;border-radius:50%;display:flex;align-items:center;justify-content:center
+  width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center
 }
 
 @media(min-width:768px){
@@ -529,8 +537,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <!-- ═══ TOP HEADER ═══ -->
 <header class="top-header" id="topHeader">
   <a href="#" class="top-logo">
-    <div class="top-logo-icon">🍊</div>
-    <span class="top-logo-text">아꼼이네</span>
+    <span class="top-logo-text">🍊 제주아꼼이네</span>
   </a>
   <a href="https://smartstore.naver.com/akkome" target="_blank" class="top-search">
     <i class="xi-search"></i>
@@ -549,41 +556,32 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       <div class="banner-bg"></div>
       <div class="banner-overlay"></div>
       <div class="banner-content">
-        <h2>제주가 키우고,<br><em>아꼼이네가</em> 고릅니다.</h2>
-        <p>갓 수확해 꼼꼼하게 선별 후 직접 보내드려요</p>
-        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">전체 상품 보기 →</a>
+        <h2>지금 꼬마 한라봉<br><em>절정입니다</em> 🍊</h2>
+        <p>작지만 알이 꽉 찬 한라봉, 당도 최고!</p>
+        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">구매하기 →</a>
       </div>
     </div>
     <div class="banner-slide">
       <div class="banner-bg"></div>
       <div class="banner-overlay"></div>
       <div class="banner-content">
-        <h2>새콤달콤 <em>한라봉!</em></h2>
-        <p>껍질 까자마자 향이 온 집안 가득!</p>
-        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">한라봉 구매 →</a>
+        <h2>천혜향<br><em>골든타임</em> 🍋</h2>
+        <p>과즙 터지는 달콤함, 지금이 제일 맛있어요</p>
+        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">구매하기 →</a>
       </div>
     </div>
     <div class="banner-slide">
       <div class="banner-bg"></div>
       <div class="banner-overlay"></div>
       <div class="banner-content">
-        <h2>한번 맛보면 <em>잊지 못해요!</em></h2>
-        <p>제주 카라향귤 — 아꼼이네 인기상품</p>
-        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">카라향 보기 →</a>
-      </div>
-    </div>
-    <div class="banner-slide">
-      <div class="banner-bg"></div>
-      <div class="banner-overlay"></div>
-      <div class="banner-content">
-        <h2>예쁜 노란 <em>제주 레몬!</em></h2>
-        <p>왁스코팅 NO! 청 담그기 너무 좋아요</p>
-        <a href="https://smartstore.naver.com/akkome" target="_blank" class="btn-banner">레몬 구매 →</a>
+        <h2>제주 감귤체험<br><em>예약</em> 🌿</h2>
+        <p>온 가족 함께하는 특별한 제주 체험</p>
+        <a href="#experience" class="btn-banner">예약하기 →</a>
       </div>
     </div>
   </div>
   <div class="banner-dots" id="bannerDots">
-    <span class="active"></span><span></span><span></span><span></span>
+    <span class="active"></span><span></span><span></span>
   </div>
 </section>
 
@@ -730,8 +728,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <footer>
   <div class="foot-brand">
     <div class="foot-logo">
-      <div class="top-logo-icon">🍊</div>
-      <span class="top-logo-text" style="color:#fff">제주아꼼이네</span>
+      <span class="top-logo-text" style="color:#fff">🍊 제주아꼼이네</span>
     </div>
     <p>제주가 키우고, 아꼼이네가 고릅니다.<br>정직하고 맛있는 제주 과일을 약속합니다.</p>
     <div class="foot-sns">
@@ -779,11 +776,28 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   <button class="float-btn top" id="btnTop"><i class="xi-arrow-up"></i></button>
 </div>
 <nav class="bottom-nav">
-  <a href="#" class="bnav-item active" data-target="top"><i class="xi-home-o"></i><span>홈</span></a>
-  <a href="#products" class="bnav-item" data-target="products"><i class="xi-package"></i><span>상품</span></a>
-  <a href="#experience" class="bnav-item" data-target="experience"><i class="xi-leaf-o"></i><span>체험</span></a>
-  <a href="#reviews" class="bnav-item" data-target="reviews"><i class="xi-star-o"></i><span>후기</span></a>
-  <a href="https://smartstore.naver.com/akkome" target="_blank" class="bnav-item"><div class="bnav-cart"><i class="xi-cart-o"></i></div><span>장바구니</span></a>
+  <a href="#" class="bnav-item active" data-target="top">
+    <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg>
+    <span>홈</span>
+  </a>
+  <a href="#products" class="bnav-item" data-target="products">
+    <svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+    <span>상품</span>
+  </a>
+  <a href="#experience" class="bnav-item" data-target="experience">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5.25 10 13 10 13s10-7.75 10-13c0-4-4.48-8-10-8z" stroke-linejoin="round"/><path d="M12 6c-1 0-3 1.5-3 4s2 4 3 4 3-1.5 3-4-2-4-3-4z"/></svg>
+    <span>체험</span>
+  </a>
+  <a href="#reviews" class="bnav-item" data-target="reviews">
+    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <span>후기</span>
+  </a>
+  <a href="https://smartstore.naver.com/akkome" target="_blank" class="bnav-item">
+    <div class="bnav-cart-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    </div>
+    <span>장바구니</span>
+  </a>
 </nav>
 
 <!-- ═══ JAVASCRIPT ═══ -->
@@ -796,24 +810,34 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     document.getElementById('topHeader').classList.toggle('scrolled',window.scrollY>10);
   },{passive:true});
 
-  /* ── 배너 스와이프 ── */
+  /* ── 배너 스와이프 (터치 + 마우스 드래그) ── */
   var track=document.getElementById('bannerTrack'),
       dots=document.getElementById('bannerDots').children,
-      cur=0,total=4,sx=0,df=0,drag=false;
+      cur=0,total=3,sx=0,df=0,drag=false;
+  var slideW=100/total;
   function goTo(i){
     cur=((i%total)+total)%total;
-    track.style.transform='translateX(-'+(cur*25)+'%)';
+    track.style.transform='translateX(-'+(cur*slideW)+'%)';
     for(var d=0;d<dots.length;d++)dots[d].className=d===cur?'active':'';
   }
+  function resetAuto(){clearInterval(auto);auto=setInterval(function(){goTo(cur+1);},4000);}
+  /* 터치 */
   track.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;drag=true;track.style.transition='none';},{passive:true});
   track.addEventListener('touchmove',function(e){if(drag)df=e.touches[0].clientX-sx;},{passive:true});
   track.addEventListener('touchend',function(){
     if(!drag)return;drag=false;
     track.style.transition='transform .4s cubic-bezier(.25,.8,.25,1)';
-    if(df<-40)goTo(cur+1);else if(df>40)goTo(cur-1);else goTo(cur);df=0;
+    if(df<-40)goTo(cur+1);else if(df>40)goTo(cur-1);else goTo(cur);df=0;resetAuto();
+  });
+  /* 마우스 드래그 */
+  track.addEventListener('mousedown',function(e){sx=e.clientX;drag=true;track.style.transition='none';e.preventDefault();});
+  document.addEventListener('mousemove',function(e){if(drag)df=e.clientX-sx;});
+  document.addEventListener('mouseup',function(){
+    if(!drag)return;drag=false;
+    track.style.transition='transform .4s cubic-bezier(.25,.8,.25,1)';
+    if(df<-40)goTo(cur+1);else if(df>40)goTo(cur-1);else goTo(cur);df=0;resetAuto();
   });
   var auto=setInterval(function(){goTo(cur+1);},4000);
-  track.addEventListener('touchstart',function(){clearInterval(auto);auto=setInterval(function(){goTo(cur+1);},6000);},{passive:true});
 
   /* ── 카운트다운 ── */
   function updateCD(){
