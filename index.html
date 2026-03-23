@@ -95,7 +95,7 @@ var CUTOFF_HOUR = 8;
   --orange:#FF6B00;--white:#fff;--off-white:#FFFBEA;
   --text-dark:#1A1A1A;--text-mid:#555;--text-light:#999;
   --green:#2D6A2D;--radius:15px;
-  --bottom-h:72px;--header-h:52px;
+  --bottom-h:72px;--header-h:52px;--notice-h:36px;--cattab-h:40px;
   --accent:#ec9621;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -103,7 +103,7 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
   font-family:'Noto Sans KR',sans-serif;color:var(--text-dark);
   background:var(--white);overflow-x:hidden;
-  padding-top:var(--header-h);padding-bottom:var(--bottom-h);
+  padding-top:calc(var(--notice-h) + var(--header-h) + var(--cattab-h));padding-bottom:var(--bottom-h);
   -webkit-tap-highlight-color:transparent
 }
 a{text-decoration:none;color:inherit}
@@ -115,11 +115,13 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
    TOP HEADER
    ══════════════════════════════ */
 .top-header{
-  position:fixed;top:0;left:0;right:0;z-index:1000;
+  position:fixed;top:var(--notice-h);left:0;right:0;z-index:1000;
   background:var(--yellow);height:var(--header-h);
   display:flex;align-items:center;padding:0 12px;gap:10px;
-  border-bottom:1px solid var(--yellow-dark);transition:box-shadow .2s
+  border-bottom:1px solid var(--yellow-dark);transition:all .2s
 }
+body.notice-hidden .top-header{top:0}
+body.notice-hidden{padding-top:calc(var(--header-h) + var(--cattab-h))}
 .top-header.scrolled{box-shadow:0 2px 12px rgba(0,0,0,.12)}
 .top-logo{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .top-logo-text{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:900;color:var(--navy);letter-spacing:-.5px}
@@ -133,6 +135,61 @@ button{border:none;background:none;cursor:pointer;font-family:inherit}
 .top-search:active{background:rgba(255,255,255,.8)}
 .top-icons{display:flex;gap:6px;flex-shrink:0}
 .top-icons a{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--navy);position:relative}
+
+/* ══════════════════════════════
+   롤링 공지 배너
+   ══════════════════════════════ */
+.notice-bar{
+  position:fixed;top:0;left:0;right:0;z-index:1001;
+  background:var(--navy);height:var(--notice-h);
+  display:flex;align-items:center;overflow:hidden
+}
+body.notice-hidden .notice-bar{display:none}
+.notice-track{
+  flex:1;overflow:hidden;position:relative;height:100%
+}
+.notice-marquee{
+  display:flex;gap:60px;align-items:center;height:100%;
+  animation:noticeScroll 20s linear infinite;white-space:nowrap
+}
+.notice-marquee span{
+  font-size:11px;color:#fff;flex-shrink:0
+}
+.notice-marquee em{color:var(--yellow);font-style:normal;font-weight:700}
+@keyframes noticeScroll{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+.notice-close{
+  width:var(--notice-h);height:var(--notice-h);display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.5);font-size:14px;flex-shrink:0;cursor:pointer
+}
+.notice-close:active{color:#fff}
+
+/* ══════════════════════════════
+   카테고리 탭바
+   ══════════════════════════════ */
+.cat-tab-bar{
+  position:fixed;top:calc(var(--notice-h) + var(--header-h));left:0;right:0;z-index:999;
+  background:var(--white);height:var(--cattab-h);
+  display:flex;align-items:stretch;overflow-x:auto;
+  border-bottom:1px solid #e8e8e8;
+  -webkit-overflow-scrolling:touch
+}
+body.notice-hidden .cat-tab-bar{top:var(--header-h)}
+.cat-tab-bar::-webkit-scrollbar{display:none}
+.cat-tab{
+  flex-shrink:0;padding:0 16px;display:flex;align-items:center;
+  font-size:13px;color:var(--text-light);font-weight:500;
+  white-space:nowrap;position:relative;cursor:pointer;
+  transition:color .15s
+}
+.cat-tab:active{color:var(--navy)}
+.cat-tab.active{color:var(--navy);font-weight:700}
+.cat-tab.active::after{
+  content:'';position:absolute;bottom:0;left:12px;right:12px;
+  height:2.5px;background:var(--yellow);border-radius:2px 2px 0 0
+}
 
 /* ══════════════════════════════
    MAIN BANNER (45vh)
@@ -448,12 +505,27 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 
 @media(min-width:768px){
   body{max-width:480px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,.08)}
-  .top-header,.bottom-nav{max-width:480px;left:50%;transform:translateX(-50%)}
+  .notice-bar,.top-header,.cat-tab-bar,.bottom-nav{max-width:480px;left:50%;transform:translateX(-50%)}
   .float-btns{right:calc(50% - 240px + 12px)}
 }
 </style>
 </head>
 <body>
+
+<!-- ═══ 롤링 공지 배너 ═══ -->
+<div class="notice-bar" id="noticeBar">
+  <div class="notice-track">
+    <div class="notice-marquee" id="noticeMarquee">
+      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🍊 <em>회원가입</em> 시 첫 주문 <em>2,000원 할인쿠폰</em> 즉시 지급!</a></span>
+      <span>🚚 오전 8시 이전 주문 시 <em>당일 발송!</em></span>
+      <span>🌿 감귤체험 시즌 <em>11월 초 ~ 1월 초</em> 운영 | 예약문의 <em>064-805-9181</em></span>
+      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🍊 <em>회원가입</em> 시 첫 주문 <em>2,000원 할인쿠폰</em> 즉시 지급!</a></span>
+      <span>🚚 오전 8시 이전 주문 시 <em>당일 발송!</em></span>
+      <span>🌿 감귤체험 시즌 <em>11월 초 ~ 1월 초</em> 운영 | 예약문의 <em>064-805-9181</em></span>
+    </div>
+  </div>
+  <button class="notice-close" id="noticeClose"><i class="xi-close"></i></button>
+</div>
 
 <!-- ═══ TOP HEADER ═══ -->
 <header class="top-header" id="topHeader">
@@ -469,6 +541,16 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     <a href="https://akkome.com/order/cart.html" target="_blank"><i class="xi-cart-o"></i></a>
   </div>
 </header>
+
+<!-- ═══ 카테고리 탭바 ═══ -->
+<nav class="cat-tab-bar" id="catTabBar">
+  <a href="#products" class="cat-tab active" data-cat="products">추천</a>
+  <a href="https://akkome.com/product/list.html?cate_no=42" target="_blank" class="cat-tab">특가상품</a>
+  <a href="https://akkome.com/product/list.html?cate_no=42" target="_blank" class="cat-tab">베스트</a>
+  <a href="#clips" class="cat-tab" data-cat="clips">숏클립</a>
+  <a href="https://akkome.com/board/gallery/list.html?board_no=8" target="_blank" class="cat-tab">스토리</a>
+  <a href="https://akkome.com/coupon/coupon_zone.html" target="_blank" class="cat-tab">혜택</a>
+</nav>
 
 <!-- ═══ MAIN BANNER (45vh) ═══ -->
 <section class="main-banner" id="mainBanner">
@@ -814,6 +896,27 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 
   /* ── 맨 위로 ── */
   document.getElementById('btnTop').addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+  /* ── 롤링 공지 닫기 ── */
+  document.getElementById('noticeClose').addEventListener('click',function(){
+    document.body.classList.add('notice-hidden');
+  });
+
+  /* ── 카테고리 탭 활성화 ── */
+  var catTabs=document.querySelectorAll('.cat-tab[data-cat]');
+  catTabs.forEach(function(tab){
+    tab.addEventListener('click',function(e){
+      e.preventDefault();
+      var target=this.getAttribute('data-cat');
+      var el=document.getElementById(target);
+      if(el){
+        var offset=el.offsetTop-(52+36+40+10);
+        window.scrollTo({top:offset,behavior:'smooth'});
+      }
+      document.querySelectorAll('.cat-tab').forEach(function(t){t.classList.remove('active')});
+      this.classList.add('active');
+    });
+  });
 
 })();
 </script>
