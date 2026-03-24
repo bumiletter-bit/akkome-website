@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>회원 혜택 | 제주아꼼이네</title>
+<link rel="icon" href="https://akkome.com/web/upload/favicon-3ad34130ee1b4111ba23d0eb68849bce.ico">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--yellow:#F5C800;--navy:#1B3A6B;--red:#FF3B30;--green:#00A651;--white:#fff;--text-dark:#1A1A1A;--text-mid:#888;--radius:15px;--bottom-h:72px;--header-h:52px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--text-dark);background:var(--white);max-width:480px;margin:0 auto;padding-top:var(--header-h);padding-bottom:var(--bottom-h);-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+/* 헤더 */
+.pd-header{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 12px;box-shadow:0 1px 4px rgba(0,0,0,.06);max-width:480px;margin:0 auto}
+.pd-header a{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--navy)}
+.pd-header .pd-title{font-size:14px;font-weight:700;color:var(--navy);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 혜택 섹션 */
+.benefit-section{padding:28px 16px}
+.benefit-section h1{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:20px}
+
+/* 혜택 카드 */
+.benefit-card{padding:18px 16px;border-radius:14px;margin-bottom:12px}
+.benefit-card.highlight{background:#FFF9DB}
+.benefit-card.normal{background:#fff;border:1px solid #eee}
+.benefit-card .benefit-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.benefit-card .benefit-desc{font-size:13px;color:var(--text-mid)}
+
+/* CTA 섹션 */
+.cta-section{padding:16px 16px 28px;text-align:center}
+.cta-btn{display:block;width:100%;padding:16px;background:var(--yellow);color:var(--navy);font-size:16px;font-weight:700;border:none;border-radius:14px;cursor:pointer;text-align:center}
+.cta-btn:active{background:#E8B800}
+.cta-sub{font-size:12px;color:var(--text-mid);margin-top:10px}
+
+/* 하단 네비 */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;height:var(--bottom-h);display:flex;align-items:center;justify-content:space-around;border-top:1px solid #e8e8e8;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#aaa;font-weight:500;padding:8px 10px;min-width:52px}
+.bnav-item svg{width:24px;height:24px;stroke:#aaa;fill:none;stroke-width:1.8}
+.bnav-item.active{color:var(--navy);font-weight:700}
+.bnav-item.active svg{stroke:var(--yellow)}
+
+@media(min-width:768px){body,.pd-header,.bottom-nav{max-width:480px;left:50%;right:auto;transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<header class="pd-header">
+  <a href="index.html">←</a>
+  <span class="pd-title">회원 혜택</span>
+  <a href="https://akkome.com/order/cart.html" target="_blank">🛒</a>
+</header>
+
+<section class="benefit-section">
+  <h1>회원가입 혜택</h1>
+
+  <div class="benefit-card highlight">
+    <div class="benefit-title">🎁 첫 주문 2,000원 할인쿠폰</div>
+    <div class="benefit-desc">회원가입 즉시 지급!</div>
+  </div>
+
+  <div class="benefit-card normal">
+    <div class="benefit-title">🚚 전국 무료배송</div>
+    <div class="benefit-desc">모든 상품 무료배송</div>
+  </div>
+
+  <div class="benefit-card normal">
+    <div class="benefit-title">💯 맛 보장 무료반품</div>
+    <div class="benefit-desc">맛없으면 수거비부터 전액 환불</div>
+  </div>
+
+  <div class="benefit-card normal">
+    <div class="benefit-title">⭐ VIP 감귤체험 무료</div>
+    <div class="benefit-desc">단골 고객 감귤체험 1인 무료</div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <a href="https://akkome.com/member/join.html" target="_blank" class="cta-btn">지금 회원가입하기 →</a>
+  <p class="cta-sub">가입 후 바로 쿠폰 지급!</p>
+</section>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>홈</span></a>
+  <a href="product/list.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><span>상품</span></a>
+  <a href="product/experience.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5.25 10 13 10 13s10-7.75 10-13c0-4-4.48-8-10-8z" stroke-linejoin="round"/><path d="M12 6c-1 0-3 1.5-3 4s2 4 3 4 3-1.5 3-4-2-4-3-4z"/></svg><span>체험</span></a>
+  <a href="index.html#reviews" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>후기</span></a>
+  <a href="https://akkome.com/order/cart.html" target="_blank" class="bnav-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span>장바구니</span></a>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>특가 상품 | 제주아꼼이네</title>
+<link rel="icon" href="https://akkome.com/web/upload/favicon-3ad34130ee1b4111ba23d0eb68849bce.ico">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--yellow:#F5C800;--navy:#1B3A6B;--red:#FF3B30;--green:#00A651;--white:#fff;--text-dark:#1A1A1A;--text-mid:#888;--radius:15px;--bottom-h:72px;--header-h:52px;--action-h:0px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--text-dark);background:var(--white);max-width:480px;margin:0 auto;padding-top:var(--header-h);padding-bottom:var(--bottom-h);-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+button,select{font-family:inherit}
+
+/* 헤더 */
+.pd-header{position:fixed;top:0;left:0;right:0;z-index:100;background:#fff;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 12px;box-shadow:0 1px 4px rgba(0,0,0,.06);max-width:480px;margin:0 auto}
+.pd-header a{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--navy)}
+.pd-header .pd-title{font-size:14px;font-weight:700;color:var(--navy);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* 상품 그리드 */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
+.prod-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.06);position:relative;transition:transform .2s}
+.prod-card:active{transform:scale(.97)}
+.prod-card .card-img{width:100%;aspect-ratio:1;background:#f8f8f8;overflow:hidden;position:relative}
+.prod-card .card-img img{width:100%;height:100%;object-fit:cover}
+.card-badges{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px}
+.card-badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;display:inline-block;width:fit-content}
+.card-badge.ship{background:#E8F5E9;color:var(--green)}
+.card-badge.hot{background:var(--red);color:#fff}
+.card-badge.sale{background:var(--yellow);color:var(--navy)}
+.card-badge.popular{background:var(--green);color:#fff}
+.card-badge.premium{background:var(--navy);color:#fff}
+.card-badge.season{background:#FF8C00;color:#fff}
+.card-badge.soldout{background:#999;color:#fff}
+.card-body{padding:10px}
+.card-name{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-desc{font-size:11px;color:var(--text-mid);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-price-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap}
+.card-discount{font-size:14px;font-weight:900;color:var(--red)}
+.card-price{font-size:14px;font-weight:900;color:var(--text-dark)}
+.card-org{font-size:11px;color:var(--text-mid);text-decoration:line-through}
+
+/* 하단 네비 */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;height:var(--bottom-h);display:flex;align-items:center;justify-content:space-around;border-top:1px solid #e8e8e8;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#aaa;font-weight:500;padding:8px 10px;min-width:52px}
+.bnav-item svg{width:24px;height:24px;stroke:#aaa;fill:none;stroke-width:1.8}
+.bnav-item.active{color:var(--navy);font-weight:700}
+.bnav-item.active svg{stroke:var(--yellow)}
+
+@media(min-width:768px){body,.pd-header,.bottom-nav{max-width:480px;left:50%;right:auto;transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<header class="pd-header">
+  <a href="../index.html">←</a>
+  <span class="pd-title">특가 상품</span>
+  <a href="https://akkome.com/order/cart.html" target="_blank">🛒</a>
+</header>
+
+<div class="prod-grid" id="productGrid"></div>
+
+<nav class="bottom-nav">
+  <a href="../index.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>홈</span></a>
+  <a href="https://akkome.com/product/list.html?cate_no=42" target="_blank" class="bnav-item active"><svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><span>상품</span></a>
+  <a href="../index.html#experience" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5.25 10 13 10 13s10-7.75 10-13c0-4-4.48-8-10-8z" stroke-linejoin="round"/><path d="M12 6c-1 0-3 1.5-3 4s2 4 3 4 3-1.5 3-4-2-4-3-4z"/></svg><span>체험</span></a>
+  <a href="../index.html#reviews" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>후기</span></a>
+  <a href="https://akkome.com/order/cart.html" target="_blank" class="bnav-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span>장바구니</span></a>
+</nav>
+
+<script>
+var SALE_PRODUCTS = [
+  {name:'제주 감귤',desc:'새콤달콤 제주 감귤',price:'20,500',originalPrice:'118,000',discount:'83',badge:'',img:'../images/2.썸네일/감귤.jpg',link:'gamgyul.html',soldOut:false},
+  {name:'제주 천혜향',desc:'과즙 터지는 달콤함',price:'32,500',originalPrice:'160,000',discount:'80',badge:'지금절정',img:'../images/2.썸네일/천혜향.jpg',link:'cheonhyehyang.html',soldOut:false},
+  {name:'제주 타이벡 감귤',desc:'달콤 끝판왕',price:'26,900',originalPrice:'118,000',discount:'77',badge:'특가',img:'../images/2.썸네일/타이벡감귤.jpg',link:'taibek.html',soldOut:false},
+  {name:'제주 하귤',desc:'청 담가먹기에 딱 좋아요',price:'24,800',originalPrice:'86,400',discount:'71',badge:'',img:'../images/2.썸네일/하귤.jpg',link:'hagyul.html',soldOut:false},
+  {name:'제주 비가림 감귤',desc:'고당도 믿고 먹는 맛',price:'32,800',originalPrice:'93,800',discount:'65',badge:'인기',img:'../images/2.썸네일/비가림감귤.jpg',link:'gamgyul.html',soldOut:false},
+  {name:'제주 꼬마 한라봉',desc:'제주 직접 재배 · 당도보장',price:'34,800',originalPrice:'60,000',discount:'42',badge:'지금절정',img:'../images/2.썸네일/꼬마한라봉.jpg',link:'kkoma-hanrabong.html',soldOut:false}
+];
+
+function getBadgeClass(badge){
+  if(badge==='지금절정') return 'hot';
+  if(badge==='특가') return 'sale';
+  if(badge==='인기') return 'popular';
+  if(badge==='프리미엄') return 'premium';
+  if(badge==='시즌한정') return 'season';
+  return '';
+}
+
+function renderProducts(products,containerId){
+  var grid=document.getElementById(containerId);
+  var html='';
+  for(var i=0;i<products.length;i++){
+    var p=products[i];
+    html+='<a href="'+p.link+'" class="prod-card">';
+    html+='<div class="card-img"><img src="'+p.img+'" alt="'+p.name+'">';
+    html+='<div class="card-badges">';
+    html+='<span class="card-badge ship">무료배송</span>';
+    if(p.badge){
+      html+='<span class="card-badge '+getBadgeClass(p.badge)+'">'+p.badge+'</span>';
+    }
+    html+='</div></div>';
+    html+='<div class="card-body">';
+    html+='<div class="card-name">'+p.name+'</div>';
+    html+='<div class="card-desc">'+p.desc+'</div>';
+    html+='<div class="card-price-row">';
+    if(p.discount){
+      html+='<span class="card-discount">'+p.discount+'%</span>';
+    }
+    html+='<span class="card-price">'+p.price+'원</span>';
+    html+='</div>';
+    if(p.originalPrice){
+      html+='<div class="card-org">'+p.originalPrice+'원</div>';
+    }
+    html+='</div></a>';
+  }
+  grid.innerHTML=html;
+}
+
+renderProducts(SALE_PRODUCTS,'productGrid');
+</script>
+</body>
+</html>
