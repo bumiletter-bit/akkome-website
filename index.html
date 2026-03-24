@@ -20,9 +20,9 @@
 
 /* ── 사장님 추천 랭킹 ── */
 var RANKING = [
-  { rank: 1, medal: '🥇', name: '꼬마 하우스 한라봉', desc: '지금 맛 절정! 당도 최고', link: 'https://akkome.com/product/제주-꼬마한라봉/37/' },
-  { rank: 2, medal: '🥈', name: '제주 천혜향', desc: '과즙 터지는 달콤함', link: 'https://akkome.com/product/제주-천혜향/32/' },
-  { rank: 3, medal: '🥉', name: '비가림 감귤', desc: '고당도 믿고 먹는 맛', link: 'https://akkome.com/product/제주-비가림-감귤/33/' }
+  { rank: 1, medal: '🥇', name: '꼬마 하우스 한라봉', desc: '지금 맛 절정! 당도 최고', link: 'product/kkoma-hanrabong.html' },
+  { rank: 2, medal: '🥈', name: '제주 천혜향', desc: '과즙 터지는 달콤함', link: 'product/cheonhyehyang.html' },
+  { rank: 3, medal: '🥉', name: '비가림 감귤', desc: '고당도 믿고 먹는 맛', link: 'product/gamgyul.html' }
 ];
 
 /* ── 상품 목록 (JS 변수 관리 — 여기만 수정하면 됩니다) ── */
@@ -39,8 +39,8 @@ var PRODUCTS = [
   { name:'제주 하귤', desc:'청 담가먹기에 딱 좋아요', price:'24,800', originalPrice:'86,400', discount:'71', badge:'', img:'images/2.썸네일/하귤.jpg', link:'product/hagyul.html', soldOut:false },
   { name:'제주 감귤', desc:'새콤달콤 제주 감귤', price:'20,500', originalPrice:'118,000', discount:'83', badge:'', img:'images/2.썸네일/감귤.jpg', link:'product/gamgyul.html', soldOut:false },
   { name:'제주 하우스 감귤', desc:'하우스 재배 고당도 감귤', price:'32,800', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/하우스감귤.jpg', link:'product/gamgyul.html', soldOut:false },
-  { name:'제주 청귤', desc:'청귤 특유의 상큼함', price:'19,800', originalPrice:'89,300', discount:'78', badge:'', img:'images/2.썸네일/청귤.jpg', link:'https://akkome.com/product/list.html?cate_no=23', soldOut:true },
-  { name:'초당 옥수수', desc:'달콤한 제주 초당옥수수', price:'29,800', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/초당옥수수.jpg', link:'https://akkome.com/product/list.html?cate_no=30', soldOut:true },
+  { name:'제주 청귤', desc:'청귤 특유의 상큼함', price:'19,800', originalPrice:'89,300', discount:'78', badge:'', img:'images/2.썸네일/청귤.jpg', link:'product/list.html', soldOut:true },
+  { name:'초당 옥수수', desc:'달콤한 제주 초당옥수수', price:'29,800', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/초당옥수수.jpg', link:'product/list.html', soldOut:true },
   { name:'감귤 체험농장', desc:'11월~1월 시즌 운영', price:'12,000', originalPrice:'28,000', discount:'57', badge:'시즌한정', img:'images/3.체험장/체험장1.jpg', link:'product/experience.html', soldOut:true }
 ];
 
@@ -653,7 +653,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <section class="products-section" id="products">
   <div class="products-header">
     <h2>🍊 아꼼이네 상품</h2>
-    <a href="https://akkome.com/product/list.html?cate_no=42" target="_blank">전체보기 ›</a>
+    <a href="product/list.html">전체보기 ›</a>
   </div>
   <div class="prod-grid" id="prodGrid"></div>
   <div class="prod-more-wrap" id="prodMoreWrap" style="text-align:center;margin-top:16px">
@@ -753,7 +753,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     </div>
   </div>
   <div style="text-align:center;margin-top:16px">
-    <a href="https://akkome.com/board/product/list.html?board_no=4" target="_blank" style="display:inline-block;padding:10px 24px;border-radius:24px;border:1px solid #eee;font-size:13px;font-weight:600;color:var(--navy)">후기 더보기 →</a>
+    <a href="#reviews" style="display:inline-block;padding:10px 24px;border-radius:24px;border:1px solid #eee;font-size:13px;font-weight:600;color:var(--navy)">후기 더보기 →</a>
   </div>
 </section>
 
@@ -927,7 +927,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     });
     pg.innerHTML=ph;
     var moreWrap=document.getElementById('prodMoreWrap');
-    if(count>=visibleProducts.length) moreWrap.innerHTML='<a href="https://akkome.com/product/list.html?cate_no=42" target="_blank" style="display:inline-block;padding:10px 28px;border-radius:24px;border:1px solid #eee;font-size:13px;font-weight:600;color:var(--navy)">전체보기 →</a>';
+    if(count>=visibleProducts.length) moreWrap.innerHTML='<a href="product/list.html" style="display:inline-block;padding:10px 28px;border-radius:24px;border:1px solid #eee;font-size:13px;font-weight:600;color:var(--navy)">전체보기 →</a>';
   }
   renderProducts(showCount);
   document.getElementById('prodMoreBtn').addEventListener('click',function(){
