@@ -188,6 +188,14 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
   content:'';position:absolute;bottom:0;left:12px;right:12px;
   height:2.5px;background:var(--yellow);border-radius:2px 2px 0 0
 }
+.badge-n{
+  position:absolute;top:-4px;right:-8px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--red);color:#fff;
+  font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  line-height:1
+}
 
 /* ══════════════════════════════
    무료배송 보장 배너
@@ -589,7 +597,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <!-- ═══ 카테고리 탭바 ═══ -->
 <nav class="cat-tab-bar" id="catTabBar">
   <a href="#products" class="cat-tab active" data-cat="products">추천</a>
-  <a href="product/sale.html" class="cat-tab">특가상품</a>
+  <a href="product/sale.html" class="cat-tab"><span style="position:relative;display:inline-block">특가상품<span class="badge-n" id="badgeN">N</span></span></a>
   <a href="product/best.html" class="cat-tab">베스트</a>
   <a href="#clips" class="cat-tab" data-cat="clips">숏클립</a>
   <a href="story.html" class="cat-tab">스토리</a>
@@ -978,6 +986,10 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   document.getElementById('btnChat').addEventListener('click',function(){chatPopup.classList.toggle('open');});
   document.getElementById('chatClose').addEventListener('click',function(){chatPopup.classList.remove('open');});
   document.getElementById('chatCloseBtn').addEventListener('click',function(){chatPopup.classList.remove('open');});
+
+  /* ── 특가상품 N 뱃지 (badge:'특가' 상품 존재 여부) ── */
+  var hasSale=PRODUCTS.some(function(p){return p.badge==='특가'&&!p.soldOut;});
+  document.getElementById('badgeN').style.display=hasSale?'flex':'none';
 
   /* ── 롤링 공지 닫기 ── */
   document.getElementById('noticeClose').addEventListener('click',function(){
