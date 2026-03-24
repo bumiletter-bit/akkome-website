@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>회원 혜택 | 제주아꼼이네</title>
+<title>혜택 | 제주아꼼이네</title>
 <link rel="icon" href="https://akkome.com/web/upload/favicon-3ad34130ee1b4111ba23d0eb68849bce.ico">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -19,22 +19,35 @@ img{max-width:100%;display:block}
 .pd-header a{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--navy)}
 .pd-header .pd-title{font-size:14px;font-weight:700;color:var(--navy);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* 혜택 섹션 */
-.benefit-section{padding:28px 16px}
-.benefit-section h1{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:20px}
+/* 회원가입 혜택 */
+.hero-benefit{background:var(--yellow);padding:32px 16px}
+.hero-benefit h1{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center}
+.benefit-list{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.benefit-item{background:#fff;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px}
+.benefit-item .b-icon{font-size:28px;flex-shrink:0}
+.benefit-item .b-title{font-size:13px;font-weight:700;color:var(--navy)}
+.benefit-item .b-desc{font-size:11px;color:#888;margin-top:2px}
+.cta-btn{display:block;width:100%;background:var(--navy);color:#fff;font-size:15px;font-weight:700;border:none;border-radius:12px;padding:14px;text-align:center;margin-top:20px;cursor:pointer}
+.cta-btn:active{opacity:.9}
 
-/* 혜택 카드 */
-.benefit-card{padding:18px 16px;border-radius:14px;margin-bottom:12px}
-.benefit-card.highlight{background:#FFF9DB}
-.benefit-card.normal{background:#fff;border:1px solid #eee}
-.benefit-card .benefit-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px}
-.benefit-card .benefit-desc{font-size:13px;color:var(--text-mid)}
+/* 쿠폰존 */
+.coupon-section{padding:24px 16px;background:#fff}
+.coupon-section h2{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px}
+.coupon-card{border:2px dashed var(--yellow);border-radius:16px;padding:20px;text-align:center}
+.coupon-card .amount{font-family:'Noto Serif KR',serif;font-size:32px;font-weight:900;color:var(--red)}
+.coupon-card .coupon-name{font-size:13px;color:var(--navy);margin-top:4px}
+.coupon-card .coupon-note{font-size:11px;color:#888;margin-top:8px}
+.coupon-btn{display:inline-block;background:var(--yellow);color:var(--navy);font-size:13px;font-weight:700;border:none;border-radius:20px;padding:10px 24px;margin-top:12px;cursor:pointer}
+.coupon-btn:active{opacity:.9}
 
-/* CTA 섹션 */
-.cta-section{padding:16px 16px 28px;text-align:center}
-.cta-btn{display:block;width:100%;padding:16px;background:var(--yellow);color:var(--navy);font-size:16px;font-weight:700;border:none;border-radius:14px;cursor:pointer;text-align:center}
-.cta-btn:active{background:#E8B800}
-.cta-sub{font-size:12px;color:var(--text-mid);margin-top:10px}
+/* VIP 혜택 */
+.vip-section{padding:24px 16px;background:#F8F8F8}
+.vip-section h2{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px}
+.vip-list{display:flex;flex-direction:column;gap:8px}
+.vip-card{background:#fff;border-radius:12px;padding:14px;border-left:3px solid var(--yellow);display:flex;align-items:flex-start;gap:12px}
+.vip-card .v-icon{font-size:22px;flex-shrink:0}
+.vip-card .v-title{font-size:13px;font-weight:700;color:var(--navy)}
+.vip-card .v-desc{font-size:12px;color:#888;margin-top:2px}
 
 /* 하단 네비 */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;height:var(--bottom-h);display:flex;align-items:center;justify-content:space-around;border-top:1px solid #e8e8e8;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom)}
@@ -50,38 +63,81 @@ img{max-width:100%;display:block}
 
 <header class="pd-header">
   <a href="index.html">←</a>
-  <span class="pd-title">회원 혜택</span>
+  <span class="pd-title">혜택</span>
   <a href="https://akkome.com/order/cart.html" target="_blank">🛒</a>
 </header>
 
-<section class="benefit-section">
-  <h1>회원가입 혜택</h1>
-
-  <div class="benefit-card highlight">
-    <div class="benefit-title">🎁 첫 주문 2,000원 할인쿠폰</div>
-    <div class="benefit-desc">회원가입 즉시 지급!</div>
+<!-- 회원가입 혜택 -->
+<div class="hero-benefit">
+  <h1>지금 가입하면 바로 혜택!</h1>
+  <div class="benefit-list">
+    <div class="benefit-item">
+      <div class="b-icon">🎁</div>
+      <div>
+        <div class="b-title">첫 주문 2,000원 할인쿠폰 즉시 지급</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="b-icon">📦</div>
+      <div>
+        <div class="b-title">전 상품 무료배송</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="b-icon">🍊</div>
+      <div>
+        <div class="b-title">감귤체험 무료 1인</div>
+        <div class="b-desc">VIP 고객</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="b-icon">📲</div>
+      <div>
+        <div class="b-title">제철 상품 문자 알림 서비스</div>
+      </div>
+    </div>
   </div>
+  <a href="https://akkome.com/member/join.html" target="_blank"><button class="cta-btn">지금 회원가입하기 →</button></a>
+</div>
 
-  <div class="benefit-card normal">
-    <div class="benefit-title">🚚 전국 무료배송</div>
-    <div class="benefit-desc">모든 상품 무료배송</div>
+<!-- 쿠폰존 -->
+<div class="coupon-section">
+  <h2>쿠폰 받기</h2>
+  <div class="coupon-card">
+    <div class="amount">2,000원</div>
+    <div class="coupon-name">신규회원 할인쿠폰</div>
+    <div class="coupon-note">가입 즉시 자동 지급</div>
+    <a href="https://akkome.com/member/join.html" target="_blank"><button class="coupon-btn">쿠폰 받으러 가기 →</button></a>
   </div>
+</div>
 
-  <div class="benefit-card normal">
-    <div class="benefit-title">💯 맛 보장 무료반품</div>
-    <div class="benefit-desc">맛없으면 수거비부터 전액 환불</div>
+<!-- VIP 혜택 -->
+<div class="vip-section">
+  <h2>VIP 고객 혜택</h2>
+  <div class="vip-list">
+    <div class="vip-card">
+      <div class="v-icon">🍊</div>
+      <div>
+        <div class="v-title">감귤체험 무료 1인</div>
+        <div class="v-desc">스토어 단골 고객님께 감귤체험 무료 제공</div>
+      </div>
+    </div>
+    <div class="vip-card">
+      <div class="v-icon">📱</div>
+      <div>
+        <div class="v-title">제철 상품 먼저 알림</div>
+        <div class="v-desc">시즌 시작 전 VIP 고객님께 먼저 안내</div>
+      </div>
+    </div>
+    <div class="vip-card">
+      <div class="v-icon">💰</div>
+      <div>
+        <div class="v-title">할인 혜택 우선 제공</div>
+        <div class="v-desc">특가 이벤트 VIP 우선 참여</div>
+      </div>
+    </div>
   </div>
-
-  <div class="benefit-card normal">
-    <div class="benefit-title">⭐ VIP 감귤체험 무료</div>
-    <div class="benefit-desc">단골 고객 감귤체험 1인 무료</div>
-  </div>
-</section>
-
-<section class="cta-section">
-  <a href="https://akkome.com/member/join.html" target="_blank" class="cta-btn">지금 회원가입하기 →</a>
-  <p class="cta-sub">가입 후 바로 쿠폰 지급!</p>
-</section>
+</div>
 
 <nav class="bottom-nav">
   <a href="index.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>홈</span></a>

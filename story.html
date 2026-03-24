@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>아꼼이네 이야기 | 제주아꼼이네</title>
+<title>아꼼이네 스토리 | 제주아꼼이네</title>
 <link rel="icon" href="https://akkome.com/web/upload/favicon-3ad34130ee1b4111ba23d0eb68849bce.ico">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -19,28 +19,36 @@ img{max-width:100%;display:block}
 .pd-header a{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--navy)}
 .pd-header .pd-title{font-size:14px;font-weight:700;color:var(--navy);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* 히어로 */
-.hero-img{width:100%;aspect-ratio:16/9;overflow:hidden}
-.hero-img img{width:100%;height:100%;object-fit:cover}
+/* 섹션 공통 */
+.section{padding:24px 16px}
+.section h2{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px}
 
-/* 섹션 */
-.story-section{padding:28px 16px;border-bottom:8px solid #f5f5f5}
-.story-section:last-of-type{border-bottom:none}
-.story-section h1{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:16px;line-height:1.4}
-.story-section p{font-size:14px;color:var(--text-dark);line-height:1.8;margin-bottom:12px}
+/* 브랜드 소개 */
+.brand-intro{text-align:center;padding:32px 16px}
+.brand-intro h1{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:16px}
+.brand-intro p{font-size:14px;color:#555;line-height:1.8}
 
-/* 약속 */
-.promise-list{display:flex;flex-direction:column;gap:0}
-.promise-item{display:flex;align-items:center;gap:10px;padding:12px 0;font-size:13px;color:var(--text-dark);border-bottom:1px solid #f5f5f5}
-.promise-item:last-child{border-bottom:none}
-.promise-item span{font-size:18px;flex-shrink:0}
+/* 숫자 카드 */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-card{background:#F8F8F8;border-radius:12px;padding:16px;text-align:center}
+.stat-card .number{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy)}
+.stat-card .label{font-size:10px;color:#888;margin-top:4px}
 
-/* 농장 사진 그리드 */
-.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
+/* 약속 카드 */
+.promise-card{display:flex;align-items:flex-start;gap:12px;padding:14px;background:#F8F8F8;border-radius:12px;border-left:3px solid var(--yellow)}
+.promise-icon{width:34px;height:34px;min-width:34px;background:#FFFBEA;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.promise-card .promise-title{font-size:13px;font-weight:700;color:var(--navy)}
+.promise-card .promise-desc{font-size:12px;color:#888;margin-top:2px}
+.promise-list{display:flex;flex-direction:column;gap:10px}
+
+/* 농장 사진 */
+.farm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.farm-grid img{border-radius:12px;aspect-ratio:1;object-fit:cover;width:100%}
 
 /* 슬로건 */
-.slogan{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--navy);text-align:center;line-height:1.6}
+.slogan{background:var(--yellow);padding:32px 16px;text-align:center}
+.slogan .line1{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:900;color:var(--navy)}
+.slogan .line2{font-size:14px;font-weight:500;color:var(--navy);margin-top:8px}
 
 /* 하단 네비 */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;height:var(--bottom-h);display:flex;align-items:center;justify-content:space-around;border-top:1px solid #e8e8e8;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom)}
@@ -56,40 +64,86 @@ img{max-width:100%;display:block}
 
 <header class="pd-header">
   <a href="index.html">←</a>
-  <span class="pd-title">아꼼이네 이야기</span>
+  <span class="pd-title">아꼼이네 스토리</span>
   <a href="https://akkome.com/order/cart.html" target="_blank">🛒</a>
 </header>
 
-<div class="hero-img"><img src="images/3.체험장/체험장1.jpg" alt="제주아꼼이네 농장"></div>
+<!-- 브랜드 소개 -->
+<div class="brand-intro">
+  <img src="images/제주아꼼이네로고 메인.png" style="height:80px;margin:0 auto 16px" alt="제주아꼼이네 로고">
+  <h1>제주아꼼이네 이야기</h1>
+  <p>"아꼼이"는 "사랑스럽다", "귀엽다"는 제주도 사투리입니다.</p>
+  <p>정직하고 좋은 제품을 드리겠다는 마음으로, 제 딸 태명을 따와 지은 이름입니다.</p>
+  <p>가족이 먹는 것처럼 고르고, 가족한테 드리듯 보냅니다.</p>
+</div>
 
-<section class="story-section">
-  <h1>제주가 키우고, 아꼼이네가 고릅니다.</h1>
-  <p>"아꼼이"는 "사랑스럽다"는 제주도 사투리입니다. 정직하고 좋은 제품을 판매하겠다는 마음으로 제 딸 태명을 따와 '제주아꼼이네'로 짓게 되었습니다.</p>
-  <p>3대째 농업을 이어온 제주아꼼이네. 가족이 먹는 것처럼 고르고, 가족한테 드리듯 보냅니다.</p>
-</section>
-
-<section class="story-section">
-  <h1>🍊 아꼼이네 약속</h1>
-  <div class="promise-list">
-    <div class="promise-item"><span>✅</span> 당도보장 · 맛없으면 무료반품</div>
-    <div class="promise-item"><span>🚚</span> 산지직송 · 전국 무료배송</div>
-    <div class="promise-item"><span>⏰</span> 오전 8시 전 주문 당일발송</div>
+<!-- 숫자로 보는 아꼼이네 -->
+<div class="section">
+  <h2>숫자로 보는 아꼼이네</h2>
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="number">187,198명</div>
+      <div class="label">관심고객</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">4,369,830</div>
+      <div class="label">누적방문</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">★5.0</div>
+      <div class="label">평균평점</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">100%</div>
+      <div class="label">맛보장</div>
+    </div>
   </div>
-</section>
+</div>
 
-<section class="story-section">
-  <h1>🌿 우리 농장</h1>
-  <div class="photo-grid">
+<!-- 아꼼이네 약속 -->
+<div class="section">
+  <h2>아꼼이네 약속</h2>
+  <div class="promise-list">
+    <div class="promise-card">
+      <div class="promise-icon">🎯</div>
+      <div>
+        <div class="promise-title">엄격한 당도 선별</div>
+        <div class="promise-desc">당도 기준 미달은 절대 출하하지 않습니다. 예뻐도 맛없으면 안 보냅니다.</div>
+      </div>
+    </div>
+    <div class="promise-card">
+      <div class="promise-icon">🚚</div>
+      <div>
+        <div class="promise-title">산지 직송</div>
+        <div class="promise-desc">제주 농장에서 고객님 댁까지 직접. 오전 8시 전 주문 시 당일 발송.</div>
+      </div>
+    </div>
+    <div class="promise-card">
+      <div class="promise-icon">💯</div>
+      <div>
+        <div class="promise-title">맛 보장 무료반품</div>
+        <div class="promise-desc">드셔보시고 맛이 없으시면 수거비부터 전액 환불. 이 약속, 한 번도 어긴 적 없습니다.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 농장 사진 -->
+<div class="section">
+  <h2>아꼼이네 농장</h2>
+  <div class="farm-grid">
     <img src="images/3.체험장/체험장1.jpg" alt="농장 사진 1">
     <img src="images/3.체험장/체험장2.jpg" alt="농장 사진 2">
     <img src="images/3.체험장/체험장3.jpg" alt="농장 사진 3">
     <img src="images/3.체험장/체험장4.jpg" alt="농장 사진 4">
   </div>
-</section>
+</div>
 
-<section class="story-section">
-  <p class="slogan">달아야 팝니다. 안 달면 안 팝니다.</p>
-</section>
+<!-- 슬로건 -->
+<div class="slogan">
+  <div class="line1">제주가 키우고, 아꼼이네가 고릅니다.</div>
+  <div class="line2">달아야 팝니다. 안 달면 안 팝니다.</div>
+</div>
 
 <nav class="bottom-nav">
   <a href="index.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>홈</span></a>

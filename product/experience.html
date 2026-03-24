@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>제주 감귤체험 | 제주아꼼이네</title>
+<title>감귤체험 예약 | 제주아꼼이네</title>
 <link rel="icon" href="https://akkome.com/web/upload/favicon-3ad34130ee1b4111ba23d0eb68849bce.ico">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -20,44 +20,39 @@ button,select{font-family:inherit}
 .pd-header a{width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--navy)}
 .pd-header .pd-title{font-size:14px;font-weight:700;color:var(--navy);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* 히어로 이미지 */
-.hero-img{width:100%;aspect-ratio:4/3;background:#f8f8f8;overflow:hidden}
+/* 히어로 */
+.hero-img{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:0}
 .hero-img img{width:100%;height:100%;object-fit:cover}
 
-/* 체험 안내 섹션 */
-.exp-info{padding:24px 16px;text-align:center;border-bottom:8px solid #f5f5f5}
-.exp-info h1{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900;color:var(--navy);margin-bottom:8px}
-.exp-info .desc{font-size:14px;color:var(--text-mid);line-height:1.6;margin-bottom:14px}
-.exp-badge{display:inline-block;font-size:13px;font-weight:700;padding:6px 16px;border-radius:20px;background:var(--yellow);color:var(--navy)}
+/* 체험 소개 */
+.exp-intro{padding:20px 16px}
+.exp-intro h1{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:900;color:var(--navy)}
+.season-badge{display:inline-block;background:#FFF3CD;color:#856404;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;margin:10px 0 16px}
+.feature-list{display:flex;flex-direction:column;gap:8px}
+.feature-item{display:flex;flex-direction:row;gap:10px;padding:12px;background:#F8F8F8;border-radius:12px;align-items:center}
+.feature-icon{width:36px;height:36px;min-width:36px;background:#FFFBEA;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.feature-text .ft-title{font-size:13px;font-weight:700;color:var(--text-dark)}
+.feature-text .ft-desc{font-size:11px;color:var(--text-mid);margin-top:2px}
 
-/* 포토 그리드 */
-.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-bottom:8px solid #f5f5f5}
-.photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+/* 갤러리 */
+.gallery{padding:0 16px 20px}
+.gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gallery-grid .gal-item{border-radius:12px;overflow:hidden;aspect-ratio:1}
+.gallery-grid .gal-item img{width:100%;height:100%;object-fit:cover}
 
-/* 특징 */
-.exp-features{padding:16px;border-bottom:8px solid #f5f5f5}
-.feature-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #f5f5f5}
-.feature-item:last-child{border:none}
-.feature-icon{font-size:24px;flex-shrink:0;width:36px;text-align:center}
-.feature-text .ft-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
-.feature-text .ft-desc{font-size:12px;color:var(--text-mid);line-height:1.5}
-
-/* 정보 카드 */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:16px;border-bottom:8px solid #f5f5f5}
-.info-card{padding:16px;border-radius:12px;background:#f8f8f8;text-align:center}
-.info-card.highlight{background:var(--yellow)}
-.info-card .ic-icon{font-size:20px;margin-bottom:6px}
-.info-card .ic-label{font-size:11px;color:var(--text-mid);margin-bottom:4px}
-.info-card.highlight .ic-label{color:var(--navy)}
-.info-card .ic-value{font-size:13px;font-weight:700;color:var(--navy)}
+/* 예약 안내 */
+.reservation{background:var(--navy);padding:24px 16px;color:#fff}
+.reservation h2{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:900;color:var(--yellow);margin-bottom:14px}
+.res-row{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1)}
+.res-row:last-child{border-bottom:none}
+.res-row .rl{color:rgba(255,255,255,0.6)}
+.res-row .rv{color:#fff;font-weight:500}
 
 /* 하단 고정 액션 */
 .pd-action{position:fixed;bottom:var(--bottom-h);left:0;right:0;z-index:100;background:#fff;height:var(--action-h);display:flex;align-items:center;gap:10px;padding:0 16px;border-top:1px solid #eee;max-width:480px;margin:0 auto}
-.btn-call{flex:1;height:44px;border-radius:10px;border:1.5px solid #fff;background:transparent;color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
-.btn-map{flex:1;height:44px;border-radius:10px;border:none;background:var(--yellow);color:var(--navy);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
-.pd-action{background:var(--navy)}
-.btn-call{border-color:rgba(255,255,255,.5);color:#fff}
-.btn-call:active{background:rgba(255,255,255,.1)}
+.btn-call{flex:1;height:44px;border-radius:10px;border:1.5px solid var(--navy);background:#fff;color:var(--navy);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.btn-call:active{background:#f5f5f5}
+.btn-map{flex:2;height:44px;border-radius:10px;border:none;background:var(--yellow);color:var(--navy);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
 .btn-map:active{background:#E8B800}
 
 /* 하단 네비 */
@@ -78,70 +73,75 @@ button,select{font-family:inherit}
   <a href="https://akkome.com/order/cart.html" target="_blank">🛒</a>
 </header>
 
-<div class="hero-img"><img src="../images/3.체험장/체험장1.jpg" alt="제주 감귤체험"></div>
+<!-- 히어로 이미지 -->
+<div class="hero-img"><img src="../images/3.체험장/체험장1.jpg" alt="감귤체험"></div>
 
-<div class="exp-info">
-  <h1>제주 감귤체험</h1>
-  <p class="desc">직접 따서 먹는 제주 감귤! 온 가족이 함께하는 특별한 제주 추억</p>
-  <span class="exp-badge">시즌: 11월 초 ~ 1월 초</span>
-</div>
-
-<div class="photo-grid">
-  <img src="../images/3.체험장/체험장1.jpg" alt="체험장 사진 1">
-  <img src="../images/3.체험장/체험장2.jpg" alt="체험장 사진 2">
-  <img src="../images/3.체험장/체험장3.jpg" alt="체험장 사진 3">
-  <img src="../images/3.체험장/체험장4.jpg" alt="체험장 사진 4">
-</div>
-
-<div class="exp-features">
-  <div class="feature-item">
-    <div class="feature-icon">🍊</div>
-    <div class="feature-text">
-      <div class="ft-title">직접 따는 감귤 체험</div>
-      <div class="ft-desc">수확한 감귤은 현장에서 바로 맛볼 수 있어요</div>
+<!-- 체험 소개 -->
+<section class="exp-intro">
+  <h1>제주 감귤밭에서 직접 따먹어요 🍊</h1>
+  <span class="season-badge">⚠️ 11월 초 ~ 1월 초 한정 운영</span>
+  <div class="feature-list">
+    <div class="feature-item">
+      <div class="feature-icon">🍊</div>
+      <div class="feature-text">
+        <div class="ft-title">직접 따는 감귤 체험</div>
+        <div class="ft-desc">직접 수확한 감귤은 현장에서 바로 맛볼 수 있어요</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">📸</div>
+      <div class="feature-text">
+        <div class="ft-title">인생샷 포토존</div>
+        <div class="ft-desc">귤밭 속 예쁜 포토존에서 특별한 추억을 남기세요</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">👨‍👩‍👧‍👦</div>
+      <div class="feature-text">
+        <div class="ft-title">가족 단체 체험 가능</div>
+        <div class="ft-desc">어린이부터 어르신까지 온 가족이 함께</div>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">🎁</div>
+      <div class="feature-text">
+        <div class="ft-title">VIP 고객 무료 1인</div>
+        <div class="ft-desc">스토어 단골 고객님께 감귤체험 무료 제공</div>
+      </div>
     </div>
   </div>
-  <div class="feature-item">
-    <div class="feature-icon">📸</div>
-    <div class="feature-text">
-      <div class="ft-title">인생샷 포토존</div>
-      <div class="ft-desc">귤밭 속 예쁜 포토존에서 특별한 추억을 남기세요</div>
-    </div>
-  </div>
-</div>
+</section>
 
-<div class="info-grid">
-  <div class="info-card highlight">
-    <div class="ic-icon">📞</div>
-    <div class="ic-label">예약 문의</div>
-    <div class="ic-value">064-805-9181</div>
+<!-- 체험 사진 갤러리 -->
+<section class="gallery">
+  <div class="gallery-grid">
+    <div class="gal-item"><img src="../images/3.체험장/체험장1.jpg" alt="체험장1"></div>
+    <div class="gal-item"><img src="../images/3.체험장/체험장2.jpg" alt="체험장2"></div>
+    <div class="gal-item"><img src="../images/3.체험장/체험장3.jpg" alt="체험장3"></div>
+    <div class="gal-item"><img src="../images/3.체험장/체험장4.jpg" alt="체험장4"></div>
   </div>
-  <div class="info-card">
-    <div class="ic-icon">📍</div>
-    <div class="ic-label">위치</div>
-    <div class="ic-value">제주시 연삼로 1066-31</div>
-  </div>
-  <div class="info-card">
-    <div class="ic-icon">🕐</div>
-    <div class="ic-label">시즌</div>
-    <div class="ic-value">11월 초 ~ 1월 초</div>
-  </div>
-  <div class="info-card">
-    <div class="ic-icon">🎫</div>
-    <div class="ic-label">체험비</div>
-    <div class="ic-value">전화문의</div>
-  </div>
-</div>
+</section>
 
+<!-- 예약 안내 -->
+<section class="reservation">
+  <h2>예약 안내</h2>
+  <div class="res-row"><span class="rl">📍 위치</span><span class="rv">제주시 연삼로 1066-31</span></div>
+  <div class="res-row"><span class="rl">🕐 시즌</span><span class="rv">11월 초 ~ 1월 초</span></div>
+  <div class="res-row"><span class="rl">💰 체험비</span><span class="rv">문의 후 안내</span></div>
+  <div class="res-row"><span class="rl">🅿️ 주차</span><span class="rv">무료 주차 가능</span></div>
+</section>
+
+<!-- 하단 고정 버튼 -->
 <div class="pd-action">
   <a href="tel:0648059181" style="flex:1;display:flex"><button class="btn-call" style="width:100%">📞 전화 예약</button></a>
-  <a href="https://map.kakao.com/link/to/제주아꼼이네,33.4996,126.5312" target="_blank" style="flex:1;display:flex"><button class="btn-map" style="width:100%">🗺 카카오맵 길찾기</button></a>
+  <a href="https://map.kakao.com/?q=제주아꼼이네" target="_blank" style="flex:2;display:flex"><button class="btn-map" style="width:100%">📍 카카오맵 길찾기</button></a>
 </div>
 
+<!-- 하단 네비 -->
 <nav class="bottom-nav">
   <a href="../index.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"/></svg><span>홈</span></a>
-  <a href="https://akkome.com/product/list.html?cate_no=42" target="_blank" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><span>상품</span></a>
-  <a href="../index.html#experience" class="bnav-item active"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5.25 10 13 10 13s10-7.75 10-13c0-4-4.48-8-10-8z" stroke-linejoin="round"/><path d="M12 6c-1 0-3 1.5-3 4s2 4 3 4 3-1.5 3-4-2-4-3-4z"/></svg><span>체험</span></a>
+  <a href="list.html" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><span>상품</span></a>
+  <a href="experience.html" class="bnav-item active"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5.25 10 13 10 13s10-7.75 10-13c0-4-4.48-8-10-8z" stroke-linejoin="round"/><path d="M12 6c-1 0-3 1.5-3 4s2 4 3 4 3-1.5 3-4-2-4-3-4z"/></svg><span>체험</span></a>
   <a href="../index.html#reviews" class="bnav-item"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>후기</span></a>
   <a href="https://akkome.com/order/cart.html" target="_blank" class="bnav-item"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span>장바구니</span></a>
 </nav>
