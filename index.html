@@ -25,23 +25,23 @@ var RANKING = [
   { rank: 3, medal: '🥉', name: '비가림 감귤', desc: '고당도 믿고 먹는 맛', link: 'https://akkome.com/product/제주-비가림-감귤/33/' }
 ];
 
-/* ── 상품 목록 (2열 그리드) ── */
+/* ── 상품 목록 (JS 변수 관리 — 여기만 수정하면 됩니다) ── */
 var PRODUCTS = [
-  { name:'하우스 감귤', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'32,800원', discount:'', buyers:3842, badge:'무료배송', link:'https://akkome.com/product/제주-비가림-감귤/33/', img:'images/2.썸네일/하우스감귤.jpg', emoji:'🍊' },
-  { name:'꼬마 한라봉', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'24,000원', discount:'', buyers:2891, badge:'무료배송', link:'https://akkome.com/product/제주-꼬마한라봉/37/', img:'images/2.썸네일/꼬마한라봉.jpg', emoji:'🍊' },
-  { name:'제주 천혜향', farmDesc:'아꼼이네 직접 재배', orgPrice:'160,000원', salePrice:'32,500원', discount:'80%', buyers:2156, badge:'무료배송', link:'https://akkome.com/product/제주-천혜향/32/', img:'images/2.썸네일/천혜향.jpg', emoji:'🍋' },
-  { name:'비가림 감귤', farmDesc:'아꼼이네 직접 재배', orgPrice:'93,800원', salePrice:'32,800원', discount:'65%', buyers:1947, badge:'무료배송', link:'https://akkome.com/product/제주-비가림-감귤/33/', img:'images/2.썸네일/비가림감귤.jpg', emoji:'🟠' },
-  { name:'제주 한라봉', farmDesc:'아꼼이네 직접 재배', orgPrice:'122,500원', salePrice:'24,000원', discount:'80%', buyers:1823, badge:'무료배송', link:'https://akkome.com/product/제주-한라봉/29/', img:'images/2.썸네일/한라봉.jpg', emoji:'🍊' },
-  { name:'제주 레몬', farmDesc:'왁스코팅 NO! 청담그기 최고', orgPrice:'94,000원', salePrice:'33,000원', discount:'65%', buyers:1523, badge:'무료배송', link:'https://akkome.com/product/제주-레몬/24/', img:'images/2.썸네일/레몬.jpg', emoji:'🍋' },
-  { name:'제주 수라향', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'42,800원', discount:'', buyers:987, badge:'무료배송', link:'https://akkome.com/product/제주-수라향/35/', img:'images/2.썸네일/수라향.jpg', emoji:'🫐' },
-  { name:'제주 카라향', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'28,800원', discount:'', buyers:1847, badge:'무료배송', link:'https://akkome.com/product/제주-카라향/39/', img:'images/2.썸네일/카라향.jpg', emoji:'🍊' },
-  { name:'제주 청귤', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'13,800원', discount:'', buyers:834, badge:'무료배송', link:'https://akkome.com/product/제주-비가림-감귤/33/', img:'images/2.썸네일/청귤.jpg', emoji:'🍊' },
-  { name:'타이벡 감귤', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'32,800원', discount:'', buyers:762, badge:'무료배송', link:'https://akkome.com/product/제주-비가림-감귤/33/', img:'images/2.썸네일/타이벡감귤.jpg', emoji:'🍊' },
-  { name:'제주 자몽', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'34,800원', discount:'', buyers:634, badge:'무료배송', link:'https://akkome.com/product/제주-자몽/83/', img:'images/2.썸네일/자몽.jpg', emoji:'🍊' },
-  { name:'제주 하귤', farmDesc:'청 담가먹기에 딱!', orgPrice:'86,400원', salePrice:'24,800원', discount:'71%', buyers:531, badge:'무료배송', link:'https://akkome.com/product/제주-하귤/54/', img:'images/2.썸네일/하귤.jpg', emoji:'🍊' },
-  { name:'제주 황금향', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'35,800원', discount:'', buyers:423, badge:'무료배송', link:'https://akkome.com/product/제주-카라향/39/', img:'images/2.썸네일/황금향.jpg', emoji:'🍊' },
-  { name:'초당옥수수', farmDesc:'제주 신선 채소', orgPrice:'', salePrice:'19,800원', discount:'', buyers:312, badge:'무료배송', link:'https://akkome.com/product/list.html?cate_no=30', img:'images/2.썸네일/초당옥수수.jpg', emoji:'🌽' },
-  { name:'산하홍', farmDesc:'아꼼이네 직접 재배', orgPrice:'', salePrice:'38,800원', discount:'', buyers:287, badge:'무료배송', link:'https://akkome.com/product/list.html?cate_no=29', img:'images/2.썸네일/산하홍.jpg', emoji:'🍊' }
+  { name:'제주 꼬마 한라봉', desc:'제주 직접 재배 · 당도보장', price:'34,800', originalPrice:'60,000', discount:'42', badge:'지금절정', img:'images/2.썸네일/꼬마한라봉.jpg', link:'https://akkome.com/product/제주-꼬마한라봉/37/', soldOut:false },
+  { name:'제주 천혜향', desc:'과즙 터지는 달콤함', price:'32,500', originalPrice:'160,000', discount:'80', badge:'지금절정', img:'images/2.썸네일/천혜향.jpg', link:'https://akkome.com/product/제주-천혜향/32/', soldOut:false },
+  { name:'제주 비가림 감귤', desc:'고당도 믿고 먹는 맛', price:'32,800', originalPrice:'93,800', discount:'65', badge:'인기', img:'images/2.썸네일/비가림감귤.jpg', link:'https://akkome.com/product/제주-비가림-감귤/33/', soldOut:false },
+  { name:'제주 한라봉', desc:'진한 향과 달콤함', price:'24,000', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/한라봉.jpg', link:'https://akkome.com/product/제주-한라봉/29/', soldOut:false },
+  { name:'제주 레몬', desc:'제주산 싱그러운 레몬', price:'33,000', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/레몬.jpg', link:'https://akkome.com/product/제주-레몬/24/', soldOut:false },
+  { name:'제주 수라향', desc:'입안에서 살살 녹는 식감', price:'42,800', originalPrice:'', discount:'', badge:'프리미엄', img:'images/2.썸네일/수라향.jpg', link:'https://akkome.com/product/제주-수라향/35/', soldOut:false },
+  { name:'제주 카라향', desc:'진짜 맛있는 만감류', price:'28,800', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/카라향.jpg', link:'https://akkome.com/product/제주-카라향/39/', soldOut:false },
+  { name:'제주 타이벡 감귤', desc:'달콤 끝판왕', price:'26,900', originalPrice:'118,000', discount:'77', badge:'특가', img:'images/2.썸네일/타이벡감귤.jpg', link:'https://akkome.com/product/제주-비가림-감귤/33/', soldOut:false },
+  { name:'제주 자몽', desc:'새콤달콤 과육이 살아있어요', price:'34,800', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/자몽.jpg', link:'https://akkome.com/product/제주-자몽/83/', soldOut:false },
+  { name:'제주 하귤', desc:'청 담가먹기에 딱 좋아요', price:'24,800', originalPrice:'86,400', discount:'71', badge:'', img:'images/2.썸네일/하귤.jpg', link:'https://akkome.com/product/제주-하귤/54/', soldOut:false },
+  { name:'제주 감귤', desc:'새콤달콤 제주 감귤', price:'20,500', originalPrice:'118,000', discount:'83', badge:'', img:'images/2.썸네일/감귤.jpg', link:'https://akkome.com/product/list.html?cate_no=23', soldOut:false },
+  { name:'제주 하우스 감귤', desc:'하우스 재배 고당도 감귤', price:'32,800', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/하우스감귤.jpg', link:'https://akkome.com/product/list.html?cate_no=23', soldOut:false },
+  { name:'제주 청귤', desc:'청귤 특유의 상큼함', price:'19,800', originalPrice:'89,300', discount:'78', badge:'', img:'images/2.썸네일/청귤.jpg', link:'https://akkome.com/product/list.html?cate_no=23', soldOut:true },
+  { name:'초당 옥수수', desc:'달콤한 제주 초당옥수수', price:'29,800', originalPrice:'', discount:'', badge:'', img:'images/2.썸네일/초당옥수수.jpg', link:'https://akkome.com/product/list.html?cate_no=30', soldOut:true },
+  { name:'감귤 체험농장', desc:'11월~1월 시즌 운영', price:'12,000', originalPrice:'28,000', discount:'57', badge:'시즌한정', img:'images/3.체험장/체험장1.jpg', link:'https://akkome.com/product/제주-감귤-체험-농장/47/', soldOut:true }
 ];
 
 /* ── 숏클립 영상 섹션 (mp4 자동재생) ── */
@@ -297,7 +297,11 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
   position:absolute;top:8px;left:8px;font-size:10px;font-weight:700;
   padding:3px 8px;border-radius:8px;background:var(--yellow);color:var(--navy);z-index:2
 }
-.prod-thumb .prod-badge.gift{background:var(--red);color:#fff}
+.prod-thumb .prod-badge.b-hot{background:var(--red);color:#fff}
+.prod-thumb .prod-badge.b-sale{background:var(--yellow);color:var(--navy)}
+.prod-thumb .prod-badge.b-best{background:var(--green);color:#fff}
+.prod-thumb .prod-badge.b-premium{background:var(--navy);color:#fff}
+.prod-thumb .prod-badge.b-season{background:var(--orange);color:#fff}
 .prod-info{padding:10px 2px}
 .prod-farm{font-size:10px;color:var(--text-light);margin-bottom:3px}
 .prod-name{font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;line-height:1.3}
@@ -607,6 +611,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     <a href="https://akkome.com/product/list.html?cate_no=42" target="_blank">전체보기 ›</a>
   </div>
   <div class="prod-grid" id="prodGrid"></div>
+  <div class="prod-more-wrap" id="prodMoreWrap" style="text-align:center;margin-top:16px">
+    <button id="prodMoreBtn" style="display:inline-block;padding:10px 28px;border-radius:24px;border:1px solid #eee;font-size:13px;font-weight:600;color:var(--navy);background:#fff;cursor:pointer">상품 더보기 ▼</button>
+  </div>
 </section>
 
 <!-- ═══ 숏클립 영상 ═══ -->
@@ -824,27 +831,42 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   rl.innerHTML=rh;
 
   /* ── 상품 그리드 렌더 ── */
-  var pg=document.getElementById('prodGrid'),ph='';
-  PRODUCTS.forEach(function(p){
-    var thumb=p.img
-      ?'<img src="'+p.img+'" alt="'+p.name+'" loading="lazy">'
-      :'<div class="placeholder">'+p.emoji+'</div>';
-    var badge=p.badge
-      ?'<span class="prod-badge'+(p.badge==='선물용'?' gift':'')+'">'+p.badge+'</span>':'';
-    var org=p.orgPrice?'<span class="prod-org-price">'+p.orgPrice+'</span>':'';
-    var disc=p.discount?'<span class="prod-discount">'+p.discount+'</span>':'';
-    ph+='<a href="'+p.link+'" target="_blank" class="prod-card">'
-      +'<div class="prod-thumb">'+thumb+badge+'</div>'
-      +'<div class="prod-info">'
-      +'<div class="prod-farm">'+p.farmDesc+'</div>'
-      +'<div class="prod-name">'+p.name+'</div>'
-      +'<div class="prod-price-row">'+disc+'<span class="prod-sale-price">'+p.salePrice+'</span>'+org+'</div>'
-      +'<div class="prod-meta">'
-      +'<span class="prod-buyers">'+p.buyers.toLocaleString()+'개 구매중</span>'
-      +'<span class="prod-free-ship">'+p.badge+'</span>'
-      +'</div></div></a>';
+  var pg=document.getElementById('prodGrid');
+  var visibleProducts=PRODUCTS.filter(function(p){return !p.soldOut;});
+  var showCount=8;
+  function badgeClass(b){
+    if(b==='지금절정')return ' b-hot';
+    if(b==='특가')return ' b-sale';
+    if(b==='인기')return ' b-best';
+    if(b==='프리미엄')return ' b-premium';
+    if(b==='시즌한정')return ' b-season';
+    return '';
+  }
+  function renderProducts(count){
+    var ph='';
+    var items=visibleProducts.slice(0,count);
+    items.forEach(function(p){
+      var badge=p.badge?'<span class="prod-badge'+badgeClass(p.badge)+'">'+p.badge+'</span>':'';
+      var org=p.originalPrice?'<span class="prod-org-price">'+p.originalPrice+'원</span>':'';
+      var disc=p.discount?'<span class="prod-discount">'+p.discount+'%</span>':'';
+      ph+='<a href="'+p.link+'" target="_blank" class="prod-card">'
+        +'<div class="prod-thumb"><img src="'+p.img+'" alt="'+p.name+'" loading="lazy">'+badge+'</div>'
+        +'<div class="prod-info">'
+        +'<div class="prod-farm">'+p.desc+'</div>'
+        +'<div class="prod-name">'+p.name+'</div>'
+        +'<div class="prod-price-row">'+disc+'<span class="prod-sale-price">'+p.price+'원</span>'+org+'</div>'
+        +'<div class="prod-meta">'
+        +'<span class="prod-free-ship">무료배송</span>'
+        +'</div></div></a>';
+    });
+    pg.innerHTML=ph;
+    var moreWrap=document.getElementById('prodMoreWrap');
+    if(count>=visibleProducts.length) moreWrap.innerHTML='<a href="https://akkome.com/product/list.html?cate_no=42" target="_blank" style="display:inline-block;padding:10px 28px;border-radius:24px;border:1px solid #eee;font-size:13px;font-weight:600;color:var(--navy)">전체보기 →</a>';
+  }
+  renderProducts(showCount);
+  document.getElementById('prodMoreBtn').addEventListener('click',function(){
+    renderProducts(visibleProducts.length);
   });
-  pg.innerHTML=ph;
 
   /* ── 숏클립 렌더 (mp4 자동재생) ── */
   var cg=document.getElementById('clipsGrid'),ch='';
