@@ -1112,7 +1112,18 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   });
   cg.innerHTML=ch;
 
-  /* ── 비디오 lazy load 제거 (autoplay로 직접 재생) ── */
+  /* ── 숏클립 영상 재생 (IntersectionObserver로 화면 진입시 play) ── */
+  var clipObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      var v=e.target;
+      if(e.isIntersecting){v.play().catch(function(){});}
+      else{v.pause();}
+    });
+  },{rootMargin:'100px'});
+  document.querySelectorAll('.clip-video-wrap video').forEach(function(v){
+    v.play().catch(function(){});
+    clipObs.observe(v);
+  });
 
   /* ── 하단 네비 활성 ── */
   var navItems=document.querySelectorAll('.bnav-item[data-target]');
