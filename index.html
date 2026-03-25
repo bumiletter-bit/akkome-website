@@ -83,7 +83,7 @@ var SHORTCLIPS = [
 
 /* ── 스토어 통계 (대표님이 주기적으로 업데이트) ── */
 var STORE_STATS = {
-  followers: 187198,
+  followers: 187841,
   reviewCount: 1247,
   reviews: [
     5, 5, 5, 5, 4, 5, 5, 5, 4, 5,
@@ -445,9 +445,9 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .rev-stat{
   background:#fff;border-radius:16px;border:1px solid #eee;
   box-shadow:0 4px 16px rgba(0,0,0,.06);
-  padding:20px 16px;text-align:center;
+  padding:20px;text-align:center;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:120px
+  height:130px
 }
 .rev-stat .stars-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:8px}
 .rev-stat .stars-row svg{width:16px;height:16px}
@@ -455,13 +455,15 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 /* 플립 시계 */
 .flip-card{display:inline-flex;align-items:center;gap:2px;justify-content:center}
 .flip-digit{
-  position:relative;width:36px;height:52px;
+  position:relative;width:32px;height:46px;
   background:var(--navy);border-radius:6px;color:#fff;
-  font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;
+  font-family:'Montserrat',sans-serif;font-size:26px;font-weight:700;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 8px rgba(0,0,0,.2);overflow:hidden;
   perspective:200px
 }
+.flip-card.sm .flip-digit{width:26px;height:40px;font-size:22px}
+.flip-card.sm .flip-sep{font-size:20px}
 .flip-digit::after{
   content:'';position:absolute;left:0;right:0;top:50%;
   height:1px;background:rgba(0,0,0,.3)
@@ -471,9 +473,10 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
   font-size:24px;font-weight:700;align-self:center;padding:0 1px
 }
 @keyframes flipDown{
-  0%{transform:rotateX(0)}
-  50%{transform:rotateX(-90deg)}
-  100%{transform:rotateX(0)}
+  0%{transform:rotateX(0);opacity:1}
+  50%{transform:rotateX(-90deg);opacity:0}
+  51%{transform:rotateX(90deg);opacity:0}
+  100%{transform:rotateX(0);opacity:1}
 }
 .flipping{animation:flipDown .4s ease-in-out}
 .rev-scroll{
@@ -526,11 +529,11 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
    FLOATING + BOTTOM NAV
    ══════════════════════════════ */
 .float-btns{
-  position:fixed;right:16px;bottom:90px;z-index:999;
+  position:fixed;right:12px;bottom:90px;z-index:999;
   display:flex;flex-direction:column;gap:12px
 }
 .float-btn{
-  width:48px;height:48px;border-radius:50%;border:none;
+  width:44px;height:44px;border-radius:50%;border:none;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:all .3s ease
 }
@@ -538,7 +541,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 .float-btn:active{transform:scale(.95)}
 .float-btn.top{background:#fff;border:1px solid #eee;box-shadow:0 2px 8px rgba(0,0,0,.15);display:none}
 .float-btn.chat{background:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.float-btn.top svg,.float-btn.chat svg{width:22px;height:22px}
+.float-btn.top svg,.float-btn.chat svg{width:20px;height:20px}
 .float-btn.top svg{stroke:var(--navy);fill:none;stroke-width:2}
 .float-btn.chat svg{fill:#fff}
 /* 채팅 팝업 */
@@ -599,7 +602,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 @media(min-width:768px){
   body{max-width:480px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,.08)}
   .notice-bar,.top-header,.cat-tab-bar,.bottom-nav{max-width:480px;left:50%;transform:translateX(-50%)}
-  .float-btns{right:calc(50% - 240px + 16px)}
+  .float-btns{right:calc(50% - 240px + 12px)}
   .chat-popup{right:calc(50% - 240px + 16px)}
 }
 </style>
@@ -782,7 +785,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       <div class="l">평균 평점</div>
     </div>
     <div class="rev-stat">
-      <div class="flip-card" id="flipFollowers"></div>
+      <div class="flip-card sm" id="flipFollowers"></div>
       <div class="l">관심 고객</div>
     </div>
   </div>
@@ -970,30 +973,52 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   document.getElementById('starsRow').innerHTML=starSvg+starSvg+starSvg+starSvg+starSvg;
 
   /* ── 플립 카드 빌드 ── */
-  function buildFlip(containerId,text){
+  function buildFlip(containerId,text,digitClass){
     var el=document.getElementById(containerId);el.innerHTML='';
     for(var i=0;i<text.length;i++){
       var ch=text[i];
       if(ch>='0'&&ch<='9'){
-        var d=document.createElement('div');d.className='flip-digit';d.textContent=ch;
-        el.appendChild(d);
+        var d=document.createElement('div');d.className='flip-digit';
+        if(digitClass)d.classList.add(digitClass);
+        d.textContent=ch;el.appendChild(d);
       }else{
         var s=document.createElement('span');s.className='flip-sep';s.textContent=ch;
         el.appendChild(s);
       }
     }
   }
-  var followersStr=STORE_STATS.followers.toLocaleString();
+  var followersBase=187841;
+  var followersStr=followersBase.toLocaleString();
   buildFlip('flipRating',avgRating);
-  buildFlip('flipFollowers',followersStr);
+  buildFlip('flipFollowers',followersStr,'follower-digit');
 
-  /* ── 3초마다 플립 애니메이션 ── */
+  /* ── 3초마다 뒷자리만 플립 ── */
+  var ratingLast=3;
   setInterval(function(){
-    document.querySelectorAll('.flip-digit').forEach(function(el,i){
+    ratingLast=ratingLast%9+1;
+    var digits=document.querySelectorAll('#flipRating .flip-digit');
+    var lastEl=digits[digits.length-1];
+    lastEl.classList.add('flipping');
+    setTimeout(function(){lastEl.textContent=ratingLast;lastEl.classList.remove('flipping');},200);
+  },3000);
+
+  var fOffset=0;
+  setInterval(function(){
+    fOffset=(fOffset+1)%10;
+    var val=followersBase+fOffset;
+    var chars=val.toLocaleString().split('');
+    var allDigits=document.querySelectorAll('#flipFollowers .flip-digit');
+    var len=allDigits.length;
+    [allDigits[len-1],allDigits[len-2]].forEach(function(el,i){
+      if(!el)return;
       setTimeout(function(){
         el.classList.add('flipping');
-        setTimeout(function(){el.classList.remove('flipping');},400);
-      },i*50);
+        var digitChars=[];
+        chars.forEach(function(c){if(c>='0'&&c<='9')digitChars.push(c);});
+        var dLen=digitChars.length;
+        var newVal=digitChars[dLen-(i===0?1:2)];
+        setTimeout(function(){el.textContent=newVal;el.classList.remove('flipping');},200);
+      },i*100);
     });
   },3000);
 
