@@ -278,16 +278,17 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
    ══════════════════════════════ */
 .countdown-bar{
   background:var(--navy);padding:8px 16px;
-  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:nowrap;
+  white-space:nowrap;width:100%;font-size:clamp(11px,3vw,14px);box-sizing:border-box
 }
-.countdown-bar .label{font-size:11px;color:rgba(255,255,255,.7)}
+.countdown-bar .label{font-size:clamp(10px,2.5vw,11px);color:rgba(255,255,255,.7);white-space:nowrap;flex-shrink:0}
 .countdown-bar .timer{
-  display:flex;align-items:center;gap:3px;
-  font-family:'Montserrat',sans-serif;font-weight:700;font-size:16px;color:var(--yellow)
+  display:flex;align-items:center;gap:3px;flex-shrink:0;
+  font-family:'Montserrat',sans-serif;font-weight:700;font-size:clamp(13px,3.5vw,16px);color:var(--yellow)
 }
 .countdown-bar .timer .sep{font-size:12px;opacity:.5;color:#fff}
-.countdown-bar .emoji{font-size:13px}
-.countdown-bar .msg{font-size:10px;color:var(--yellow);font-weight:700}
+.countdown-bar .emoji{font-size:13px;flex-shrink:0}
+.countdown-bar .msg{font-size:clamp(9px,2.2vw,10px);color:var(--yellow);font-weight:700;white-space:nowrap;flex-shrink:0}
 
 /* ── 카운트다운 아래 배경 ── */
 .reviews-sec{padding:40px 16px;background:var(--off-white)}
@@ -623,9 +624,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <div class="notice-bar" id="noticeBar">
   <div class="notice-track">
     <div class="notice-marquee" id="noticeMarquee">
-      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🎁 꼭 가입하고 구매하세요! <em>간편가입 시 1만원 상당 쿠폰백 증정</em> + 구매금액 <em>1% 적립혜택</em>까지!</a></span>
-      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🎁 꼭 가입하고 구매하세요! <em>간편가입 시 1만원 상당 쿠폰백 증정</em> + 구매금액 <em>1% 적립혜택</em>까지!</a></span>
-      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🎁 꼭 가입하고 구매하세요! <em>간편가입 시 1만원 상당 쿠폰백 증정</em> + 구매금액 <em>1% 적립혜택</em>까지!</a></span>
+      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🎁 꼭 가입하고 구매하세요! <em>간편가입 시 1만원 상당 쿠폰팩 증정</em> + 구매금액 <em>1% 적립혜택</em>까지!</a></span>
+      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🎁 꼭 가입하고 구매하세요! <em>간편가입 시 1만원 상당 쿠폰팩 증정</em> + 구매금액 <em>1% 적립혜택</em>까지!</a></span>
+      <span><a href="https://akkome.com/member/join.html" target="_blank" style="color:inherit">🎁 꼭 가입하고 구매하세요! <em>간편가입 시 1만원 상당 쿠폰팩 증정</em> + 구매금액 <em>1% 적립혜택</em>까지!</a></span>
     </div>
   </div>
   <button class="notice-close" id="noticeClose"><i class="xi-close"></i></button>
@@ -1072,14 +1073,12 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     var items=visibleProducts.slice(0,count);
     items.forEach(function(p){
       var badge=p.badge?'<span class="prod-badge'+badgeClass(p.badge)+'">'+p.badge+'</span>':'';
-      var org=p.originalPrice?'<span class="prod-org-price">'+p.originalPrice+'원</span>':'';
-      var disc=p.discount?'<span class="prod-discount">'+p.discount+'%</span>':'';
       ph+='<a href="'+p.link+'" class="prod-card">'
         +'<div class="prod-thumb"><img src="'+p.img+'" alt="'+p.name+'" loading="lazy">'+badge+'</div>'
         +'<div class="prod-info">'
         +'<div class="prod-farm">'+p.desc+'</div>'
         +'<div class="prod-name">'+p.name+'</div>'
-        +'<div class="prod-price-row">'+disc+'<span class="prod-sale-price">'+p.price+'원</span>'+org+'</div>'
+        +'<div class="prod-price-row"><span class="prod-sale-price">'+p.price+'원</span></div>'
         +'<div class="prod-meta">'
         +'<span class="prod-free-ship">무료배송</span>'
         +'</div></div></a>';
@@ -1106,9 +1105,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       +'<div class="ci-farm">'+c.farm+'</div>'
       +'<div class="ci-name">'+c.prodName+'</div>'
       +'<div class="ci-price-row">'
-      +'<span class="ci-discount">'+c.discount+'</span>'
       +'<span class="ci-sale">'+c.salePrice+'</span>'
-      +'<span class="ci-org">'+c.orgPrice+'</span>'
       +'</div>'
       +'<span class="ci-badge">무료배송</span>'
       +'</div></a>';

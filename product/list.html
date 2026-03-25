@@ -150,10 +150,8 @@ function renderProducts() {
     html += '<div class="card-desc">' + p.desc + '</div>';
     html += '<div class="card-name">' + p.name + '</div>';
     html += '<div class="card-price-row">';
-    if (p.disc) html += '<span class="card-disc">' + p.disc + '%</span>';
     html += '<span class="card-price">' + p.price + '원</span>';
     html += '</div>';
-    if (p.org) html += '<div class="card-org">' + p.org + '원</div>';
     html += '<span class="card-ship">무료배송</span>';
     html += '</div></a></div>';
   }
