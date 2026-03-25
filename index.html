@@ -453,32 +453,29 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .rev-stat .stars-row svg{width:16px;height:16px}
 .rev-stat .l{font-size:12px;color:#888;margin-top:8px}
 /* 플립 시계 */
-.flip-card{display:inline-flex;align-items:center;gap:2px;justify-content:center}
+.flip-card{display:inline-flex;align-items:center;gap:2px;justify-content:center;overflow:hidden}
 .flip-digit{
-  position:relative;width:32px;height:46px;
+  position:relative;width:28px;height:40px;
   background:var(--navy);border-radius:6px;color:#fff;
-  font-family:'Montserrat',sans-serif;font-size:26px;font-weight:700;
+  font-family:'Montserrat',sans-serif;font-size:22px;font-weight:700;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 8px rgba(0,0,0,.2);overflow:hidden;
-  perspective:200px
+  box-shadow:0 4px 8px rgba(0,0,0,.2);overflow:hidden
 }
-.flip-card.sm .flip-digit{width:26px;height:40px;font-size:22px}
-.flip-card.sm .flip-sep{font-size:20px}
 .flip-digit::after{
   content:'';position:absolute;left:0;right:0;top:50%;
   height:1px;background:rgba(0,0,0,.3)
 }
 .flip-sep{
   color:var(--navy);font-family:'Montserrat',sans-serif;
-  font-size:24px;font-weight:700;align-self:center;padding:0 1px
+  font-size:20px;font-weight:700;align-self:center;padding:0 1px
 }
-@keyframes flipDown{
-  0%{transform:rotateX(0);opacity:1}
-  50%{transform:rotateX(-90deg);opacity:0}
-  51%{transform:rotateX(90deg);opacity:0}
-  100%{transform:rotateX(0);opacity:1}
+@keyframes flipSlide{
+  0%{transform:translateY(0);opacity:1}
+  40%{transform:translateY(-100%);opacity:0}
+  41%{transform:translateY(100%);opacity:0}
+  100%{transform:translateY(0);opacity:1}
 }
-.flipping{animation:flipDown .4s ease-in-out}
+.flipping{animation:flipSlide .5s cubic-bezier(.23,1,.32,1)}
 .rev-scroll{
   display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;padding-bottom:8px
@@ -785,7 +782,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       <div class="l">평균 평점</div>
     </div>
     <div class="rev-stat">
-      <div class="flip-card sm" id="flipFollowers"></div>
+      <div class="flip-card" id="flipFollowers"></div>
       <div class="l">관심 고객</div>
     </div>
   </div>
@@ -973,13 +970,12 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   document.getElementById('starsRow').innerHTML=starSvg+starSvg+starSvg+starSvg+starSvg;
 
   /* ── 플립 카드 빌드 ── */
-  function buildFlip(containerId,text,digitClass){
+  function buildFlip(containerId,text){
     var el=document.getElementById(containerId);el.innerHTML='';
     for(var i=0;i<text.length;i++){
       var ch=text[i];
       if(ch>='0'&&ch<='9'){
         var d=document.createElement('div');d.className='flip-digit';
-        if(digitClass)d.classList.add(digitClass);
         d.textContent=ch;el.appendChild(d);
       }else{
         var s=document.createElement('span');s.className='flip-sep';s.textContent=ch;
@@ -988,39 +984,45 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     }
   }
   var followersBase=187841;
-  var followersStr=followersBase.toLocaleString();
   buildFlip('flipRating',avgRating);
-  buildFlip('flipFollowers',followersStr,'follower-digit');
+  buildFlip('flipFollowers',followersBase.toLocaleString());
 
-  /* ── 3초마다 뒷자리만 플립 ── */
+  /* ── 비규칙 랜덤 애니메이션 ── */
+  function randomDelay(){return Math.floor(Math.random()*8000)+2000;}
+
   var ratingLast=3;
-  setInterval(function(){
+  function flipRating(){
     ratingLast=ratingLast%9+1;
     var digits=document.querySelectorAll('#flipRating .flip-digit');
-    var lastEl=digits[digits.length-1];
-    lastEl.classList.add('flipping');
-    setTimeout(function(){lastEl.textContent=ratingLast;lastEl.classList.remove('flipping');},200);
-  },3000);
+    var el=digits[digits.length-1];
+    if(!el){setTimeout(flipRating,randomDelay());return;}
+    el.classList.add('flipping');
+    setTimeout(function(){el.textContent=ratingLast;el.classList.remove('flipping');},300);
+    setTimeout(flipRating,randomDelay());
+  }
+  setTimeout(flipRating,randomDelay());
 
   var fOffset=0;
-  setInterval(function(){
+  function flipFollowers(){
     fOffset=(fOffset+1)%10;
     var val=followersBase+fOffset;
-    var chars=val.toLocaleString().split('');
-    var allDigits=document.querySelectorAll('#flipFollowers .flip-digit');
-    var len=allDigits.length;
-    [allDigits[len-1],allDigits[len-2]].forEach(function(el,i){
-      if(!el)return;
+    var valStr=String(val);
+    var digits=document.querySelectorAll('#flipFollowers .flip-digit');
+    var len=digits.length;
+    var lastEl=digits[len-1];
+    if(lastEl){
+      lastEl.classList.add('flipping');
+      setTimeout(function(){lastEl.textContent=valStr[valStr.length-1];lastEl.classList.remove('flipping');},300);
+    }
+    if(Math.random()<0.3&&digits[len-2]){
       setTimeout(function(){
-        el.classList.add('flipping');
-        var digitChars=[];
-        chars.forEach(function(c){if(c>='0'&&c<='9')digitChars.push(c);});
-        var dLen=digitChars.length;
-        var newVal=digitChars[dLen-(i===0?1:2)];
-        setTimeout(function(){el.textContent=newVal;el.classList.remove('flipping');},200);
-      },i*100);
-    });
-  },3000);
+        digits[len-2].classList.add('flipping');
+        setTimeout(function(){digits[len-2].textContent=valStr[valStr.length-2];digits[len-2].classList.remove('flipping');},300);
+      },150);
+    }
+    setTimeout(flipFollowers,randomDelay());
+  }
+  setTimeout(flipFollowers,randomDelay()+1000);
 
   /* ── 사장님 추천 랭킹 렌더 ── */
   var rl=document.getElementById('rankingList'),rh='';
