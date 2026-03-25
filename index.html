@@ -1097,7 +1097,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   SHORTCLIPS.forEach(function(c){
     ch+='<a href="'+c.productLink+'" class="clip-card">'
       +'<div class="clip-video-wrap">'
-      +'<video autoplay muted loop playsinline preload="metadata" src="'+c.videoSrc+'"></video>'
+      +'<video muted loop playsinline preload="none" poster="" data-src="'+c.videoSrc+'" style="background:#000"></video>'
       +'<div class="clip-overlay">'
       +'<div class="clip-title">'+c.title+'</div>'
       +'</div></div>'
@@ -1112,18 +1112,19 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   });
   cg.innerHTML=ch;
 
-  /* ── 숏클립 영상 재생 (IntersectionObserver로 화면 진입시 play) ── */
+  /* ── 숏클립 영상 lazy load + 재생 ── */
   var clipObs=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       var v=e.target;
-      if(e.isIntersecting){v.play().catch(function(){});}
-      else{v.pause();}
+      if(e.isIntersecting){
+        if(!v.src&&v.dataset.src){v.src=v.dataset.src;}
+        v.play().catch(function(){});
+      }else{
+        v.pause();
+      }
     });
-  },{rootMargin:'100px'});
-  document.querySelectorAll('.clip-video-wrap video').forEach(function(v){
-    v.play().catch(function(){});
-    clipObs.observe(v);
-  });
+  },{rootMargin:'300px'});
+  document.querySelectorAll('.clip-video-wrap video').forEach(function(v){clipObs.observe(v);});
 
   /* ── 하단 네비 활성 ── */
   var navItems=document.querySelectorAll('.bnav-item[data-target]');
