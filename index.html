@@ -786,8 +786,55 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   <div class="clips-header">
     <h2>🎬 아꼼이네 숏클립</h2>
   </div>
-  <div class="clips-scroll" id="clipsGrid">
-    <!-- JS로 렌더링 -->
+  <div class="clips-scroll">
+    <a href="product/hanrabong.html" class="clip-card">
+      <div class="clip-video-wrap">
+        <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_노지한라봉.mp4"></video>
+        <div class="clip-overlay"><div class="clip-title">제주 한라봉 수확 🍊</div></div>
+      </div>
+      <div class="clip-info">
+        <div class="ci-farm">제주아꼼이네 직접 재배</div>
+        <div class="ci-name">제주 한라봉</div>
+        <div class="ci-price-row"><span class="ci-sale">24,000원</span></div>
+        <span class="ci-badge">전국무료배송</span>
+      </div>
+    </a>
+    <a href="product/karahyang.html" class="clip-card">
+      <div class="clip-video-wrap">
+        <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_벚꽃카라향.mp4"></video>
+        <div class="clip-overlay"><div class="clip-title">벚꽃 속 카라향 🌸</div></div>
+      </div>
+      <div class="clip-info">
+        <div class="ci-farm">제주아꼼이네 직접 재배</div>
+        <div class="ci-name">제주 카라향</div>
+        <div class="ci-price-row"><span class="ci-sale">28,800원</span></div>
+        <span class="ci-badge">전국무료배송</span>
+      </div>
+    </a>
+    <a href="product/blood-orange.html" class="clip-card">
+      <div class="clip-video-wrap">
+        <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_블러드오렌지.mp4"></video>
+        <div class="clip-overlay"><div class="clip-title">블러드오렌지 이야기 🍊</div></div>
+      </div>
+      <div class="clip-info">
+        <div class="ci-farm">제주아꼼이네 직접 재배</div>
+        <div class="ci-name">제주 블러드오렌지</div>
+        <div class="ci-price-row"><span class="ci-sale">34,800원</span></div>
+        <span class="ci-badge">전국무료배송</span>
+      </div>
+    </a>
+    <a href="product/hagyul.html" class="clip-card">
+      <div class="clip-video-wrap">
+        <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_하귤양산형.mp4"></video>
+        <div class="clip-overlay"><div class="clip-title">하귤 양산 아래 ☀️</div></div>
+      </div>
+      <div class="clip-info">
+        <div class="ci-farm">제주아꼼이네 직접 재배</div>
+        <div class="ci-name">제주 하귤</div>
+        <div class="ci-price-row"><span class="ci-sale">24,800원</span></div>
+        <span class="ci-badge">전국무료배송</span>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -1148,44 +1195,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     renderProducts(visibleProducts.length);
   });
 
-  /* ── 숏클립 렌더 (mp4) ── */
-  var cg=document.getElementById('clipsGrid'),ch='';
-  SHORTCLIPS.forEach(function(c){
-    ch+='<a href="'+c.productLink+'" class="clip-card">'
-      +'<div class="clip-video-wrap">'
-      +'<video muted loop playsinline preload="none" data-video="'+c.videoSrc+'"></video>'
-      +'<div class="clip-overlay">'
-      +'<div class="clip-title">'+c.title+'</div>'
-      +'</div></div>'
-      +'<div class="clip-info">'
-      +'<div class="ci-farm">'+c.farm+'</div>'
-      +'<div class="ci-name">'+c.prodName+'</div>'
-      +'<div class="ci-price-row">'
-      +'<span class="ci-sale">'+c.salePrice+'</span>'
-      +'</div>'
-      +'<span class="ci-badge">전국무료배송</span>'
-      +'<span class="badge-exchange">무료교환반품</span>'
-      +'</div></a>';
-  });
-  cg.innerHTML=ch;
-
-  /* ── 숏클립 영상 lazy load + 재생 ── */
-  var clipVideos=document.querySelectorAll('.clip-video-wrap video[data-video]');
-  var clipObs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      var v=e.target;
-      if(e.isIntersecting){
-        if(!v.getAttribute('src')){
-          v.setAttribute('src',v.getAttribute('data-video'));
-          v.load();
-        }
-        v.play().catch(function(){});
-      }else{
-        v.pause();
-      }
-    });
-  },{rootMargin:'300px'});
-  clipVideos.forEach(function(v){clipObs.observe(v);});
+  /* ── 숏클립 영상 (HTML 하드코딩, JS 렌더링 제거) ── */
 
   /* ── 하단 네비 활성 ── */
   var navItems=document.querySelectorAll('.bnav-item[data-target]');
