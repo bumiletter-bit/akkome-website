@@ -905,7 +905,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   /* ── 배너 스와이프 (터치 + 마우스 드래그) ── */
   var track=document.getElementById('bannerTrack'),
       dots=document.getElementById('bannerDots').children,
-      cur=0,total=5,sx=0,df=0,drag=false,moved=false;
+      cur=0,total=8,sx=0,df=0,drag=false,moved=false;
   var slideW=100/total;
   function goTo(i){
     cur=((i%total)+total)%total;
