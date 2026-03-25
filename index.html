@@ -440,23 +440,42 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .reviews-header-top h2{font-family:'Noto Sans KR',sans-serif;font-size:17px;font-weight:900;color:var(--navy)}
 .reviews-header-top .update-time{font-size:10px;color:var(--text-mid);white-space:nowrap}
 .rev-stats{
-  background:#fff;border-radius:16px;margin:0 0 20px;
-  border:1px solid #F0F0F0;overflow:hidden;
-  box-shadow:0 4px 16px rgba(0,0,0,.06);
-  display:flex;align-items:stretch
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 20px
 }
-.rev-stat{flex:1;text-align:center;padding:20px 12px}
-.rev-stat+.rev-stat{border-left:1px solid #F0F0F0}
-.rev-stat .stars-row{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:2px}
-.rev-stat .stars-row svg{width:14px;height:14px}
-.rev-stat .n{font-family:'Montserrat',sans-serif;font-size:36px;font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:center;line-height:1;height:44px}
-.rev-stat .l{font-size:12px;color:#888;margin-top:6px}
-/* 오디미터 */
-.odo-wrap{display:inline-flex;align-items:center;height:44px}
-.odo-slot{display:inline-block;overflow:hidden;height:44px;line-height:44px;position:relative}
-.odo-inner{display:flex;flex-direction:column;transition:transform 1.5s cubic-bezier(.23,1,.32,1)}
-.odo-inner span{display:block;height:44px;line-height:44px;text-align:center;font-family:'Montserrat',sans-serif;font-size:36px;font-weight:700;color:var(--navy)}
-.odo-sep{display:inline-block;font-family:'Montserrat',sans-serif;font-size:36px;font-weight:700;color:var(--navy);line-height:44px;height:44px;width:auto}
+.rev-stat{
+  background:#fff;border-radius:16px;border:1px solid #eee;
+  box-shadow:0 4px 16px rgba(0,0,0,.06);
+  padding:20px 16px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:120px
+}
+.rev-stat .stars-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:8px}
+.rev-stat .stars-row svg{width:16px;height:16px}
+.rev-stat .l{font-size:12px;color:#888;margin-top:8px}
+/* 플립 시계 */
+.flip-card{display:inline-flex;align-items:center;gap:2px;justify-content:center}
+.flip-digit{
+  position:relative;width:36px;height:52px;
+  background:var(--navy);border-radius:6px;color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 8px rgba(0,0,0,.2);overflow:hidden;
+  perspective:200px
+}
+.flip-digit::after{
+  content:'';position:absolute;left:0;right:0;top:50%;
+  height:1px;background:rgba(0,0,0,.3)
+}
+.flip-sep{
+  color:var(--navy);font-family:'Montserrat',sans-serif;
+  font-size:24px;font-weight:700;align-self:center;padding:0 1px
+}
+@keyframes flipDown{
+  0%{transform:rotateX(0)}
+  50%{transform:rotateX(-90deg)}
+  100%{transform:rotateX(0)}
+}
+.flipping{animation:flipDown .4s ease-in-out}
 .rev-scroll{
   display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;padding-bottom:8px
@@ -759,11 +778,11 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   <div class="rev-stats" id="revStats">
     <div class="rev-stat">
       <div class="stars-row" id="starsRow"></div>
-      <div class="n"><div class="odo-wrap" id="odoRating"></div></div>
+      <div class="flip-card" id="flipRating"></div>
       <div class="l">평균 평점</div>
     </div>
     <div class="rev-stat">
-      <div class="n"><div class="odo-wrap" id="odoFollowers"></div></div>
+      <div class="flip-card" id="flipFollowers"></div>
       <div class="l">관심 고객</div>
     </div>
   </div>
@@ -943,67 +962,40 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   document.getElementById('updateTime').textContent=
     String(today.getMonth()+1).padStart(2,'0')+'.'+String(today.getDate()).padStart(2,'0')+' 09:00 업데이트';
 
-  /* ── 평균 평점 (소수점 2자리) ── */
-  var avgRating=(STORE_STATS.reviews.reduce(function(a,b){return a+b;},0)/STORE_STATS.reviews.length).toFixed(2);
+  /* ── 평균 평점 (고정값 4.83) ── */
+  var avgRating='4.83';
 
-  /* ── 별점 SVG 렌더 ── */
-  var starFull='<svg viewBox="0 0 24 24" fill="#F5C800" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-  var starHalf='<svg viewBox="0 0 24 24" stroke="none"><defs><linearGradient id="hg"><stop offset="50%" stop-color="#F5C800"/><stop offset="50%" stop-color="#DDD"/></linearGradient></defs><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#hg)"/></svg>';
-  var starEmpty='<svg viewBox="0 0 24 24" fill="#DDD" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-  var ratingNum=parseFloat(avgRating),starsHtml='';
-  for(var i=1;i<=5;i++){
-    if(ratingNum>=i)starsHtml+=starFull;
-    else if(ratingNum>=i-0.5)starsHtml+=starHalf;
-    else starsHtml+=starEmpty;
-  }
-  document.getElementById('starsRow').innerHTML=starsHtml;
+  /* ── 별점 SVG 렌더 (5개 채움) ── */
+  var starSvg='<svg viewBox="0 0 24 24" fill="#F5C800" stroke="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+  document.getElementById('starsRow').innerHTML=starSvg+starSvg+starSvg+starSvg+starSvg;
 
-  /* ── 오디미터 빌드 ── */
-  function buildOdometer(containerId,text){
-    var container=document.getElementById(containerId);
-    container.innerHTML='';
+  /* ── 플립 카드 빌드 ── */
+  function buildFlip(containerId,text){
+    var el=document.getElementById(containerId);el.innerHTML='';
     for(var i=0;i<text.length;i++){
       var ch=text[i];
       if(ch>='0'&&ch<='9'){
-        var slot=document.createElement('div');slot.className='odo-slot';
-        var inner=document.createElement('div');inner.className='odo-inner';
-        for(var d=0;d<=9;d++){var s=document.createElement('span');s.textContent=d;inner.appendChild(s);}
-        inner.style.transform='translateY(0)';
-        slot.appendChild(inner);slot.dataset.target=ch;slot.dataset.delay=i;
-        container.appendChild(slot);
+        var d=document.createElement('div');d.className='flip-digit';d.textContent=ch;
+        el.appendChild(d);
       }else{
-        var sep=document.createElement('span');sep.className='odo-sep';sep.textContent=ch;
-        container.appendChild(sep);
+        var s=document.createElement('span');s.className='flip-sep';s.textContent=ch;
+        el.appendChild(s);
       }
     }
   }
   var followersStr=STORE_STATS.followers.toLocaleString();
-  buildOdometer('odoRating',avgRating);
-  buildOdometer('odoFollowers',followersStr);
+  buildFlip('flipRating',avgRating);
+  buildFlip('flipFollowers',followersStr);
 
-  /* ── 오디미터 애니메이션 (Intersection Observer) ── */
-  function animateOdometer(containerId){
-    var slots=document.getElementById(containerId).querySelectorAll('.odo-slot');
-    slots.forEach(function(slot,idx){
+  /* ── 3초마다 플립 애니메이션 ── */
+  setInterval(function(){
+    document.querySelectorAll('.flip-digit').forEach(function(el,i){
       setTimeout(function(){
-        var target=parseInt(slot.dataset.target);
-        var inner=slot.querySelector('.odo-inner');
-        inner.style.transform='translateY(-'+target*44+'px)';
-      },idx*100);
+        el.classList.add('flipping');
+        setTimeout(function(){el.classList.remove('flipping');},400);
+      },i*50);
     });
-  }
-  var statsAnimated=false;
-  var statsObserver=new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting&&!statsAnimated){
-        statsAnimated=true;
-        animateOdometer('odoRating');
-        animateOdometer('odoFollowers');
-        statsObserver.disconnect();
-      }
-    });
-  },{threshold:0.3});
-  statsObserver.observe(document.getElementById('revStats'));
+  },3000);
 
   /* ── 사장님 추천 랭킹 렌더 ── */
   var rl=document.getElementById('rankingList'),rh='';
