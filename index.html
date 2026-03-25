@@ -11,7 +11,9 @@
 <meta property="og:url" content="https://akkome.com/">
 <meta name="description" content="제주 감귤, 한라봉, 천혜향 산지직송. 3대째 농업을 이어온 제주아꼼이네.">
 <link rel="icon" href="https://akkome.com/web/upload/favicon-3ad34130ee1b4111ba23d0eb68849bce.ico">
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Montserrat:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Montserrat:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/xeicon@2/xeicon.min.css" rel="stylesheet">
 
 <script>
@@ -1074,7 +1076,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   SHORTCLIPS.forEach(function(c){
     ch+='<a href="'+c.productLink+'" class="clip-card">'
       +'<div class="clip-video-wrap">'
-      +'<video autoplay muted loop playsinline preload="metadata" src="'+c.videoSrc+'"></video>'
+      +'<video muted loop playsinline preload="none" data-src="'+c.videoSrc+'"></video>'
       +'<div class="clip-overlay">'
       +'<div class="clip-title">'+c.title+'</div>'
       +'</div></div>'
@@ -1090,6 +1092,16 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
       +'</div></a>';
   });
   cg.innerHTML=ch;
+
+  /* ── 비디오 lazy load (스크롤시 로드+재생) ── */
+  var vidObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var v=e.target;v.src=v.dataset.src;v.play();vidObs.unobserve(v);
+      }
+    });
+  },{rootMargin:'200px'});
+  document.querySelectorAll('video[data-src]').forEach(function(v){vidObs.observe(v);});
 
   /* ── 하단 네비 활성 ── */
   var navItems=document.querySelectorAll('.bnav-item[data-target]');
