@@ -440,42 +440,37 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .reviews-header-top h2{font-family:'Noto Sans KR',sans-serif;font-size:17px;font-weight:900;color:var(--navy)}
 .reviews-header-top .update-time{font-size:10px;color:var(--text-mid);white-space:nowrap}
 .rev-stats{
-  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 20px
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 20px
 }
 .rev-stat{
   background:#fff;border-radius:16px;border:1px solid #eee;
   box-shadow:0 4px 16px rgba(0,0,0,.06);
-  padding:20px;text-align:center;
+  padding:16px 10px;text-align:center;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:130px
+  height:120px
 }
-.rev-stat .stars-row{display:flex;align-items:center;justify-content:center;gap:3px;margin-bottom:8px}
-.rev-stat .stars-row svg{width:16px;height:16px}
-.rev-stat .l{font-size:12px;color:#888;margin-top:8px}
+.rev-stat .stat-top{font-size:11px;color:var(--text-mid);margin-bottom:6px;height:18px;display:flex;align-items:center;justify-content:center;gap:3px}
+.rev-stat .stat-top svg{width:14px;height:14px}
+.rev-stat .l{font-size:11px;color:#888;margin-top:6px}
 /* 플립 시계 */
-.flip-card{display:inline-flex;align-items:center;gap:2px;justify-content:center;overflow:hidden}
+.flip-card{display:inline-flex;align-items:center;gap:2px;justify-content:center}
 .flip-digit{
-  position:relative;width:28px;height:40px;
-  background:var(--navy);border-radius:6px;color:#fff;
-  font-family:'Montserrat',sans-serif;font-size:22px;font-weight:700;
+  position:relative;width:26px;height:38px;
+  background:var(--navy);border-radius:5px;color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:20px;font-weight:700;
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 8px rgba(0,0,0,.2);overflow:hidden
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  transition:transform .3s ease,opacity .3s ease
 }
 .flip-digit::after{
   content:'';position:absolute;left:0;right:0;top:50%;
-  height:1px;background:rgba(0,0,0,.3)
+  height:1px;background:rgba(0,0,0,.2)
 }
+.flip-digit.changing{transform:scale(.7);opacity:0}
 .flip-sep{
   color:var(--navy);font-family:'Montserrat',sans-serif;
-  font-size:20px;font-weight:700;align-self:center;padding:0 1px
+  font-size:18px;font-weight:700;align-self:center;padding:0 1px
 }
-@keyframes flipSlide{
-  0%{transform:translateY(0);opacity:1}
-  40%{transform:translateY(-100%);opacity:0}
-  41%{transform:translateY(100%);opacity:0}
-  100%{transform:translateY(0);opacity:1}
-}
-.flipping{animation:flipSlide .5s cubic-bezier(.23,1,.32,1)}
 .rev-scroll{
   display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;padding-bottom:8px
@@ -777,11 +772,12 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   </div>
   <div class="rev-stats" id="revStats">
     <div class="rev-stat">
-      <div class="stars-row" id="starsRow"></div>
+      <div class="stat-top" id="starsRow"></div>
       <div class="flip-card" id="flipRating"></div>
       <div class="l">평균 평점</div>
     </div>
     <div class="rev-stat">
+      <div class="stat-top">🍊 스토어</div>
       <div class="flip-card" id="flipFollowers"></div>
       <div class="l">관심 고객</div>
     </div>
@@ -987,7 +983,11 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   buildFlip('flipRating',avgRating);
   buildFlip('flipFollowers',followersBase.toLocaleString());
 
-  /* ── 비규칙 랜덤 애니메이션 ── */
+  /* ── 부드러운 숫자 변경 (fade+scale) ── */
+  function smoothChange(el,newText){
+    el.classList.add('changing');
+    setTimeout(function(){el.textContent=newText;el.classList.remove('changing');},300);
+  }
   function randomDelay(){return Math.floor(Math.random()*8000)+2000;}
 
   var ratingLast=3;
@@ -995,9 +995,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     ratingLast=ratingLast%9+1;
     var digits=document.querySelectorAll('#flipRating .flip-digit');
     var el=digits[digits.length-1];
-    if(!el){setTimeout(flipRating,randomDelay());return;}
-    el.classList.add('flipping');
-    setTimeout(function(){el.textContent=ratingLast;el.classList.remove('flipping');},300);
+    if(el)smoothChange(el,ratingLast);
     setTimeout(flipRating,randomDelay());
   }
   setTimeout(flipRating,randomDelay());
@@ -1005,24 +1003,16 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   var fOffset=0;
   function flipFollowers(){
     fOffset=(fOffset+1)%10;
-    var val=followersBase+fOffset;
-    var valStr=String(val);
+    var valStr=String(followersBase+fOffset);
     var digits=document.querySelectorAll('#flipFollowers .flip-digit');
     var len=digits.length;
-    var lastEl=digits[len-1];
-    if(lastEl){
-      lastEl.classList.add('flipping');
-      setTimeout(function(){lastEl.textContent=valStr[valStr.length-1];lastEl.classList.remove('flipping');},300);
-    }
+    if(digits[len-1])smoothChange(digits[len-1],valStr[valStr.length-1]);
     if(Math.random()<0.3&&digits[len-2]){
-      setTimeout(function(){
-        digits[len-2].classList.add('flipping');
-        setTimeout(function(){digits[len-2].textContent=valStr[valStr.length-2];digits[len-2].classList.remove('flipping');},300);
-      },150);
+      setTimeout(function(){smoothChange(digits[len-2],valStr[valStr.length-2]);},200);
     }
     setTimeout(flipFollowers,randomDelay());
   }
-  setTimeout(flipFollowers,randomDelay()+1000);
+  setTimeout(flipFollowers,randomDelay()+1500);
 
   /* ── 사장님 추천 랭킹 렌더 ── */
   var rl=document.getElementById('rankingList'),rh='';
