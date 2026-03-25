@@ -631,7 +631,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <!-- ═══ 당일발송 카운트다운 ═══ -->
 <div class="countdown-bar">
   <span class="emoji">🚚</span>
-  <span class="label">당일발송 마감까지</span>
+  <span class="label" id="cdLabel">당일발송 마감까지</span>
   <div class="timer" id="countdownTimer">
     <span id="cdH">00</span><span class="sep">:</span>
     <span id="cdM">00</span><span class="sep">:</span>
@@ -866,17 +866,43 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   });
   var auto=setInterval(function(){goTo(cur+1);},4000);
 
-  /* ── 카운트다운 ── */
+  /* ── 카운트다운 (배송정책: 월~금,일 발송 / 토 배송없음) ── */
+  function getNextDeadline(){
+    var now=new Date();
+    var day=now.getDay(); // 0=일,1=월,2=화,3=수,4=목,5=금,6=토
+    var todayDeadline=new Date(now);
+    todayDeadline.setHours(8,0,0,0);
+
+    // 토요일 → 일요일 오전 8시
+    if(day===6){
+      var sun=new Date(now);sun.setDate(sun.getDate()+1);sun.setHours(8,0,0,0);
+      return{deadline:sun,label:'토요일은 배송 없음',msg:'일요일 오전 8시 전 주문 시 발송!'};
+    }
+    // 금요일 오전 8시 이후 → 일요일 오전 8시
+    if(day===5&&now>=todayDeadline){
+      var sun2=new Date(now);sun2.setDate(sun2.getDate()+2);sun2.setHours(8,0,0,0);
+      return{deadline:sun2,label:'발송 마감까지',msg:'일요일 오전 8시 전 주문 시 일요일 발송!'};
+    }
+    // 오전 8시 이전 → 오늘 당일발송
+    if(now<todayDeadline){
+      return{deadline:todayDeadline,label:'당일발송 마감까지',msg:'오전 8시 전 주문 시 당일발송!'};
+    }
+    // 오전 8시 이후 → 다음 배송일
+    var next=new Date(now);next.setDate(next.getDate()+1);next.setHours(8,0,0,0);
+    if(next.getDay()===6){
+      next.setDate(next.getDate()+1);
+      return{deadline:next,label:'발송 마감까지',msg:'일요일 오전 8시 전 주문 시 일요일 발송!'};
+    }
+    return{deadline:next,label:'발송 마감까지',msg:'내일 오전 8시 전 주문 시 내일 발송!'};
+  }
   function updateCD(){
-    var now=new Date(),cut=new Date(now);
-    cut.setHours(CUTOFF_HOUR,0,0,0);
-    if(now>=cut)cut.setDate(cut.getDate()+1);
-    var d=cut-now;
+    var info=getNextDeadline();
+    var d=info.deadline-new Date();if(d<0)d=0;
     document.getElementById('cdH').textContent=String(Math.floor(d/3600000)).padStart(2,'0');
     document.getElementById('cdM').textContent=String(Math.floor((d%3600000)/60000)).padStart(2,'0');
     document.getElementById('cdS').textContent=String(Math.floor((d%60000)/1000)).padStart(2,'0');
-    document.getElementById('cdMsg').textContent=
-      now.getHours()>=CUTOFF_HOUR?'내일 오전 '+CUTOFF_HOUR+'시 전 주문 시 당일발송!':'오전 '+CUTOFF_HOUR+'시 마감!';
+    document.getElementById('cdLabel').textContent=info.label;
+    document.getElementById('cdMsg').textContent=info.msg;
   }
   updateCD();setInterval(updateCD,1000);
 
