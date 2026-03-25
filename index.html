@@ -81,6 +81,16 @@ var SHORTCLIPS = [
   }
 ];
 
+/* ── 스토어 통계 (대표님이 주기적으로 업데이트) ── */
+var STORE_STATS = {
+  followers: 187198,
+  reviewCount: 1247,
+  reviews: [
+    5, 5, 5, 5, 4, 5, 5, 5, 4, 5,
+    5, 5, 5, 4, 5, 5, 5, 5, 5, 4
+  ]
+};
+
 /* ── 당일발송 마감 시간 (24시간 기준) ── */
 var CUTOFF_HOUR = 8;
 </script>
@@ -429,10 +439,16 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .reviews-header .sec-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:6px}
 .reviews-header h2{font-family:'Noto Sans KR',sans-serif;font-size:20px;font-weight:900;color:var(--navy);margin-bottom:6px}
 .reviews-header p{font-size:12px;color:var(--text-mid)}
-.rev-stats{display:flex;justify-content:center;gap:20px;margin-bottom:20px}
-.rev-stat{text-align:center}
-.rev-stat .n{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;color:var(--navy);display:block}
-.rev-stat .l{font-size:10px;color:var(--text-light);margin-top:2px}
+.rev-stats{
+  display:flex;justify-content:center;align-items:stretch;
+  background:#fff;border-radius:14px;margin:0 0 20px;
+  border:1px solid #eee;overflow:hidden
+}
+.rev-stat{flex:1;text-align:center;padding:18px 12px}
+.rev-stat+.rev-stat{border-left:1px solid #eee}
+.rev-stat .star{color:#F5B800;font-size:14px;margin-right:4px}
+.rev-stat .n{font-family:'Montserrat',sans-serif;font-size:32px;font-weight:700;color:var(--navy);display:block;line-height:1.2}
+.rev-stat .l{font-size:11px;color:var(--text-light);margin-top:4px}
 .rev-scroll{
   display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;padding-bottom:8px
@@ -731,9 +747,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     <h2>고객님들의 생생한 후기</h2>
     <p>직접 드셔보신 고객님들의 진짜 이야기</p>
   </div>
-  <div class="rev-stats">
-    <div class="rev-stat"><span class="n">★ 5.0</span><div class="l">평균 평점</div></div>
-    <div class="rev-stat"><span class="n">187,198</span><div class="l">관심 고객</div></div>
+  <div class="rev-stats" id="revStats">
+    <div class="rev-stat"><span class="n"><span class="star">★</span> <span id="statRating">0.0</span></span><div class="l">평균 평점</div></div>
+    <div class="rev-stat"><span class="n" id="statFollowers">0</span><div class="l">관심 고객</div></div>
   </div>
   <div class="rev-scroll">
     <div class="rev-card">
@@ -905,6 +921,34 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     document.getElementById('cdMsg').textContent=info.msg;
   }
   updateCD();setInterval(updateCD,1000);
+
+  /* ── 롤링 카운터 애니메이션 ── */
+  var avgRating=(STORE_STATS.reviews.reduce(function(a,b){return a+b;},0)/STORE_STATS.reviews.length).toFixed(1);
+  function animateCounter(el,target,duration,isDecimal){
+    var start=0,startTime=null;
+    function step(ts){
+      if(!startTime)startTime=ts;
+      var p=Math.min((ts-startTime)/duration,1);
+      var ease=1-Math.pow(1-p,3); // easeOutCubic
+      var val=ease*target;
+      if(isDecimal){el.textContent=val.toFixed(1);}
+      else{el.textContent=Math.floor(val).toLocaleString();}
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var statsAnimated=false;
+  var statsObserver=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting&&!statsAnimated){
+        statsAnimated=true;
+        animateCounter(document.getElementById('statRating'),parseFloat(avgRating),1500,true);
+        animateCounter(document.getElementById('statFollowers'),STORE_STATS.followers,1500,false);
+        statsObserver.disconnect();
+      }
+    });
+  },{threshold:0.3});
+  statsObserver.observe(document.getElementById('revStats'));
 
   /* ── 사장님 추천 랭킹 렌더 ── */
   var rl=document.getElementById('rankingList'),rh='';
