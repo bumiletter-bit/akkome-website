@@ -793,7 +793,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     <h2>🎬 제철상품 실시간 영상</h2>
   </div>
   <div class="clips-scroll">
-    <a href="product/hanrabong.html" class="clip-card">
+    <a href="product/hanrabong.html" class="clip-card" data-clip="한라봉">
       <div class="clip-video-wrap">
         <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_노지한라봉.mp4"></video>
         <div class="clip-overlay"><div class="clip-title">제주 한라봉 수확 🍊</div></div>
@@ -805,7 +805,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
         <span class="ci-badge">전국무료배송</span><span class="ci-badge-exchange">무료교환반품</span>
       </div>
     </a>
-    <a href="product/karahyang.html" class="clip-card">
+    <a href="product/karahyang.html" class="clip-card" data-clip="카라향">
       <div class="clip-video-wrap">
         <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_벚꽃카라향.mp4"></video>
         <div class="clip-overlay"><div class="clip-title">벚꽃 속 카라향 🌸</div></div>
@@ -817,7 +817,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
         <span class="ci-badge">전국무료배송</span><span class="ci-badge-exchange">무료교환반품</span>
       </div>
     </a>
-    <a href="product/blood-orange.html" class="clip-card">
+    <a href="product/blood-orange.html" class="clip-card" data-clip="블러드오렌지">
       <div class="clip-video-wrap">
         <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_블러드오렌지.mp4"></video>
         <div class="clip-overlay"><div class="clip-title">블러드오렌지 이야기 🍊</div></div>
@@ -829,7 +829,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
         <span class="ci-badge">전국무료배송</span><span class="ci-badge-exchange">무료교환반품</span>
       </div>
     </a>
-    <a href="product/hagyul.html" class="clip-card">
+    <a href="product/hagyul.html" class="clip-card" data-clip="하귤">
       <div class="clip-video-wrap">
         <video autoplay muted loop playsinline preload="metadata" src="images/영상/제주아꼼이네_하귤양산형.mp4"></video>
         <div class="clip-overlay"><div class="clip-title">하귤 양산 아래 ☀️</div></div>
@@ -1346,6 +1346,70 @@ function toggleSub(el){
   var sub=el.nextElementSibling;
   sub.classList.toggle('open');
 }
+</script>
+
+<!-- ═══ 숏클립 팝업 ═══ -->
+<div id="clip-popup" style="display:none">
+  <div class="cpop-overlay"></div>
+  <div class="cpop-modal">
+    <button class="cpop-close">✕</button>
+    <div class="cpop-video-wrap">
+      <video id="cpop-video" playsinline controls autoplay style="width:100%;height:100%;object-fit:cover">
+        <source id="cpop-source" src="" type="video/mp4">
+      </video>
+    </div>
+    <div class="cpop-info">
+      <p id="cpop-subtitle" class="cpop-subtitle"></p>
+      <p id="cpop-name" class="cpop-name"></p>
+      <p id="cpop-price" class="cpop-price"></p>
+      <div style="display:flex;gap:4px;margin-bottom:8px">
+        <span class="ci-badge">전국무료배송</span><span class="ci-badge-exchange">무료교환반품</span>
+      </div>
+      <a id="cpop-link" href="" class="cpop-btn">상품 상세보기 →</a>
+    </div>
+  </div>
+</div>
+<style>
+#clip-popup{position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999}
+.cpop-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85)}
+.cpop-modal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:92%;max-width:420px;background:#fff;border-radius:16px;overflow:hidden}
+.cpop-close{position:absolute;top:10px;right:12px;z-index:10;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer}
+.cpop-video-wrap{width:100%;aspect-ratio:9/16;max-height:55vh;background:#000;overflow:hidden}
+.cpop-info{padding:14px 16px}
+.cpop-subtitle{font-size:11px;color:#888;margin:0 0 4px}
+.cpop-name{font-size:16px;font-weight:700;color:#1B3A6B;margin:0 0 4px}
+.cpop-price{font-size:15px;font-weight:700;color:#222;margin:0 0 8px}
+.cpop-btn{display:block;width:100%;padding:12px;background:#F5C800;color:#1B3A6B;font-weight:700;font-size:14px;text-align:center;border-radius:8px;text-decoration:none}
+</style>
+<script>
+var clipData={
+  '한라봉':{video:'images/영상/제주아꼼이네_노지한라봉.mp4',name:'제주 한라봉',price:'24,000원',subtitle:'제주아꼼이네 직접 재배',link:'product/hanrabong.html'},
+  '카라향':{video:'images/영상/제주아꼼이네_벚꽃카라향.mp4',name:'제주 카라향',price:'28,800원',subtitle:'제주아꼼이네 직접 재배',link:'product/karahyang.html'},
+  '블러드오렌지':{video:'images/영상/제주아꼼이네_블러드오렌지.mp4',name:'제주 블러드오렌지',price:'34,800원',subtitle:'제주아꼼이네 직접 재배',link:'product/blood-orange.html'},
+  '하귤':{video:'images/영상/제주아꼼이네_하귤양산형.mp4',name:'제주 하귤',price:'24,800원',subtitle:'제주아꼼이네 직접 재배',link:'product/hagyul.html'}
+};
+document.querySelectorAll('.clip-card[data-clip]').forEach(function(card){
+  card.addEventListener('click',function(e){
+    e.preventDefault();
+    var d=clipData[this.dataset.clip];
+    if(!d)return;
+    document.getElementById('cpop-source').src=d.video;
+    document.getElementById('cpop-subtitle').textContent=d.subtitle;
+    document.getElementById('cpop-name').textContent=d.name;
+    document.getElementById('cpop-price').textContent=d.price;
+    document.getElementById('cpop-link').href=d.link;
+    var v=document.getElementById('cpop-video');
+    v.load();v.play().catch(function(){});
+    document.getElementById('clip-popup').style.display='block';
+  });
+});
+function closeClipPopup(){
+  document.getElementById('clip-popup').style.display='none';
+  var v=document.getElementById('cpop-video');v.pause();
+  document.getElementById('cpop-source').src='';
+}
+document.querySelector('.cpop-close').addEventListener('click',closeClipPopup);
+document.querySelector('.cpop-overlay').addEventListener('click',closeClipPopup);
 </script>
 
 </body>
