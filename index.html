@@ -232,17 +232,16 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 /* ══════════════════════════════
    MAIN BANNER (45vh)
    ══════════════════════════════ */
-.main-banner{width:100%;height:45vh;min-height:200px;max-height:320px;overflow:hidden;position:relative}
-.banner-track{display:flex;width:800%;height:100%;transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+.main-banner{width:100%;overflow:hidden;position:relative}
+.banner-track{display:flex;width:800%;transition:transform .4s cubic-bezier(.25,.8,.25,1)}
 .banner-slide{
-  width:calc(100%/5);height:100%;position:relative;flex-shrink:0;
-  display:flex;align-items:flex-end;overflow:hidden;cursor:pointer
+  width:calc(100%/8);position:relative;flex-shrink:0;
+  display:block;overflow:hidden;cursor:pointer
 }
 .banner-slide .banner-bg{
-  position:absolute;inset:0;background-size:cover;background-position:center;
-  display:flex;align-items:center;justify-content:center;overflow:hidden
+  display:block;overflow:hidden
 }
-.banner-slide .banner-bg img{width:100%;height:100%;object-fit:cover}
+.banner-slide .banner-bg img{width:100%;height:auto;display:block}
 .banner-slide .banner-bg{background:#f5f5f5}
 .banner-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 60%)}
 .banner-content{
