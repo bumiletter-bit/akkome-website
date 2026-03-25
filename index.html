@@ -1100,12 +1100,12 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     renderProducts(visibleProducts.length);
   });
 
-  /* ── 숏클립 렌더 (mp4 자동재생) ── */
+  /* ── 숏클립 렌더 (mp4) ── */
   var cg=document.getElementById('clipsGrid'),ch='';
   SHORTCLIPS.forEach(function(c){
     ch+='<a href="'+c.productLink+'" class="clip-card">'
       +'<div class="clip-video-wrap">'
-      +'<video muted loop playsinline preload="none" poster="" data-src="'+c.videoSrc+'" style="background:#000"></video>'
+      +'<video muted loop playsinline preload="none" data-video="'+c.videoSrc+'"></video>'
       +'<div class="clip-overlay">'
       +'<div class="clip-title">'+c.title+'</div>'
       +'</div></div>'
@@ -1122,18 +1122,22 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   cg.innerHTML=ch;
 
   /* ── 숏클립 영상 lazy load + 재생 ── */
+  var clipVideos=document.querySelectorAll('.clip-video-wrap video[data-video]');
   var clipObs=new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       var v=e.target;
       if(e.isIntersecting){
-        if(!v.src&&v.dataset.src){v.src=v.dataset.src;}
+        if(!v.getAttribute('src')){
+          v.setAttribute('src',v.getAttribute('data-video'));
+          v.load();
+        }
         v.play().catch(function(){});
       }else{
         v.pause();
       }
     });
   },{rootMargin:'300px'});
-  document.querySelectorAll('.clip-video-wrap video').forEach(function(v){clipObs.observe(v);});
+  clipVideos.forEach(function(v){clipObs.observe(v);});
 
   /* ── 하단 네비 활성 ── */
   var navItems=document.querySelectorAll('.bnav-item[data-target]');
