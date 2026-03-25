@@ -193,24 +193,24 @@ body.notice-hidden .notice-bar{display:none}
    ══════════════════════════════ */
 .cat-tab-bar{
   position:fixed;top:calc(var(--notice-h) + var(--header-h));left:0;right:0;z-index:999;
-  background:var(--white);height:var(--cattab-h);
+  background:var(--yellow);height:var(--cattab-h);
   display:flex;align-items:stretch;overflow-x:auto;
-  border-bottom:1px solid #e8e8e8;
+  border-bottom:none;
   -webkit-overflow-scrolling:touch
 }
 body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .cat-tab-bar::-webkit-scrollbar{display:none}
 .cat-tab{
   flex-shrink:0;padding:0 16px;display:flex;align-items:center;
-  font-size:13px;color:var(--text-light);font-weight:500;
+  font-size:13px;color:var(--navy);font-weight:500;opacity:.6;
   white-space:nowrap;position:relative;cursor:pointer;
-  transition:color .15s
+  transition:opacity .15s
 }
-.cat-tab:active{color:var(--navy)}
-.cat-tab.active{color:var(--navy);font-weight:700}
+.cat-tab:active{opacity:1}
+.cat-tab.active{color:var(--navy);font-weight:700;opacity:1}
 .cat-tab.active::after{
   content:'';position:absolute;bottom:0;left:12px;right:12px;
-  height:2.5px;background:var(--yellow);border-radius:2px 2px 0 0
+  height:2.5px;background:var(--navy);border-radius:2px 2px 0 0
 }
 .badge-n{
   position:absolute;top:-6px;right:-12px;z-index:10;
@@ -227,15 +227,15 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
    MAIN BANNER (45vh)
    ══════════════════════════════ */
 .main-banner{width:100%;overflow:hidden;position:relative}
-.banner-track{display:flex;width:800%;transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+.banner-track{display:flex;width:100%;transition:transform .3s ease}
 .banner-slide{
-  width:calc(100%/8);position:relative;flex-shrink:0;
+  min-width:100%;width:100%;flex-shrink:0;
   display:block;overflow:hidden;cursor:pointer
 }
 .banner-slide .banner-bg{
   display:block;overflow:hidden
 }
-.banner-slide .banner-bg img{width:100%;height:auto;max-height:90vw;object-fit:cover;object-position:center;display:block}
+.banner-slide .banner-bg img{width:100%;height:auto;display:block}
 .banner-slide .banner-bg{background:#f5f5f5}
 .banner-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 60%)}
 .banner-content{
@@ -899,10 +899,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   var track=document.getElementById('bannerTrack'),
       dots=document.getElementById('bannerDots').children,
       cur=0,total=8,sx=0,df=0,drag=false,moved=false;
-  var slideW=100/total;
   function goTo(i){
     cur=((i%total)+total)%total;
-    track.style.transform='translateX(-'+(cur*slideW)+'%)';
+    track.style.transform='translateX(-'+(cur*100)+'%)';
     for(var d=0;d<dots.length;d++)dots[d].className=d===cur?'active':'';
   }
   function resetAuto(){clearInterval(auto);auto=setInterval(function(){goTo(cur+1);},4000);}
