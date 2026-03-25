@@ -355,15 +355,14 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .prod-discount{font-size:13px;font-weight:700;color:var(--red)}
 .prod-meta{display:flex;align-items:center;gap:8px;margin-top:6px}
 .prod-buyers{font-size:10px;color:var(--red);font-weight:600}
-.prod-free-ship{
-  font-size:9px;font-weight:700;color:var(--green);
-  background:#E8F5E9;padding:2px 6px;border-radius:4px
-}
+.prod-free-ship,
 .badge-exchange{
-  display:inline-block;background-color:#1B3A6B;color:#FFFFFF;
-  font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;
-  margin-left:4px;white-space:nowrap
+  display:inline-block;font-size:11px;font-weight:600;
+  padding:4px 8px;border-radius:4px;white-space:nowrap;line-height:1.4;
+  color:#FFFFFF
 }
+.prod-free-ship{background-color:#1B3A6B}
+.badge-exchange{background-color:#00A651;margin-left:4px}
 
 /* ══════════════════════════════
    숏클립 영상 섹션
@@ -410,8 +409,9 @@ body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .clip-info .ci-org{font-size:11px;color:var(--text-light);text-decoration:line-through}
 .clip-info .ci-badge{
   display:inline-block;margin-top:6px;
-  font-size:9px;font-weight:700;color:var(--green);
-  background:#E8F5E9;padding:2px 6px;border-radius:4px
+  font-size:11px;font-weight:600;color:#FFFFFF;
+  background-color:#1B3A6B;padding:4px 8px;border-radius:4px;
+  white-space:nowrap;line-height:1.4
 }
 
 /* ══════════════════════════════

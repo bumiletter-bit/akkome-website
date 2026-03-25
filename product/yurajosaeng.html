@@ -49,6 +49,12 @@ button,select{font-family:'Noto Sans KR',sans-serif;font-weight:700}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#aaa;font-weight:500;padding:8px 10px;min-width:52px}
 .bnav-item svg{width:24px;height:24px;stroke:#aaa;fill:none;stroke-width:1.8}
 @media(min-width:768px){body,.pd-header,.pd-action,.bottom-nav{max-width:480px;left:50%;right:auto;transform:translateX(-50%)}}
+
+.badge-wrap{display:flex;gap:6px;align-items:center;margin:8px 0}
+.badge-free-shipping,
+.badge-exchange{display:inline-block;font-size:11px;font-weight:600;padding:4px 8px;border-radius:4px;white-space:nowrap;line-height:1.4;color:#FFFFFF}
+.badge-free-shipping{background-color:#1B3A6B}
+.badge-exchange{background-color:#00A651}
 </style>
 </head>
 <body>
@@ -65,13 +71,14 @@ button,select{font-family:'Noto Sans KR',sans-serif;font-weight:700}
 <div class="pd-img"><img src="../images/썸네일/유라조생/2-1썸네일.jpg" alt="제주 유라조생"></div>
 
 <div class="pd-info">
-  <div class="pd-badge-row">
-    <span class="pd-badge ship">무료배송</span>
-  </div>
   <h1 class="pd-name">제주 유라조생</h1>
   <p class="pd-desc">조생 품종 달콤한 감귤</p>
   <div class="pd-price-box">
     <span class="pd-sale">28,800원</span>
+  </div>
+  <div class="badge-wrap">
+    <span class="badge-free-shipping">전국무료배송</span>
+    <span class="badge-exchange">무료교환반품</span>
   </div>
 </div>
 

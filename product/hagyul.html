@@ -36,6 +36,11 @@ button,select{font-family:'Noto Sans KR',sans-serif;font-weight:700}
 .pd-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px}
 .pd-badge.ship{background:#E8F5E9;color:var(--green)}
 .pd-badge.hot{background:var(--red);color:#fff}
+.badge-wrap{display:flex;gap:6px;align-items:center;margin:8px 0}
+.badge-free-shipping,
+.badge-exchange{display:inline-block;font-size:11px;font-weight:600;padding:4px 8px;border-radius:4px;white-space:nowrap;line-height:1.4;color:#FFFFFF}
+.badge-free-shipping{background-color:#1B3A6B}
+.badge-exchange{background-color:#00A651}
 .pd-name{font-family:'Black Han Sans',sans-serif;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:6px}
 .pd-desc{font-size:13px;color:var(--text-mid);margin-bottom:14px}
 .pd-price-box{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -111,15 +116,16 @@ button,select{font-family:'Noto Sans KR',sans-serif;font-weight:700}
 <div class="pd-img"><img src="../images/썸네일/하귤/2-1썸네일.jpg" alt="제주 하귤"></div>
 
 <div class="pd-info">
-  <div class="pd-badge-row">
-    <span class="pd-badge ship">무료배송</span>
-  </div>
   <h1 class="pd-name">제주 하귤</h1>
   <p class="pd-desc">청 담가먹기에 딱 좋아요</p>
   <div class="pd-price-box">
     <span class="pd-discount">71%</span>
     <span class="pd-sale">24,800원</span>
     <span class="pd-org">86,400원</span>
+  </div>
+  <div class="badge-wrap">
+    <span class="badge-free-shipping">전국무료배송</span>
+    <span class="badge-exchange">무료교환반품</span>
   </div>
 </div>
 
