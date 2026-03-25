@@ -623,6 +623,51 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   .float-btns{right:calc(50% - 240px + 12px)}
   .chat-popup{right:calc(50% - 240px + 16px)}
 }
+
+/* ══════════════════════════════
+   햄버거 메뉴 버튼
+   ══════════════════════════════ */
+.hamburger-btn{
+  display:flex;flex-direction:column;justify-content:space-between;
+  width:22px;height:16px;background:none;border:none;cursor:pointer;padding:0
+}
+.hamburger-btn span{display:block;width:100%;height:2px;background-color:#1B3A6B;border-radius:2px}
+
+/* ══════════════════════════════
+   사이드 메뉴
+   ══════════════════════════════ */
+.side-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:999}
+.side-menu{
+  position:fixed;top:0;right:-100%;width:80%;max-width:320px;height:100%;
+  background:#fff;z-index:1000;overflow-y:auto;transition:right 0.3s ease;padding-bottom:40px
+}
+.side-menu.open{right:0}
+.side-overlay.open{display:block}
+.side-header{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #eee}
+.side-close{background:none;border:none;font-size:18px;cursor:pointer;color:#1B3A6B}
+.side-myshopping{padding:16px;background:#FFF9E0;border-bottom:1px solid #eee}
+.side-myshopping-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.side-myshopping-label{font-weight:700;color:#1B3A6B;font-size:14px}
+.side-point-wrap{font-size:12px;color:#555;text-align:right}
+.side-point-value{display:block;color:#F5C800;font-size:14px;font-weight:700}
+.side-myshopping-bottom{display:flex;gap:8px}
+.side-myshopping-bottom a{
+  flex:1;text-align:center;padding:8px 0;border:1px solid #ddd;
+  border-radius:6px;font-size:12px;color:#1B3A6B;text-decoration:none;background:#fff
+}
+.side-category{padding:16px}
+.side-category-title{font-weight:700;font-size:14px;color:#1B3A6B;margin-bottom:8px}
+.side-category ul{list-style:none;padding:0;margin:0}
+.side-category>ul>li{border-bottom:1px solid #f0f0f0}
+.side-category>ul>li>a,
+.side-category>ul>li>span{display:block;padding:13px 4px;font-size:14px;color:#222;text-decoration:none;cursor:pointer}
+.sub-menu{display:none;background:#fafafa;padding:4px 0 8px 12px}
+.sub-menu li a{display:block;padding:8px 4px;font-size:13px;color:#444;text-decoration:none}
+.sub-menu.open{display:block}
+.side-footer{display:flex;gap:8px;padding:16px;border-top:1px solid #eee}
+.side-footer a{flex:1;text-align:center;padding:10px 0;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none}
+.side-footer a:first-child{background:#1B3A6B;color:#fff}
+.side-footer a:last-child{background:#F5C800;color:#1B3A6B}
 </style>
 </head>
 <body>
@@ -652,6 +697,9 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
     <a href="https://akkome.com/order/cart.html" target="_blank">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--navy)" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
     </a>
+    <button class="hamburger-btn" onclick="openSideMenu()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
@@ -1199,6 +1247,89 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   window.onpageshow = function(e) {
     if (e.persisted) window.scrollTo(0, 0);
   };
+</script>
+
+<!-- ═══ 사이드 메뉴 오버레이 ═══ -->
+<div class="side-overlay" id="sideOverlay" onclick="closeSideMenu()"></div>
+
+<!-- ═══ 사이드 메뉴 패널 ═══ -->
+<div class="side-menu" id="sideMenu">
+  <div class="side-header">
+    <img src="images/제주아꼼이네로고 메인.png" alt="로고" style="height:32px;">
+    <button class="side-close" onclick="closeSideMenu()">✕</button>
+  </div>
+  <div class="side-myshopping">
+    <div class="side-myshopping-top">
+      <span class="side-myshopping-label">마이쇼핑 ›</span>
+      <span class="side-point-wrap">
+        🍊 제주아꼼이네 포인트
+        <strong class="side-point-value">로그인 후 확인</strong>
+      </span>
+    </div>
+    <div class="side-myshopping-bottom">
+      <a href="https://akkome.com/order/orderlist.html">주문배송</a>
+      <a href="https://akkome.com/order/cart.html">장바구니</a>
+      <a href="https://akkome.com/mypage/wish.html">찜한상품</a>
+    </div>
+  </div>
+  <div class="side-category">
+    <p class="side-category-title">카테고리</p>
+    <ul>
+      <li><a href="product/best.html">베스트</a></li>
+      <li><a href="product/sale.html">특가상품</a></li>
+      <li class="has-sub">
+        <span onclick="toggleSub(this)">감귤류 ›</span>
+        <ul class="sub-menu">
+          <li><a href="product/hanrabong.html">한라봉</a></li>
+          <li><a href="product/cheonhyehyang.html">천혜향</a></li>
+          <li><a href="product/karahyang.html">카라향</a></li>
+          <li><a href="product/surahyang.html">수라향</a></li>
+          <li><a href="product/redhyang.html">레드향</a></li>
+          <li><a href="product/hwanggumhyang.html">황금향</a></li>
+          <li><a href="product/gamgyul.html">비가림감귤</a></li>
+          <li><a href="product/taibek.html">타이벡감귤</a></li>
+          <li><a href="product/housegamgyul.html">하우스감귤</a></li>
+          <li><a href="product/noji.html">노지귤</a></li>
+        </ul>
+      </li>
+      <li class="has-sub">
+        <span onclick="toggleSub(this)">기타과일 ›</span>
+        <ul class="sub-menu">
+          <li><a href="product/lemon.html">레몬</a></li>
+          <li><a href="product/blood-orange.html">블러드오렌지</a></li>
+          <li><a href="product/jagong.html">자몽</a></li>
+          <li><a href="product/hagyul.html">하귤</a></li>
+          <li><a href="product/seminol.html">세미놀귤</a></li>
+          <li><a href="product/sanhahong.html">산하홍</a></li>
+          <li><a href="product/yurajosaeng.html">유라조생</a></li>
+          <li><a href="product/cheongyeon.html">청견오렌지</a></li>
+        </ul>
+      </li>
+      <li><a href="product/list.html">전체상품</a></li>
+      <li><a href="product/experience.html">감귤체험</a></li>
+      <li><a href="story.html">브랜드스토리</a></li>
+      <li><a href="benefit.html">회원혜택</a></li>
+    </ul>
+  </div>
+  <div class="side-footer">
+    <a href="https://akkome.com/member/login.html">로그인</a>
+    <a href="https://akkome.com/member/join.html">회원가입</a>
+  </div>
+</div>
+
+<script>
+function openSideMenu(){
+  document.getElementById('sideMenu').classList.add('open');
+  document.getElementById('sideOverlay').classList.add('open');
+}
+function closeSideMenu(){
+  document.getElementById('sideMenu').classList.remove('open');
+  document.getElementById('sideOverlay').classList.remove('open');
+}
+function toggleSub(el){
+  var sub=el.nextElementSibling;
+  sub.classList.toggle('open');
+}
 </script>
 
 </body>
