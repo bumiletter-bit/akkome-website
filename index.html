@@ -1098,7 +1098,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   SHORTCLIPS.forEach(function(c){
     ch+='<a href="'+c.productLink+'" class="clip-card">'
       +'<div class="clip-video-wrap">'
-      +'<video muted loop playsinline preload="none" data-src="'+c.videoSrc+'"></video>'
+      +'<video autoplay muted loop playsinline preload="metadata" src="'+c.videoSrc+'"></video>'
       +'<div class="clip-overlay">'
       +'<div class="clip-title">'+c.title+'</div>'
       +'</div></div>'
@@ -1115,15 +1115,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   });
   cg.innerHTML=ch;
 
-  /* ── 비디오 lazy load (스크롤시 로드+재생) ── */
-  var vidObs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        var v=e.target;v.src=v.dataset.src;v.play();vidObs.unobserve(v);
-      }
-    });
-  },{rootMargin:'200px'});
-  document.querySelectorAll('video[data-src]').forEach(function(v){vidObs.observe(v);});
+  /* ── 비디오 lazy load 제거 (autoplay로 직접 재생) ── */
 
   /* ── 하단 네비 활성 ── */
   var navItems=document.querySelectorAll('.bnav-item[data-target]');
