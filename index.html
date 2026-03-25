@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script>if(history.scrollRestoration)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname);window.scrollTo(0,0);</script>
 <title>제주아꼼이네 | 제주가 키우고 아꼼이네가 고릅니다</title>
 <meta property="og:title" content="제주아꼼이네">
 <meta property="og:description" content="제주가 키우고, 아꼼이네가 고릅니다. 달아야 팝니다. 안 달면 안 팝니다.">
@@ -599,7 +600,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 }
 </style>
 </head>
-<body onload="window.scrollTo(0,0)">
+<body>
 
 <!-- ═══ 롤링 공지 배너 ═══ -->
 <div class="notice-bar" id="noticeBar">
@@ -1147,13 +1148,8 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 </script>
 
 <script>
-  window.onload = function() {
-    window.scrollTo(0, 0);
-  };
   window.onpageshow = function(e) {
-    if (e.persisted) {
-      window.scrollTo(0, 0);
-    }
+    if (e.persisted) window.scrollTo(0, 0);
   };
 </script>
 
