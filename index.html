@@ -160,8 +160,7 @@ button{border:none;background:none;cursor:pointer;font-family:'Noto Sans KR',san
   position:fixed;top:var(--notice-h);left:0;right:0;z-index:1000;
   background:#fff;height:var(--header-h);
   display:flex;align-items:center;justify-content:space-between;padding:0 12px;
-  box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .2s;
-  -webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform
+  box-shadow:0 2px 8px rgba(0,0,0,.1)
 }
 body.notice-hidden .top-header{top:0}
 body.notice-hidden{padding-top:calc(var(--header-h) + var(--cattab-h))}
@@ -210,8 +209,7 @@ body.notice-hidden .notice-bar{display:none}
   background:var(--white);height:var(--cattab-h);
   display:flex;align-items:stretch;overflow-x:auto;
   border-bottom:1px solid #e8e8e8;
-  -webkit-overflow-scrolling:touch;
-  -webkit-transform:translateZ(0);transform:translateZ(0)
+  -webkit-overflow-scrolling:touch
 }
 body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .cat-tab-bar::-webkit-scrollbar{display:none}
@@ -693,7 +691,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 </div>
 
 <!-- ═══ TOP HEADER ═══ -->
-<header class="top-header" id="topHeader">
+<header class="top-header" id="topHeader" style="position:fixed!important;display:flex!important;visibility:visible!important;opacity:1!important">
   <a href="/" class="top-logo">
     <img src="images/제주아꼼이네로고 메인.png" alt="제주아꼼이네" class="top-logo-img">
     <span class="top-logo-text">제주아꼼이네</span>
