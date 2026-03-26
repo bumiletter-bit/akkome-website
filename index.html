@@ -160,7 +160,8 @@ button{border:none;background:none;cursor:pointer;font-family:'Noto Sans KR',san
   position:fixed;top:var(--notice-h);left:0;right:0;z-index:1000;
   background:#fff;height:var(--header-h);
   display:flex;align-items:center;justify-content:space-between;padding:0 12px;
-  box-shadow:0 1px 4px rgba(0,0,0,.06);transition:all .2s
+  box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .2s;
+  -webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform
 }
 body.notice-hidden .top-header{top:0}
 body.notice-hidden{padding-top:calc(var(--header-h) + var(--cattab-h))}
@@ -209,7 +210,8 @@ body.notice-hidden .notice-bar{display:none}
   background:var(--white);height:var(--cattab-h);
   display:flex;align-items:stretch;overflow-x:auto;
   border-bottom:1px solid #e8e8e8;
-  -webkit-overflow-scrolling:touch
+  -webkit-overflow-scrolling:touch;
+  -webkit-transform:translateZ(0);transform:translateZ(0)
 }
 body.notice-hidden .cat-tab-bar{top:var(--header-h)}
 .cat-tab-bar::-webkit-scrollbar{display:none}
@@ -570,8 +572,8 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 .float-btn.chat svg{fill:#fff}
 /* 채팅 팝업 */
 .chat-popup{
-  display:none;position:fixed;right:16px;bottom:150px;z-index:1000;
-  width:300px;height:400px;background:#fff;border-radius:16px;
+  display:none;position:fixed;right:12px;bottom:150px;z-index:10000;
+  width:min(300px,calc(100vw - 24px));max-height:70vh;background:#fff;border-radius:16px;
   box-shadow:0 8px 30px rgba(0,0,0,.2);overflow:hidden;
   flex-direction:column;animation:chatIn .3s ease
 }
@@ -958,7 +960,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   <button class="float-btn top" id="btnTop">
     <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
-  <button class="float-btn chat" id="btnChat">
+  <button class="float-btn chat" id="btnChat" onclick="var cp=document.getElementById('chatPopup');if(cp)cp.classList.toggle('open');">
     <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
   </button>
 </div>
@@ -967,7 +969,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
 <div class="chat-popup" id="chatPopup">
   <div class="chat-popup-header">
     <span>🍊 아꼼이 상담사</span>
-    <button class="chat-popup-close" id="chatClose">&times;</button>
+    <button class="chat-popup-close" id="chatClose" onclick="document.getElementById('chatPopup').classList.remove('open')">&times;</button>
   </div>
   <div class="chat-popup-body">
     <div class="chat-emoji">🍊</div>
@@ -977,7 +979,7 @@ footer{background:#0C1D38;padding:32px 16px calc(20px + var(--bottom-h));color:r
   </div>
   <div class="chat-popup-footer">
     <a href="tel:064-805-9181">📞 전화 연결</a>
-    <button id="chatCloseBtn">닫기</button>
+    <button id="chatCloseBtn" onclick="document.getElementById('chatPopup').classList.remove('open')">닫기</button>
   </div>
 </div>
 <nav class="bottom-nav">
