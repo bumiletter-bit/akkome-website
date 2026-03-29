@@ -55,6 +55,22 @@ button,select{font-family:'Noto Sans KR',sans-serif;font-weight:700}
 .badge-exchange{display:inline-block;font-size:11px;font-weight:600;padding:4px 8px;border-radius:4px;white-space:nowrap;line-height:1.4;color:#FFFFFF}
 .badge-free-shipping{background-color:#1B3A6B}
 .badge-exchange{background-color:#00A651}
+
+/* 후기 작성 */
+.rev-summary{display:flex;align-items:center;gap:12px;padding:12px;background:#fff9e6;border-radius:10px;margin-bottom:12px}
+.rev-avg-num{font-size:28px;font-weight:900;color:var(--navy);font-family:'Montserrat',sans-serif}
+.rev-avg-stars{color:#F5B800;font-size:14px}
+.rev-avg-cnt{font-size:12px;color:var(--text-mid);margin-top:2px}
+.pd-rev-form{margin-top:12px;padding:14px;border:1.5px solid #eee;border-radius:10px;background:#fafafa}
+.pd-rev-form .form-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.pd-rev-form .form-note{font-size:11px;color:var(--text-mid);margin-bottom:10px}
+.star-row{display:flex;gap:6px;margin-bottom:10px}
+.star-row span{font-size:26px;color:#ddd;cursor:pointer;transition:color .1s}
+.star-row span.on{color:#F5B800}
+.pd-rev-form input[type=text]{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:'Noto Sans KR',sans-serif;margin-bottom:8px;box-sizing:border-box}
+.pd-rev-form textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:'Noto Sans KR',sans-serif;resize:vertical;min-height:80px;margin-bottom:8px;box-sizing:border-box}
+.btn-rev-submit{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.btn-rev-write{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;border:1.5px solid var(--navy);border-radius:10px;font-size:13px;font-weight:700;color:var(--navy);margin-top:8px;cursor:pointer;background:#fff;font-family:'Noto Sans KR',sans-serif}
 </style>
 </head>
 <body>
@@ -117,6 +133,51 @@ button,select{font-family:'Noto Sans KR',sans-serif;font-weight:700}
   <img src="../images/상세페이지/세미놀귤/3-13상세.jpg" style="width:100%;display:block;margin:0;padding:0;">
   <img src="../images/상세페이지/세미놀귤/3-14상세.jpg" style="width:100%;display:block;margin:0;padding:0;">
 </div>
+
+<div class="pd-reviews">
+  <h3>구매후기 <span style="color:var(--text-mid);font-weight:400;font-size:13px">(3)</span></h3>
+  <div class="rev-summary">
+    <span class="rev-avg-num">4.8</span>
+    <div>
+      <div class="rev-avg-stars">★★★★★</div>
+      <div class="rev-avg-cnt">총 3개 후기</div>
+    </div>
+  </div>
+  
+  <div class="pd-rev">
+    <div class="stars">★★★★★</div>
+    <div class="txt">세미놀귤 처음 먹어봤는데 향이 독특하고 맛있어요.</div>
+    <div class="date">작성자: 김**  |  2026.03.19</div>
+  </div>
+  <div class="pd-rev">
+    <div class="stars">★★★★★</div>
+    <div class="txt">새콤달콤 맛의 조화가 좋아요. 아이들이 너무 좋아해요.</div>
+    <div class="date">작성자: 이**  |  2026.03.17</div>
+  </div>
+  <div class="pd-rev">
+    <div class="stars">★★★★☆</div>
+    <div class="txt">신선하고 맛있어요. 다음에도 구매할게요.</div>
+    <div class="date">작성자: 박**  |  2026.03.14</div>
+  </div>
+  <div id="userRevs"></div>
+  <button class="btn-rev-write" onclick="_toggleRevForm()">✏️ 리뷰 작성하기</button>
+  <div id="revFormWrap" style="display:none">
+    <div class="pd-rev-form">
+      <p class="form-title">구매후기 작성</p>
+      <p class="form-note">구매하신 분만 작성해주세요. 작성하신 후기는 즉시 반영됩니다.</p>
+      <div class="star-row">
+        <span onclick="_setStar(1)">★</span>
+        <span onclick="_setStar(2)">★</span>
+        <span onclick="_setStar(3)">★</span>
+        <span onclick="_setStar(4)">★</span>
+        <span onclick="_setStar(5)">★</span>
+      </div>
+      <input type="text" id="revName" placeholder="작성자명 (예: 홍**)">
+      <textarea id="revText" placeholder="구매하신 상품 후기를 자유롭게 작성해주세요."></textarea>
+      <button class="btn-rev-submit" onclick="_submitRev()">후기 등록하기</button>
+    </div>
+  </div>
+</div>
 <div class="pd-action">
   <a href="https://akkome.com/order/cart.html" target="_blank" style="flex:1"><button class="btn-cart" style="width:100%">장바구니</button></a>
   <a href="https://akkome.com/order/cart.html" target="_blank" style="flex:2"><button class="btn-buy" style="width:100%">바로구매</button></a>
@@ -131,6 +192,41 @@ button,select{font-family:'Noto Sans KR',sans-serif;font-weight:700}
 </nav>
 
 <script>
+var _revKey='rev_'+location.pathname;
+var _selStar=0;
+function _toggleRevForm(){var f=document.getElementById('revFormWrap');f.style.display=f.style.display==='none'?'block':'none';}
+function _setStar(n){_selStar=n;document.querySelectorAll('.star-row span').forEach(function(s,i){s.classList.toggle('on',i<n);});}
+function _submitRev(){
+  var nm=document.getElementById('revName').value.trim();
+  var tx=document.getElementById('revText').value.trim();
+  if(!nm){alert('작성자명을 입력해주세요.');return;}
+  if(!tx){alert('후기 내용을 입력해주세요.');return;}
+  if(!_selStar){alert('별점을 선택해주세요.');return;}
+  var rs=JSON.parse(localStorage.getItem(_revKey)||'[]');
+  var d=new Date();
+  var ds=d.getFullYear()+'.'+(String(d.getMonth()+1).padStart(2,'0'))+'.'+(String(d.getDate()).padStart(2,'0'));
+  rs.unshift({n:nm,t:tx,s:_selStar,d:ds});
+  localStorage.setItem(_revKey,JSON.stringify(rs));
+  _renderRevs();
+  document.getElementById('revFormWrap').style.display='none';
+  document.getElementById('revName').value='';
+  document.getElementById('revText').value='';
+  _selStar=0;
+  document.querySelectorAll('.star-row span').forEach(function(s){s.classList.remove('on');});
+  alert('후기가 등록되었습니다. 감사합니다!');
+}
+function _escHtml(s){return s.replace(/[<>&"]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
+function _renderRevs(){
+  var rs=JSON.parse(localStorage.getItem(_revKey)||'[]');
+  var c=document.getElementById('userRevs');
+  if(!c)return;
+  c.innerHTML='';
+  rs.forEach(function(r){
+    var st='★'.repeat(r.s)+'☆'.repeat(5-r.s);
+    c.innerHTML+='<div class="pd-rev"><div class="stars">'+st+'</div><div class="txt">'+_escHtml(r.t)+'</div><div class="date">작성자: '+_escHtml(r.n)+'  |  '+r.d+'</div></div>';
+  });
+}
+window.addEventListener('load',_renderRevs);
 var qty=1;
 function updatePrice(){
   var sel=document.getElementById('optionSelect');
