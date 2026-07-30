@@ -803,9 +803,15 @@
   .rev-stat{ flex:1; background:#fff; border:1px solid #EDEFF2; border-radius:14px; padding:11px 8px; text-align:center; }
   .rev-stat b{ display:block; font-size:16.5px; font-weight:800; color:#15181C; }
   .rev-stat span{ font-size:10.5px; font-weight:700; color:var(--text-mid); }
-  .rev-card{ background:#fff; border:1px solid #EDEFF2; border-radius:14px; padding:13px 14px; margin-bottom:9px; }
-  .rev-card.rev-hidden{ display:none; }
-  .rev-open .rev-card.rev-hidden{ display:block; }
+  .rev-card{ background:#fff; border:1.5px solid #E2EFCF; border-radius:16px; padding:13px 14px; margin-bottom:9px; box-shadow:0 2px 10px rgba(140,198,62,.10); border-top:3px solid var(--primary); }   /* #130: 라임 포인트 카드 */
+  /* #130: 후기 롤링 캐러셀 (접힘 상태 — 3.5초 자동 순환·조작 시 정지). 더보기·리뷰수 클릭(rev-open) 시 전체 세로 목록 */
+  .rev-roll{ display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; gap:10px; padding-bottom:4px; }
+  .rev-roll::-webkit-scrollbar{ display:none; }
+  .rev-roll .rev-card{ flex:0 0 100%; scroll-snap-align:start; margin-bottom:0; }
+  .rev-full{ display:none; }
+  .rev-open .rev-roll{ display:none; }
+  .rev-open .rev-full{ display:block; }
+  .rev-open #revMore{ display:none; }
   .rev-top{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
   .rev-badge{ font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:999px; flex:none; line-height:1.6; }
   .rev-badge.best{ color:#B45309; background:#FFF3C4; }
@@ -1322,7 +1328,7 @@
       <!-- 지시 #129: 대표 제작 통이미지(860×6600) 3분할 — 체험장 파트(1·2)+오션라운지 파트. 다크 올리브 구섹션 교체 -->
       <div style="display:flex; align-items:center; gap:10px; padding:14px 18px 10px; background:#fff;">
         <span style="font-size:15px; font-weight:800; color:#15181C;">🍊 제주아꼼이네 감귤체험장</span>
-        <a style="margin-left:auto; flex:none; background:var(--primary); color:#153015; font-size:13px; font-weight:800; padding:9px 20px; border-radius:11px; box-shadow:0 3px 10px rgba(140,198,62,.35);" href="https://brand.naver.com/jejuakkome/products/7673020911" target="_blank" rel="noopener">예약</a>
+        <a style="margin-left:auto; flex:none; background:var(--primary); color:#153015; font-size:13px; font-weight:800; padding:9px 20px; border-radius:11px; box-shadow:0 3px 10px rgba(140,198,62,.35);" href="#p/7673020911" data-pd="7673020911">예약</a>
       </div>
       <img src="assets/exp_part1.jpg" alt="제주아꼼이네 감귤체험장" loading="lazy" style="width:100%; display:block; aspect-ratio:860/2200; object-fit:cover; background:#F7F7F5;">
       <div style="position:relative;">
@@ -1759,16 +1765,34 @@ try{
     '<div class="rev-stat"><b>★'+D.store.avgScore+'</b><span>스토어 평점</span></div>'+
     '<div class="rev-stat"><b>99,999+</b><span>누적 리뷰</span></div></div>'+
     '<div class="rev-trust">모든 후기는 네이버 스토어 실제 구매 고객이 남긴 리뷰입니다</div>'+
-    shown + hidden +
-    (revCards.length>3 ? '<button class="rev-more" type="button" id="revMore">후기 더보기 ('+(revCards.length-3)+'건) ▾</button>' : '');
+    '<div class="rev-roll" id="revRoll">'+revCards.slice(0,8).join('')+'</div>'+   /* #130: 롤링 캐러셀(상위 8건) */
+    '<div class="rev-full">'+revCards.join('')+'</div>'+
+    (revCards.length>3 ? '<button class="rev-more" type="button" id="revMore">후기 더보기 ('+revCards.length+'건 전체) ▾</button>' : '');
   /* #126: 구 정적 rev-stats(플립 카운터 — 더미 187,841에서 2~10초 틱 반복)가 잔존해 실측 타일과 공존하던 것이 '초기화' 증상의 실체 → 정적 stats도 제거 (신 타일은 이 뒤에 삽입되므로 안전) */
   var old = revSec.querySelectorAll('.rev-list, .rev-summary, .rev-scroll, .rev, .big-rating-wrap, .rev-stats');
   for(var i=0;i<old.length;i++) old[i].remove();
   revBody.insertAdjacentElement('afterend', wrap);
   wrap.addEventListener('click', function(e){
-    if(e.target.id==='revMore'){ wrap.classList.add('rev-open'); e.target.style.display='none'; return; }
+    if(e.target.id==='revMore'){ wrap.classList.add('rev-open'); if(revRollTimer){clearInterval(revRollTimer);revRollTimer=null;} return; }
     var t=e.target.closest('[data-expand]'); if(t) t.classList.toggle('open');
   });
+  /* #130: 후기 롤링 — 3.5초 자동 순환(끝→처음 루프)·조작 시 5초 정지(#127 갤러리와 동일 원칙)·rev-open이면 정지 */
+  var revRollTimer = null;
+  (function(){
+    var roll = document.getElementById('revRoll');
+    if (!roll || revCards.length < 2) return;
+    var n = Math.min(revCards.length, 8);
+    var pausedUntil = 0;
+    revRollTimer = setInterval(function(){
+      if (Date.now() < pausedUntil || wrap.classList.contains('rev-open')) return;
+      var i = Math.round(roll.scrollLeft / roll.clientWidth);
+      roll.scrollTo({ left: roll.clientWidth * ((i+1) % n), behavior: 'smooth' });
+    }, 3500);
+    function rPause(){ pausedUntil = Date.now() + 5000; }
+    roll.addEventListener('touchstart', rPause, { passive:true });
+    roll.addEventListener('pointerdown', rPause, { passive:true });
+    roll.addEventListener('wheel', rPause, { passive:true });
+  })();
   /* #126: 관심고객 끝자리 실시간 연출 — 기준은 항상 스냅샷 실측값(재방문 시 실측부터·연출 누적 미저장). 30~90초 랜덤 +1, 평점은 고정 */
   (function(){
     var el = document.getElementById('revInterest');
