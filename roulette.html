@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F5F6F8">
+<title>제주아꼼이네 — 나침판 돌리기</title>
+<!-- ============================================================================
+  ⚠️⚠️⚠️  프로토타입 한정 (STEP2 실동작 데모)  ⚠️⚠️⚠️
+  실서비스에서는 추첨 결과·쿠폰 발급·참여 기록 전부 "회사프로그램 서버"가 담당한다.
+  ★ 프론트 추첨 금지: 브라우저 JS의 랜덤은 누구나 개발자도구로 조작 가능.
+  ★ 이 파일의 랜덤 로직(pickWeighted)·localStorage 1일 제한·잔액 갱신은 전부 데모용.
+  ★ 서버 이관 시: 버튼 클릭 → POST /api/game/roulette/spin 호출 →
+     서버가 (참여자격 검증 + 추첨 + 물방울/쿠폰 지급 + 참여기록 저장) 후
+     결과(당첨 칸 index)만 응답 → 프론트는 그 index로 "연출(회전 애니메이션)"만 수행.
+  파일 내 서버 대체 지점은 전부  "API:" 로 시작하는 주석으로 표시해 두었다.
+============================================================================ -->
+<style>
+  /* ============================================================
+     스킨 토큰: home_v2.html에서 복사 (회사프로그램 디자인 시스템 — 인디고)
+     외부 리소스 0 (오프라인 100% 렌더)
+     ============================================================ */
+  :root{
+    --primary:       #8CC63E;
+    --primary-dark:  #5F9E1F;
+    --primary-light: #F1F8E4;
+    --primary-ring:  rgba(140,198,62,.15);
+    --bg:            #F5F6F8;
+    --card:          #FFFFFF;
+    --text-dark:     #101828;
+    --text-mid:      #667085;
+    --text-light:    #98A0AE;
+    --border:        #ECEDF1;
+    --border-soft:   #F1F2F5;
+    --danger:        #F04438;
+    --success:       #12B76A;
+    --amber:         #F59E0B;
+    --yellow:        #F5C800;
+    --yellow-soft:   #FFF6D0;
+    --navy:          #1B3A6B;
+    --radius:        14px;
+    --radius-box:    12px;
+    --radius-btn:    10px;
+    --shadow:        0 1px 3px rgba(16,24,40,.06);
+    --shadow-float:  0 4px 16px -6px rgba(16,24,40,.12);
+    --shadow-cta:    0 6px 16px -6px rgba(140,198,62,.55);
+    --header-grad:   linear-gradient(#FBFBFD,#F4F5F8);
+    --tabbar-h:      62px;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html{ color-scheme: light only; }
+  html,body{ height:100%; }
+  body{
+    font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,
+      "Apple SD Gothic Neo","Malgun Gothic","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:#E9EAEF;
+    color:var(--text-dark);
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
+  a{ text-decoration:none; color:inherit; }
+
+  .app{
+    position:relative;
+    max-width:480px;
+    min-height:100dvh;
+    margin:0 auto;
+    background:var(--bg);
+    box-shadow:0 0 40px rgba(16,24,40,.12);
+    overflow-x:hidden;
+  }
+  .scroll{ padding-bottom:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px) + 20px); }
+
+  /* ============ 상단 헤더: 뒤로가기 + 제목 + 💧 잔액 ============ */
+  .topbar{
+    background:var(--header-grad);
+    border-bottom:1px solid var(--border);
+    padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;
+    display:flex; align-items:center; gap:8px;
+    position:sticky; top:0; z-index:10;
+  }
+  .back-btn{
+    width:38px; height:38px; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; font-weight:800; color:var(--text-dark);
+    border-radius:var(--radius-btn);
+  }
+  .back-btn:active{ background:var(--primary-light); color:var(--primary-dark); }
+  .topbar h1{
+    flex:1; font-size:16.5px; font-weight:800; letter-spacing:-.02em; color:var(--text-dark);
+  }
+  /* 💧 물방울 잔액 자리 — 실서비스에선 서버 응답 값으로 채움 (지금은 더미 1,250) */
+  .water-chip{
+    display:inline-flex; align-items:center; gap:5px;
+    background:var(--card); border:1.5px solid var(--border);
+    border-radius:999px; padding:6px 13px;
+    font-size:13.5px; font-weight:800; color:var(--navy);
+    font-variant-numeric:tabular-nums;
+    box-shadow:var(--shadow);
+  }
+
+  /* ============ 룰렛 본체 ============ */
+  .stage{
+    padding:26px 18px 10px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .stage-title{
+    font-size:20px; font-weight:800; letter-spacing:-.03em; color:var(--text-dark);
+    text-align:center;
+  }
+  .stage-sub{
+    margin-top:5px; font-size:12.5px; font-weight:600; color:var(--text-mid); text-align:center;
+  }
+  .stage-sub b{ color:var(--primary); }
+
+  .wheel-wrap{
+    position:relative;
+    width:min(320px, 82vw);
+    aspect-ratio:1/1;
+    margin-top:24px;
+  }
+  /* 상단 고정 포인터 (▼) — 이 포인터가 가리키는 칸이 결과 */
+  .pointer{
+    position:absolute; top:-12px; left:50%; transform:translateX(-50%);
+    z-index:5;
+    width:0; height:0;
+    border-left:13px solid transparent;
+    border-right:13px solid transparent;
+    border-top:22px solid var(--danger);
+    filter:drop-shadow(0 2px 3px rgba(16,24,40,.25));
+  }
+  .pointer::after{
+    content:""; position:absolute; left:-8px; top:-21px;
+    width:16px; height:10px;
+  }
+  #wheel{
+    width:100%; height:100%;
+    display:block;
+    border-radius:50%;
+    box-shadow:var(--shadow-float), 0 0 0 8px var(--card), 0 0 0 10px var(--border);
+    /* 회전 애니메이션: 3.6초 ease-out 계열 커브 (요구사항 3~4초) */
+    transition:transform 3.6s cubic-bezier(.12,.65,.08,1);
+    transform:rotate(0deg);
+    will-change:transform;
+  }
+  /* 중앙 [돌리기] 버튼 */
+  .spin-btn{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    z-index:6;
+    width:88px; height:88px; border-radius:50%;
+    background:var(--primary); color:#fff;
+    font-size:16px; font-weight:800; letter-spacing:-.02em;
+    box-shadow:var(--shadow-cta), 0 0 0 5px var(--card);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+    transition:transform .1s ease, background .15s;
+  }
+  .spin-btn small{ font-size:10px; font-weight:700; opacity:.85; }
+  .spin-btn:active{ transform:translate(-50%,-50%) scale(.94); background:var(--primary-dark); }
+  .spin-btn:disabled{
+    background:var(--text-light); box-shadow:0 0 0 5px var(--card); cursor:not-allowed;
+  }
+
+  /* 참여 상태 안내 (오늘 1회 제한) */
+  .limit-note{
+    margin-top:22px;
+    min-height:22px;
+    font-size:13.5px; font-weight:700; color:var(--text-mid); text-align:center;
+  }
+  .limit-note.done{ color:var(--danger); }
+
+  /* 확률 안내 카드 (데모 표기 — 실서비스 확률은 서버 정책) */
+  .info-card{
+    margin:18px 18px 0; padding:16px 18px;
+    background:var(--card); border:1px solid var(--border-soft);
+    border-radius:var(--radius); box-shadow:var(--shadow);
+  }
+  .info-card h3{ font-size:13.5px; font-weight:800; letter-spacing:-.02em; }
+  .info-card ul{ margin-top:8px; list-style:none; }
+  .info-card li{
+    display:flex; justify-content:space-between;
+    font-size:12.5px; font-weight:600; color:var(--text-mid); padding:3px 0;
+    font-variant-numeric:tabular-nums;
+  }
+  .info-card li b{ color:var(--text-dark); font-weight:700; }
+  .info-foot{
+    margin-top:10px; font-size:11px; color:var(--text-light); font-weight:600; line-height:1.5;
+  }
+
+  /* [데모 전용] 참여기록 초기화 — 실서비스에는 없는 버튼 */
+  .demo-reset{
+    display:block; margin:16px auto 0;
+    font-size:11.5px; font-weight:700; color:var(--text-light);
+    text-decoration:underline; text-underline-offset:3px;
+  }
+  .demo-reset:active{ color:var(--primary); }
+
+  /* ============ 결과 모달 (home_v2 모달 규격 재사용) ============ */
+  .modal-dim{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(16,24,40,.55);
+    display:flex; align-items:center; justify-content:center;
+    padding:28px;
+    opacity:0; pointer-events:none; transition:opacity .18s ease;
+  }
+  .modal-dim.show{ opacity:1; pointer-events:auto; }
+  .modal{
+    width:100%; max-width:320px;
+    background:var(--card); border-radius:var(--radius);
+    border:1px solid var(--border-soft);
+    padding:28px 22px 20px;
+    text-align:center;
+    box-shadow:0 18px 50px rgba(16,24,40,.35);
+    transform:translateY(14px) scale(.96);
+    transition:transform .18s ease;
+  }
+  .modal-dim.show .modal{ transform:none; }
+  .modal-emo{ font-size:54px; line-height:1.1; }
+  .modal h3{
+    margin-top:12px; font-size:19px; font-weight:800; color:var(--text-dark); letter-spacing:-.02em;
+  }
+  .modal p{
+    margin-top:8px; font-size:13.5px; color:var(--text-mid); font-weight:600; line-height:1.55;
+  }
+  .modal-close{
+    margin-top:18px; width:100%;
+    background:var(--primary); color:#fff;
+    font-size:15px; font-weight:800;
+    padding:14px 0; border-radius:var(--radius-btn);
+    box-shadow:var(--shadow-cta);
+    transition:transform .1s ease, background .15s;
+  }
+  .modal-close:active{ transform:scale(.97); background:var(--primary-dark); }
+
+  /* ============ 하단 고정 탭바 (다른 요원 제작 페이지로 링크) ============ */
+  .tabbar{
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px; z-index:50;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(8px);
+    border-top:1px solid var(--border);
+    box-shadow:0 -4px 16px -6px rgba(16,24,40,.12);
+    display:flex;
+    height:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px));
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    color:var(--text-light); font-size:10.5px; font-weight:700; letter-spacing:-.02em;
+  }
+  .tab .t-ic{
+    font-size:21px; line-height:1; filter:grayscale(1) opacity(.55);
+    padding:2px 12px; border-radius:999px;
+  }
+  .tab.active{ color:var(--primary); }
+  .tab.active .t-ic{ filter:none; transform:scale(1.06); background:var(--primary-light); }
+  .tab:active{ color:var(--primary); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="scroll">
+
+    <!-- ===== 상단바: 뒤로가기(index.html) · 제목 · 💧 잔액(더미) ===== -->
+    <header class="topbar">
+      <a class="back-btn" href="index_v5.html" aria-label="홈으로 돌아가기">‹</a>
+      <h1>🧭 나침판 돌리기</h1>
+      <!-- API: GET /api/game/wallet — 실서비스에선 서버가 주는 물방울 잔액 표시 (아래는 더미) -->
+      <span class="water-chip">💧 <span id="waterBalance">1,250</span></span>
+    </header>
+
+    <!-- ===== 룰렛 스테이지 ===== -->
+    <section class="stage">
+      <h2 class="stage-title">아꼼이의 나침판을 돌려보세요!</h2>
+      <p class="stage-sub">하루에 <b>1번</b> — 물방울과 귤 쿠폰이 기다려요 🍊</p>
+
+      <div class="wheel-wrap">
+        <div class="pointer" aria-hidden="true"></div>
+        <!-- 룰렛 원판: 6칸 SVG (조각은 JS가 생성 — 외부 리소스 없음) -->
+        <svg id="wheel" viewBox="-110 -110 220 220" role="img" aria-label="나침판 룰렛 원판"></svg>
+        <!-- API: POST /api/game/roulette/spin
+             실서비스: 이 버튼 클릭 시 서버에 스핀 요청 → 서버가 추첨·지급·기록 후
+             당첨 칸 index만 응답 → 프론트는 받은 index로 회전 연출만 한다. -->
+        <button class="spin-btn" type="button" id="spinBtn">
+          돌리기<small>GO!</small>
+        </button>
+      </div>
+
+      <p class="limit-note" id="limitNote"></p>
+    </section>
+
+    <!-- ===== 상품(칸) 안내 — 데모 확률 표기 ===== -->
+    <div class="info-card">
+      <h3>🎁 나침판 구성 (데모 확률)</h3>
+      <ul id="oddsList"><!-- JS가 채움 --></ul>
+      <p class="info-foot">
+        ※ 프로토타입 데모 확률입니다. 실서비스 확률·당첨·지급은 전부 회사프로그램 서버가 결정합니다.<br>
+        ※ 참여는 하루 1회, 자정에 초기화됩니다. (데모: 기기 localStorage 날짜 비교로 시뮬레이션)
+      </p>
+    </div>
+
+    <!-- [데모 전용] 오늘 참여기록 지우고 다시 돌려보기 — 실서비스에는 없는 기능 -->
+    <button class="demo-reset" type="button" id="demoReset">[데모] 참여 기록 초기화 (다시 돌려보기)</button>
+  </div>
+
+  <!-- ===== 하단 탭바: 다른 요원이 만드는 index/products/my 파일명에 맞춤 ===== -->
+  <nav class="tabbar" aria-label="하단 메뉴">
+    <a class="tab" href="index_v5.html">
+      <span class="t-ic">🏠</span>홈
+    </a>
+    <a class="tab" href="products_v5.html">
+      <span class="t-ic">🛒</span>쇼핑
+    </a>
+    <a class="tab active" href="roulette.html" aria-current="page">
+      <span class="t-ic">🧭</span>나침판
+    </a>
+    <a class="tab" href="my.html">
+      <span class="t-ic">👤</span>마이
+    </a>
+  </nav>
+
+  <!-- ===== 결과 모달 ===== -->
+  <div class="modal-dim" id="modalDim" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-emo" id="modalEmo">💧</div>
+      <h3 id="modalTitle">결과</h3>
+      <p id="modalDesc"></p>
+      <button class="modal-close" type="button" id="modalClose">확인</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =============================================================================
+   ⚠️⚠️⚠️  프로토타입 한정 — 아래 랜덤 추첨 로직은 "데모용"  ⚠️⚠️⚠️
+   실서비스에서는 추첨 결과·쿠폰 발급·참여 기록 전부 회사프로그램 서버가 담당.
+   (프론트 추첨 금지: 브라우저 JS는 개발자도구로 얼마든지 조작 가능)
+   서버 이관 시 이 파일에서 서버로 옮겨야 하는 것:
+     ① pickWeighted()의 확률·추첨       → 서버 (POST /api/game/roulette/spin)
+     ② localStorage 1일 1회 제한        → 서버 참여기록 테이블 (KST 자정 기준)
+     ③ 물방울 잔액 가산·귤 쿠폰 발급    → 서버 지갑/쿠폰 테이블
+   프론트에 남는 것: 회전 "연출"과 결과 표시뿐.
+============================================================================= */
+(function(){
+  "use strict";
+
+  /* ---- 룰렛 6칸 정의 (원판에 그려지는 순서 = 시계방향, 0번이 12시 방향부터) ----
+     weight = 데모 확률(%) — ⚠️ 실서비스 확률은 서버 정책 (여기 값은 연출/데모용) */
+  var SEGS = [
+    { label:"물방울 10",  emoji:"💧", type:"water",  amount:10,  weight:34, fill:"#F1F8E4", txt:"#5F9E1F" },
+    { label:"물방울 30",  emoji:"💧", type:"water",  amount:30,  weight:25, fill:"#FFFFFF", txt:"#101828" },
+    { label:"물방울 50",  emoji:"💧", type:"water",  amount:50,  weight:15, fill:"#F1F8E4", txt:"#5F9E1F" },
+    { label:"꽝",         emoji:"😢", type:"none",   amount:0,   weight:15, fill:"#F1F2F5", txt:"#98A0AE" },
+    { label:"물방울 100", emoji:"💧", type:"water",  amount:100, weight:8,  fill:"#FFFFFF", txt:"#101828" },
+    { label:"귤 1개 쿠폰", emoji:"🍊", type:"coupon", amount:1,   weight:3,  fill:"#FFF6D0", txt:"#1B3A6B" }
+  ];
+  var SEG_ANGLE = 360 / SEGS.length;   // 60도
+  var LS_KEY = "akm_roulette_last_date";   // ⚠️ 데모용 — 실서비스는 서버 참여기록으로 대체
+
+  var wheel     = document.getElementById("wheel");
+  var spinBtn   = document.getElementById("spinBtn");
+  var limitNote = document.getElementById("limitNote");
+  var balanceEl = document.getElementById("waterBalance");
+  var dim       = document.getElementById("modalDim");
+  var modalEmo  = document.getElementById("modalEmo");
+  var modalTitle= document.getElementById("modalTitle");
+  var modalDesc = document.getElementById("modalDesc");
+
+  var rotation = 0;       // 누적 회전각(deg)
+  var spinning = false;
+  var balance  = 1250;    // 💧 더미 잔액 — 실서비스: 서버 값 (GET /api/game/wallet)
+
+  /* ---- 원판 SVG 생성: 6개 부채꼴 + 라벨 (외부 이미지 없이 코드로 그림) ---- */
+  function polar(r, deg){
+    var rad = deg * Math.PI / 180;
+    // 0도 = 12시 방향, 시계방향 증가
+    return [ r * Math.sin(rad), -r * Math.cos(rad) ];
+  }
+  function buildWheel(){
+    var NS = "http://www.w3.org/2000/svg";
+    var R = 100;
+    for (var i = 0; i < SEGS.length; i++){
+      var a0 = i * SEG_ANGLE, a1 = (i + 1) * SEG_ANGLE;
+      var p0 = polar(R, a0), p1 = polar(R, a1);
+      var path = document.createElementNS(NS, "path");
+      path.setAttribute("d",
+        "M0,0 L" + p0[0].toFixed(2) + "," + p0[1].toFixed(2) +
+        " A" + R + "," + R + " 0 0 1 " + p1[0].toFixed(2) + "," + p1[1].toFixed(2) + " Z");
+      path.setAttribute("fill", SEGS[i].fill);
+      path.setAttribute("stroke", "#ECEDF1");
+      path.setAttribute("stroke-width", "1.2");
+      wheel.appendChild(path);
+
+      // 라벨: 칸 중심각 방향으로 회전시켜 배치 (이모지 + 텍스트)
+      var mid = a0 + SEG_ANGLE / 2;
+      var g = document.createElementNS(NS, "g");
+      g.setAttribute("transform", "rotate(" + mid + ")");
+      var emo = document.createElementNS(NS, "text");
+      emo.setAttribute("x", "0"); emo.setAttribute("y", "-72");
+      emo.setAttribute("text-anchor", "middle");
+      emo.setAttribute("font-size", "17");
+      emo.textContent = SEGS[i].emoji;
+      var txt = document.createElementNS(NS, "text");
+      txt.setAttribute("x", "0"); txt.setAttribute("y", "-52");
+      txt.setAttribute("text-anchor", "middle");
+      txt.setAttribute("font-size", "11.5");
+      txt.setAttribute("font-weight", "800");
+      txt.setAttribute("fill", SEGS[i].txt);
+      txt.textContent = SEGS[i].label;
+      g.appendChild(emo); g.appendChild(txt);
+      wheel.appendChild(g);
+    }
+    // 중앙 허브 원 (버튼 아래 받침)
+    var hub = document.createElementNS(NS, "circle");
+    hub.setAttribute("r", "48");
+    hub.setAttribute("fill", "#FFFFFF");
+    hub.setAttribute("stroke", "#ECEDF1");
+    wheel.appendChild(hub);
+  }
+
+  /* ---- 확률 안내 목록 채우기 ---- */
+  function buildOdds(){
+    var ul = document.getElementById("oddsList");
+    for (var i = 0; i < SEGS.length; i++){
+      var li = document.createElement("li");
+      var b = document.createElement("b");
+      b.textContent = SEGS[i].emoji + " " + SEGS[i].label;
+      var span = document.createElement("span");
+      span.textContent = SEGS[i].weight + "%";
+      li.appendChild(b); li.appendChild(span);
+      ul.appendChild(li);
+    }
+  }
+
+  /* ---- 오늘 날짜 문자열 (기기 로컬 기준 — 자정 지나면 값이 바뀌어 자동 리셋) ---- */
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + "-" +
+      String(d.getMonth() + 1).padStart(2, "0") + "-" +
+      String(d.getDate()).padStart(2, "0");
+  }
+
+  /* ---- 오늘 1회 제한 확인/표시
+     ⚠️ 데모: localStorage 날짜 비교로 "자정 리셋"을 시뮬레이션.
+     실서비스: 서버 참여기록(KST 기준)으로 판정 — localStorage는 지워지면 그만이라 못 믿음. ---- */
+  function alreadyPlayedToday(){
+    var v = null;
+    try { v = localStorage.getItem(LS_KEY); } catch (e) {}
+    return v === todayStr();
+  }
+  function markPlayedToday(){
+    try { localStorage.setItem(LS_KEY, todayStr()); } catch (e) {}
+  }
+  function refreshLimitUI(){
+    if (alreadyPlayedToday()){
+      spinBtn.disabled = true;
+      limitNote.textContent = "오늘은 이미 참여했어요 — 내일 다시 도전하세요!";
+      limitNote.className = "limit-note done";
+    } else {
+      spinBtn.disabled = false;
+      limitNote.textContent = "오늘의 기회가 남아있어요!";
+      limitNote.className = "limit-note";
+    }
+  }
+
+  /* ---- 가중치 랜덤 추첨 — ⚠️ 데모용. 실서비스에선 서버가 추첨 (프론트 추첨 금지) ---- */
+  function pickWeighted(){
+    var total = 0, i;
+    for (i = 0; i < SEGS.length; i++) total += SEGS[i].weight;
+    var r = Math.random() * total;
+    for (i = 0; i < SEGS.length; i++){
+      r -= SEGS[i].weight;
+      if (r < 0) return i;
+    }
+    return SEGS.length - 1;
+  }
+
+  /* ---- 스핀 실행 ---- */
+  function spin(){
+    if (spinning || alreadyPlayedToday()) return;
+    spinning = true;
+    spinBtn.disabled = true;
+    limitNote.textContent = "나침판이 돌아가는 중... 🧭";
+    limitNote.className = "limit-note";
+
+    /* API: POST /api/game/roulette/spin
+       실서비스에선 아래 pickWeighted() 대신 서버 응답의 당첨 index를 사용:
+         fetch("/api/game/roulette/spin", {method:"POST", ...})
+           .then(r => r.json()).then(res => animateTo(res.segmentIndex))
+       서버가 "오늘 이미 참여" 응답을 주면 회전 없이 안내만 표시. */
+    var target = pickWeighted();   // ⚠️ 데모용 프론트 추첨
+
+    // 목표: target 칸의 중심이 12시 포인터 아래로 오도록 회전
+    // 칸 중심각 = target*60 + 30. 칸 안에서 ±20도 지터로 자연스러움 부여.
+    var jitter = (Math.random() * 40) - 20;
+    var targetMod = (360 - (target * SEG_ANGLE + SEG_ANGLE / 2 + jitter)) % 360;
+    if (targetMod < 0) targetMod += 360;
+    var currentMod = ((rotation % 360) + 360) % 360;
+    var delta = (targetMod - currentMod + 360) % 360;
+    rotation += 5 * 360 + delta;   // 최소 5바퀴 + 목표각 (3.6초 ease-out)
+    wheel.style.transform = "rotate(" + rotation + "deg)";
+
+    // transitionend 1회로 결과 처리 (안전망 타임아웃 포함)
+    var finished = false;
+    function onDone(){
+      if (finished) return;
+      finished = true;
+      wheel.removeEventListener("transitionend", onDone);
+      settle(target);
+    }
+    wheel.addEventListener("transitionend", onDone);
+    setTimeout(onDone, 4200);   // transitionend 미발화 대비 안전망
+  }
+
+  /* ---- 결과 확정: 기록 저장 + 잔액 반영(데모) + 모달 ---- */
+  function settle(idx){
+    var seg = SEGS[idx];
+    spinning = false;
+
+    /* API: (서버 이관 지점) 참여 기록 저장 + 보상 지급은 서버가 이미 spin 응답 전에 처리함.
+       데모에선 localStorage 날짜 기록 + 화면 잔액만 갱신. */
+    markPlayedToday();
+
+    if (seg.type === "water"){
+      balance += seg.amount;   // ⚠️ 데모 — 실서비스: 서버 지갑 테이블이 진실
+      balanceEl.textContent = balance.toLocaleString("ko-KR");
+      modalEmo.textContent = "💧";
+      modalTitle.textContent = "물방울 " + seg.amount + "개 당첨!";
+      modalDesc.textContent = "내 귤나무에 물 줄 물방울 " + seg.amount + "개를 받았어요. 내일 또 도전하세요!";
+    } else if (seg.type === "coupon"){
+      /* API: POST 응답에 쿠폰 코드 포함 — 발급·저장은 서버 쿠폰 테이블 담당 (데모는 표시만) */
+      modalEmo.textContent = "🍊";
+      modalTitle.textContent = "귤 1개 쿠폰 당첨!";
+      modalDesc.textContent = "다음 주문에 귤 1개를 더 담아드리는 쿠폰이에요. (데모 — 실발급은 서버)";
+    } else {
+      modalEmo.textContent = "😢";
+      modalTitle.textContent = "아쉽지만 꽝...";
+      modalDesc.textContent = "다음 기회에! 내일 자정이 지나면 다시 도전할 수 있어요.";
+    }
+    dim.classList.add("show");
+    refreshLimitUI();
+  }
+
+  /* ---- 모달 닫기 ---- */
+  function closeModal(){ dim.classList.remove("show"); }
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  dim.addEventListener("click", function(e){ if (e.target === dim) closeModal(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeModal(); });
+
+  /* ---- [데모 전용] 참여기록 초기화 — 실서비스에는 존재하지 않는 기능 ---- */
+  document.getElementById("demoReset").addEventListener("click", function(){
+    try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    refreshLimitUI();
+    limitNote.textContent = "참여 기록을 지웠어요 — 다시 돌려보세요! (데모 전용)";
+  });
+
+  spinBtn.addEventListener("click", spin);
+
+  buildWheel();
+  buildOdds();
+  refreshLimitUI();
+})();
+</script>
+</body>
+</html>
