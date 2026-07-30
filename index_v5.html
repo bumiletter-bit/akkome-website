@@ -770,7 +770,7 @@
   /* #125-2: 타이포 위계 — 상품명 최상위(22px) > 평점·리뷰(12.5px 보조) */
   .pd-fix .pd-name{ font-size:22px; line-height:1.25; letter-spacing:-.03em; }
   .pd-fix .pd-meta{ margin-top:7px; gap:10px; }
-  .pd-fix .rate-row{ font-size:12.5px; }
+  .pd-fix .rate-row{ font-size:15px; }   /* #127-1: 12.5→15px (+20%) — 상품명 22px보다 한 단계 아래 유지 */
   .pd-rev-link{ cursor:pointer; text-decoration:underline; text-underline-offset:2px; text-decoration-color:#C9CDD3; }
   .pd-fix .pd-buyrow{ margin-top:10px; padding-top:9px; border-top:1px solid #F5F6F8; }
   .pd-buyrow{ display:flex; align-items:center; gap:10px; margin-top:8px; }
@@ -1815,6 +1815,7 @@ try{
   var dim = document.createElement('div');
   dim.className = 'pd-dim'; dim.id = 'pdDim';
   dim.innerHTML = '<div class="pd-sheet"><div class="pd-body" id="pdBody"></div></div>';   // #119: 갤러리·고정 블록 전부 pdBody 안(스크롤 컨테이너)에서 렌더 — sticky 구조
+  var pdAutoTimer = null;   // #127-2: 갤러리 자동 슬라이드 타이머 (상세 닫힐 때 정리)
   document.body.appendChild(dim);
   function guideFor(it){
     var key = null;
@@ -1872,6 +1873,7 @@ try{
       '<div class="pd-foot-note">실서비스 연결 전 프로토타입 — 가격·옵션·리뷰·상세는 네이버 스토어 실데이터 스냅샷(2026-07-30)입니다.</div></div>';
     /* 갤러리 카운터·썸네일 동기화 + 주문하기 → 옵션 탭 */
     var galEl = document.getElementById('pdGal');
+    if (pdAutoTimer) { clearInterval(pdAutoTimer); pdAutoTimer = null; }
     if (galEl && gal.length>1) {
       galEl.addEventListener('scroll', function(){
         var i = Math.round(galEl.scrollLeft / galEl.clientWidth);
@@ -1880,9 +1882,21 @@ try{
         var ths = document.querySelectorAll('#pdThumbs img');
         for (var t=0;t<ths.length;t++) ths[t].classList.toggle('on', t===i);
       }, { passive:true });
+      /* #127-2: 1.5초 자동 슬라이드(끝→처음 루프) — 사용자 조작(터치·휠·썸네일) 시 일시 정지, 5초 무조작 후 재개 */
+      var pausedUntil = 0;
+      function autoTick(){
+        if (Date.now() < pausedUntil) return;
+        var i = Math.round(galEl.scrollLeft / galEl.clientWidth);
+        galEl.scrollTo({ left: galEl.clientWidth * ((i+1) % gal.length), behavior: 'smooth' });
+      }
+      pdAutoTimer = setInterval(autoTick, 1500);
+      function userPause(){ pausedUntil = Date.now() + 5000; }
+      galEl.addEventListener('touchstart', userPause, { passive:true });
+      galEl.addEventListener('pointerdown', userPause, { passive:true });
+      galEl.addEventListener('wheel', userPause, { passive:true });
       document.getElementById('pdThumbs').addEventListener('click', function(e){
         var im = e.target.closest('img[data-gi]');
-        if (im) galEl.scrollTo({ left: galEl.clientWidth * (+im.dataset.gi), behavior: 'smooth' });
+        if (im) { userPause(); galEl.scrollTo({ left: galEl.clientWidth * (+im.dataset.gi), behavior: 'smooth' }); }
       });
     }
     var orderBtn = document.getElementById('pdOrder');
@@ -1898,11 +1912,12 @@ try{
   }
   function closePd(fromPop){
     dim.classList.remove('show');
+    if (pdAutoTimer) { clearInterval(pdAutoTimer); pdAutoTimer = null; }   // #127-2
     if (!fromPop && history.state && history.state.pd) history.back();   // ← 버튼도 back과 동일 동작
   }
   window.addEventListener('popstate', function(){
     if (history.state && history.state.pd) openPd(history.state.pd);
-    else dim.classList.remove('show');                                    // 홈 DOM은 그대로 → 탭·스크롤 상태 보존
+    else { dim.classList.remove('show'); if (pdAutoTimer) { clearInterval(pdAutoTimer); pdAutoTimer = null; } }   // 홈 DOM은 그대로 → 탭·스크롤 상태 보존
   });
   if (location.hash.indexOf('#p/') === 0 && location.hash.length > 3) {   // 쇼핑 페이지에서 #p/{no}로 진입 시 상세 자동 오픈
     var hashNo = location.hash.slice(3).replace(/[^0-9]/g, '');
