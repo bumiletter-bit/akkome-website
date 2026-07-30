@@ -1741,9 +1741,11 @@ try{
   var revSec = document.getElementById('reviews');
   var nameOf = {}; D.items.forEach(function(it){ nameOf[String(it.no)] = sname(it); });
   var revCards = [];
+  var revMeta = [];   /* #131: 롤링 선정용 메타 (상품번호·BEST/재구매 여부) */
   Object.keys(D.reviews).forEach(function(no){
     var arr = D.reviews[no]; if(!Array.isArray(arr)) return;
     arr.forEach(function(rv){
+      revMeta.push({ no: no, prio: (rv.labels||[]).indexOf('BEST')>=0 ? 0 : ((rv.labels||[]).indexOf('REPURCHASE')>=0 ? 1 : 2) });
       var badges = (rv.labels||[]).map(function(l){
         return l==='BEST' ? '<span class="rev-badge best">BEST</span>' : (l==='REPURCHASE' ? '<span class="rev-badge re">재구매</span>' : '');
       }).join('');
@@ -1758,6 +1760,23 @@ try{
   });
   var shown = revCards.slice(0,3).join('');
   var hidden = revCards.slice(3).map(function(c){ return c.replace('class="rev-card"','class="rev-card rev-hidden"'); }).join('');
+  /* #131: 롤링 15건 선정 — 상품별 그룹 → 그룹 내 BEST(0)>재구매(1)>일반(2) 정렬 → 라운드로빈(같은 상품 연속 방지) */
+  function rollPick(limit){
+    var groups = {};
+    revMeta.forEach(function(m, i){ (groups[m.no] = groups[m.no] || []).push({ i: i, prio: m.prio }); });
+    Object.keys(groups).forEach(function(k){ groups[k].sort(function(a,b){ return a.prio - b.prio; }); });
+    var keys = Object.keys(groups), out = [], round = 0;
+    while (out.length < limit && round < 10) {
+      var added = false;
+      for (var k = 0; k < keys.length && out.length < limit; k++) {
+        var g = groups[keys[k]];
+        if (g[round]) { out.push(revCards[g[round].i]); added = true; }
+      }
+      if (!added) break;
+      round++;
+    }
+    return out;
+  }
   var revBody = revSec.querySelector('.section-head');
   var wrap = document.createElement('div');
   wrap.innerHTML = '<div class="rev-stats">'+
@@ -1765,7 +1784,7 @@ try{
     '<div class="rev-stat"><b>★'+D.store.avgScore+'</b><span>스토어 평점</span></div>'+
     '<div class="rev-stat"><b>99,999+</b><span>누적 리뷰</span></div></div>'+
     '<div class="rev-trust">모든 후기는 네이버 스토어 실제 구매 고객이 남긴 리뷰입니다</div>'+
-    '<div class="rev-roll" id="revRoll">'+revCards.slice(0,8).join('')+'</div>'+   /* #130: 롤링 캐러셀(상위 8건) */
+    '<div class="rev-roll" id="revRoll">'+rollPick(15).join('')+'</div>'+   /* #130·#131: 롤링 캐러셀 15건 — BEST/재구매 우선·상품 인터리브 */
     '<div class="rev-full">'+revCards.join('')+'</div>'+
     (revCards.length>3 ? '<button class="rev-more" type="button" id="revMore">후기 더보기 ('+revCards.length+'건 전체) ▾</button>' : '');
   /* #126: 구 정적 rev-stats(플립 카운터 — 더미 187,841에서 2~10초 틱 반복)가 잔존해 실측 타일과 공존하던 것이 '초기화' 증상의 실체 → 정적 stats도 제거 (신 타일은 이 뒤에 삽입되므로 안전) */
@@ -1781,7 +1800,7 @@ try{
   (function(){
     var roll = document.getElementById('revRoll');
     if (!roll || revCards.length < 2) return;
-    var n = Math.min(revCards.length, 8);
+    var n = roll.children.length;   /* #131: 롤링 카드 실개수(15) 기준 순환 */
     var pausedUntil = 0;
     revRollTimer = setInterval(function(){
       if (Date.now() < pausedUntil || wrap.classList.contains('rev-open')) return;
