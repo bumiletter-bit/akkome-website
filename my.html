@@ -8,7 +8,7 @@
 <style>
   /* ============================================================
      제주아꼼이네 프로토타입 2차 — my.html (마이 페이지)
-     프로필·물방울·내 귤나무·주문내역(#orders)·설정
+     프로필·물방울·귤나무 키우기·주문내역(#orders)·설정
      스킨: home_v2 토큰 재사용 · 외부 리소스 0
      ============================================================ */
   :root{
@@ -126,7 +126,7 @@
   }
   .water-more:active{ background:rgba(255,255,255,.3); }
 
-  /* ---- 내 귤나무 카드 ---- */
+  /* ---- 귤나무 키우기 카드 ---- */
   .tree-card{
     margin:14px 18px 0;
     background:var(--card);
@@ -335,13 +335,13 @@
       <button class="water-more" type="button" data-modal>내역 ›</button>
     </div>
 
-    <!-- ===== 3. 내 귤나무 카드 ===== -->
+    <!-- ===== 3. 귤나무 키우기 카드 ===== -->
     <!-- API: GET /api/shop/me/tree (귤나무 레벨·성장 상태 — 게임 서버 연동 지점) -->
     <div class="tree-card">
       <!-- 귤나무 게임 자리표시 -->
       <div class="tree-face">🌳</div>
       <div class="tree-info">
-        <h2>내 귤나무 <span class="tree-lv">Lv.3</span></h2>
+        <h2>귤나무 키우기 <span class="tree-lv">Lv.3</span></h2>
         <p>물 주면 무럭무럭! 다 크면 진짜 귤이 와요</p>
       </div>
       <button class="tree-go" type="button" data-modal>키우러 가기</button>
@@ -400,7 +400,7 @@
       <span class="t-ic">🛒</span>쇼핑
     </a>
     <a class="tab" href="my.html">
-      <span class="t-ic">🌳</span>내 나무
+      <span class="t-ic">🌳</span>귤나무 키우기
     </a>
     <a class="tab" href="my.html#orders" id="tabOrders">
       <span class="t-ic">📦</span>주문내역
