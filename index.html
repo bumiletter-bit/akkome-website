@@ -851,6 +851,13 @@
   .pick-1.v5-big .pick-name{ font-size:18px; }
   /* #128-2: 2·3위 썸네일 2배(56→112px) — 1위 풀폭보다는 작게, 상품이 제대로 보이는 크기 */
   .pick-2 .p-thumb{ width:112px; height:112px; margin:0 auto; }
+  /* #132: 2·3위 카드 완전 균일 — 이름 길이 무관 동일 높이·버튼 하단 정렬·이름 2줄 고정(긴 이름 자동 축소+말줄임) */
+  .pick-row{ align-items:stretch; }
+  .pick-2{ display:flex; flex-direction:column; }
+  .pick-2 .pick-name{ font-size:14.5px; line-height:1.3; height:2.6em; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .pick-2 .pick-name.nm-long{ font-size:12.5px; height:3.02em; }   /* 축소 시에도 2줄 박스 높이 동일(em 보정) */
+  .pick-2 .btn-wait{ margin-top:auto; }
+  .pick-1.v5-big .pick-name{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .pick-ribbon{ top:10px; left:10px; }
   .pick-1 .pick-name{ font-size:18px; }
   .pick-1 .pick-price{ font-size:17px; }
@@ -1658,7 +1665,7 @@ try{
     var it = pair[0];
     p23[i].outerHTML = '<div class="pick-2" data-pd="'+it.no+'">'+
       '<span class="p-thumb th-2"><img class="th-real" src="'+it.img+'" alt=""><span class="pick-medal">'+pair[1]+'</span></span>'+
-      '<div class="pick-name">'+sname(it)+'</div>'+
+      '<div class="pick-name'+(sname(it).length>12?' nm-long':'')+'">'+sname(it)+'</div>'+   /* #132: 긴 이름 자동 축소 */
       '<div class="pick-desc">'+starRow(it)+'</div>'+
       '<div class="pick-price num">'+priceLabel(it)+'</div>'+
       '<button class="btn-wait" type="button" data-pd="'+it.no+'">옵션 보러가기 ›</button></div>';
