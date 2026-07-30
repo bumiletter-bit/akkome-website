@@ -814,6 +814,15 @@
   .rev-prod{ max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .rev-trust{ margin:-6px 0 12px; font-size:11px; font-weight:600; color:var(--text-mid); text-align:center; }
   #reviews .section-head h2{ font-size:15px; letter-spacing:-.04em; white-space:nowrap; }   /* #120: 390px에서 타이틀 한 줄 유지 */
+  /* #123-1: 후기 카드 좌측 쏠림 수정 — v3 가로 스크롤 카드 규칙(width 76%) 잔존이 원인 → 세로 리스트 100% */
+  .rev-card{ width:100%; max-width:none; flex:none; margin-right:0; }
+  /* #123-2: 상단 탭 sticky 틈(iOS Safari margin 포함 계산) — margin 대신 이전 요소 padding으로 간격 */
+  .topnav{ margin-top:0 !important; }
+  .drop-wrap{ padding-bottom:16px; }
+  /* #123-3: 상세정보 더보기 접기 (스마트스토어 방식) */
+  .pd-detail.folded{ max-height:820px; overflow:hidden; position:relative; }
+  .pd-detail.folded::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:130px; background:linear-gradient(rgba(255,255,255,0), #fff 85%); pointer-events:none; }
+  .pd-more-btn{ display:block; width:100%; margin:10px 0 4px; font-size:13.5px; font-weight:800; color:var(--primary-dark); border:1.5px solid var(--primary); background:#F6FBEF; padding:12px 0; border-radius:12px; }
   .rev-star{ color:#F5A623; font-size:12px; font-weight:800; }
   .rev-prod{ font-size:10.5px; font-weight:700; color:var(--violet); background:#F5F0FF; padding:2px 8px; border-radius:999px; }
   .rev-text{ margin-top:7px; font-size:12.5px; line-height:1.6; color:#3A4048; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
@@ -1828,9 +1837,10 @@ try{
         (g?'<button class="pd-tab" data-pane="guide">드시는 법·보관법</button>':'')+'</div>'+
       '</div>'+
       '<div style="padding:0 18px calc(18px + env(safe-area-inset-bottom,0px));">'+
-      (detImgs.length?'<div class="pd-pane pd-detail" data-pane-body="det">'+
+      (detImgs.length?'<div class="pd-pane pd-detail folded" data-pane-body="det" id="pdDetPane">'+
         '<div class="pd-detail-note">네이버 스토어 상세페이지 이미지 (공개 상세 실측 '+(det.count||detImgs.length)+'장 중 '+detImgs.length+'장 · 스크립트 제거·이미지만)</div>'+
-        detImgs.map(function(u){ return '<img loading="lazy" src="'+u+'" alt="">'; }).join('')+'</div>':'')+
+        detImgs.map(function(u){ return '<img loading="lazy" src="'+u+'" alt="">'; }).join('')+'</div>'+
+        '<button class="pd-more-btn" type="button" id="pdDetMore" data-det-more>상세정보 더보기 ▼</button>':'')+
       '<div class="pd-pane" data-pane-body="opt"'+(detImgs.length?' style="display:none"':'')+'>'+optRows+
       (it.soldout?'<button class="btn-wait-sm" type="button" data-wait="'+it.no+'">🔔 시즌 대기 신청 — 오픈 때 알려드려요</button>':'')+'</div>'+
       (g?'<div class="pd-pane" data-pane-body="guide" style="display:none"><div class="pd-guide">'+String(g).replace(/</g,'&lt;')+'</div></div>':'')+
@@ -1882,6 +1892,15 @@ try{
       tab.classList.add('on');
       var panes = dim.querySelectorAll('[data-pane-body]');
       for(var j=0;j<panes.length;j++) panes[j].style.display = panes[j].getAttribute('data-pane-body')===key?'':'none';
+      var moreBtn = document.getElementById('pdDetMore');
+      if (moreBtn) moreBtn.style.display = key==='det' ? '' : 'none';   // #123-3: 더보기 버튼은 상세정보 탭에서만
+    }
+    var dm = e.target.closest('[data-det-more]');
+    if (dm) {   // #123-3: 상세정보 더보기 ▼ / 접기 ▲
+      var pane = document.getElementById('pdDetPane');
+      var folded = pane.classList.toggle('folded');
+      dm.textContent = folded ? '상세정보 더보기 ▼' : '상세정보 접기 ▲';
+      if (folded) { var fix = dim.querySelector('.pd-fix'); if (fix) fix.scrollIntoView({ block:'start' }); }
     }
   });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && dim.classList.contains('show')) closePd(false); });
