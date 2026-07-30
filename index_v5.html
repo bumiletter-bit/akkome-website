@@ -1784,19 +1784,32 @@ try{
   var revBody = revSec.querySelector('.section-head');
   var wrap = document.createElement('div');
   wrap.innerHTML = '<div class="rev-stats">'+
-    '<div class="rev-stat"><b>'+F(D.store.interestCount)+'</b><span>관심고객</span></div>'+
+    '<div class="rev-stat"><b id="revInterest" data-base="'+D.store.interestCount+'">'+F(D.store.interestCount)+'</b><span>관심고객</span></div>'+
     '<div class="rev-stat"><b>★'+D.store.avgScore+'</b><span>스토어 평점</span></div>'+
     '<div class="rev-stat"><b>99,999+</b><span>누적 리뷰</span></div></div>'+
     '<div class="rev-trust">모든 후기는 네이버 스토어 실제 구매 고객이 남긴 리뷰입니다</div>'+
     shown + hidden +
     (revCards.length>3 ? '<button class="rev-more" type="button" id="revMore">후기 더보기 ('+(revCards.length-3)+'건) ▾</button>' : '');
-  var old = revSec.querySelectorAll('.rev-list, .rev-summary, .rev-scroll, .rev, .big-rating-wrap');
+  /* #126: 구 정적 rev-stats(플립 카운터 — 더미 187,841에서 2~10초 틱 반복)가 잔존해 실측 타일과 공존하던 것이 '초기화' 증상의 실체 → 정적 stats도 제거 (신 타일은 이 뒤에 삽입되므로 안전) */
+  var old = revSec.querySelectorAll('.rev-list, .rev-summary, .rev-scroll, .rev, .big-rating-wrap, .rev-stats');
   for(var i=0;i<old.length;i++) old[i].remove();
   revBody.insertAdjacentElement('afterend', wrap);
   wrap.addEventListener('click', function(e){
     if(e.target.id==='revMore'){ wrap.classList.add('rev-open'); e.target.style.display='none'; return; }
     var t=e.target.closest('[data-expand]'); if(t) t.classList.toggle('open');
   });
+  /* #126: 관심고객 끝자리 실시간 연출 — 기준은 항상 스냅샷 실측값(재방문 시 실측부터·연출 누적 미저장). 30~90초 랜덤 +1, 평점은 고정 */
+  (function(){
+    var el = document.getElementById('revInterest');
+    if (!el) return;
+    var cur = Number(el.getAttribute('data-base')) || 0;
+    function tick(){
+      cur += 1;
+      el.textContent = F(cur);
+      setTimeout(tick, 30000 + Math.random() * 60000);
+    }
+    setTimeout(tick, 30000 + Math.random() * 60000);
+  })();
 
   /* ── 4. 상세 시트: 옵션 | 상세정보(공개 상세 이미지 — #107 상세 2차) | 드시는 법 ── */
   var dim = document.createElement('div');
