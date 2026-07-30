@@ -1709,6 +1709,22 @@ try{
     '<span class="cm-hint">'+comingNames.join('·')+'은 아직 시즌 전이에요 — 캘린더에서 <b>시즌 대기 신청</b>하면 오픈 때 알려드려요!</span></a>';
   grid.parentNode.appendChild(mini);
 
+  /* ── 2.7 영상 GIF 썸네일 카드 (#122 — D.videos, 영상 있는 상품 자동 확장·클릭 시 스토어 상품 페이지) ── */
+  var clipsScroll = document.querySelector('.clips-scroll');
+  if (clipsScroll && D.videos) {
+    var vNos = Object.keys(D.videos).filter(function(k){ return D.videos[k] && D.videos[k].gif; });
+    clipsScroll.insertAdjacentHTML('afterbegin', vNos.map(function(k){
+      var v = D.videos[k];
+      return '<a class="clip-card" href="https://brand.naver.com/jejuakkome/products/'+k+'" target="_blank" rel="noopener">'+
+        '<div class="clip-video-wrap" style="background:#15181C; font-size:0;">'+
+        '<img loading="lazy" src="'+v.gif+'" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">'+
+        '<span class="clip-live">● 실영상 '+(v.duration||53)+'초</span>'+
+        '<span class="clip-play" style="pointer-events:none;">▶</span></div>'+
+        '<div style="padding:9px 11px;"><div style="font-size:12px; font-weight:800; line-height:1.35;">'+(v.title||'제주아꼼이네 농장 영상')+'</div>'+
+        '<div style="font-size:10.5px; color:var(--text-mid); margin-top:2px;">'+sname({no:k})+' · 스토어에서 보기 ›</div></div></a>';
+    }).join(''));
+  }
+
   /* 카테고리 "시즌캘린더" 아이콘 → 캘린더 화면 연결 */
   var cats = document.querySelectorAll('.cat');
   for(var cr=0; cr<cats.length; cr++){
