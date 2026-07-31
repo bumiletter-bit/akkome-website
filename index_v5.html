@@ -1763,7 +1763,12 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
 
   /* ══════════ ⑦ 계승: 상단 탭 → 섹션 스무스 스크롤 ══════════ */
   var navBtns = document.querySelectorAll(".tnav[data-go]");
-  var topnavH = 44; /* --topnav-h (sticky 높이만큼 보정) */
+  var topnavEl = document.getElementById("topnav");
+  function topnavH(){ return (topnavEl ? topnavEl.getBoundingClientRect().height : 44); }   /* #148-3: 실높이 동적 보정 */
+  function goSection(id){ var el = (typeof id === 'string') ? document.getElementById(id) : id; if(!el) return;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - topnavH() - 8; if (y < 0) y = 0;
+    window.scrollTo({ top: y, behavior: 'smooth' }); }   /* #148-3: 전 앵커 공통 보정 */
+  window.goSection = goSection;   /* 타 스코프(렌더러 IIFE)에서도 사용 */
   for (var k = 0; k < navBtns.length; k++){
     navBtns[k].addEventListener("click", function(){
       var id = this.getAttribute("data-go");
@@ -1771,7 +1776,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
       for (var n = 0; n < navBtns.length; n++){ navBtns[n].classList.remove("active"); }
       this.classList.add("active");
       if (!el) return;
-      var y = el.getBoundingClientRect().top + window.pageYOffset - topnavH - 8;
+      var y = el.getBoundingClientRect().top + window.pageYOffset - topnavH() - 8;
       if (y < 0) y = 0;
       window.scrollTo({ top: y, behavior: "smooth" });
     });
@@ -1844,16 +1849,21 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
       for (var d = 0; d < hsDots.length; d++){ if (hsDots[d]) hsDots[d].className = (d === idx) ? "on" : ""; }
     }, { passive:true });
   }
-  /* #145: 자동 슬라이드 — 6초 간격 순환, 사용자 터치·스크롤 시 10초 일시정지 */
+  /* #145→#148-2: 자동 슬라이드 — 상태 기반 인덱스(스크롤 위치 round 의존 제거 = 2칸 점프 원인 해소)·전환 잠금·5초 주기 */
   if (hsScroll){
-    var hsAutoPause = 0;
+    var hsAutoPause = 0, hsIdx = 0, hsBusy = false;
     hsScroll.addEventListener("touchstart", function(){ hsAutoPause = Date.now() + 10000; }, { passive:true });
+    hsScroll.addEventListener("scroll", function(){
+      if (hsBusy) return;   // 자동 전환 중엔 중간값 무시
+      hsIdx = Math.max(0, Math.min(hsDots.length - 1, Math.round(hsScroll.scrollLeft / hsScroll.clientWidth)));
+    }, { passive:true });
     setInterval(function(){
-      if (Date.now() < hsAutoPause) return;
-      var n = Math.round(hsScroll.scrollLeft / hsScroll.clientWidth) + 1;
-      if (n > hsDots.length - 1) n = 0;
-      hsScroll.scrollTo({ left: n * hsScroll.clientWidth, behavior: "smooth" });
-    }, 6000);
+      if (Date.now() < hsAutoPause || hsBusy) return;
+      hsIdx = (hsIdx + 1) % hsDots.length;
+      hsBusy = true;
+      hsScroll.scrollTo({ left: hsIdx * hsScroll.clientWidth, behavior: "smooth" });
+      setTimeout(function(){ hsBusy = false; }, 800);
+    }, 5000);
   }
   /* 섹션 이동 공통 — 배너 오션라운지·카테고리 감귤체험 (상단 탭과 동일 스무스 스크롤) */
   var goSecs = document.querySelectorAll("[data-go-sec]");
@@ -1861,7 +1871,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
     goSecs[gs].addEventListener("click", function(e){
       e.preventDefault();
       var el = document.getElementById(this.getAttribute("data-go-sec"));
-      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 52, behavior: "smooth" });
+      if (el) goSection(el);
     });
   }
 
@@ -2009,7 +2019,7 @@ try{
   }
 
   /* #129: 오션라운지 진입점 → #ocean 스크롤 (카테고리 아이콘 + 히어로 배너) — cats 선언 전이라 자체 조회 사용 */
-  function goOcean(ev){ ev.preventDefault(); ev.stopPropagation(); var o=document.getElementById('ocean'); if(o) o.scrollIntoView({behavior:'smooth'}); }
+  function goOcean(ev){ ev.preventDefault(); ev.stopPropagation(); (window.goSection||function(){})('ocean'); }
   var catsOcean = document.querySelectorAll('.cat');
   for(var co=0; co<catsOcean.length; co++){
     if(/오션라운지/.test(catsOcean[co].textContent)){ catsOcean[co].addEventListener('click', goOcean, true); break; }
@@ -2021,7 +2031,7 @@ try{
   var cats = document.querySelectorAll('.cat');
   for(var cr=0; cr<cats.length; cr++){
     if(/리뷰보기/.test(cats[cr].textContent)){
-      (function(el){ el.addEventListener('click', function(ev){ ev.preventDefault(); ev.stopPropagation(); document.getElementById('reviews').scrollIntoView({behavior:'smooth'}); }, true); })(cats[cr]);
+      (function(el){ el.addEventListener('click', function(ev){ ev.preventDefault(); ev.stopPropagation(); (window.goSection||function(){})('reviews'); }, true); })(cats[cr]);
     }
   }
   for(var ci=0; ci<cats.length; ci++){
@@ -2237,7 +2247,7 @@ try{
     if(e.target.closest('[data-go-reviews]')){   /* #125-2: 리뷰수 → 홈 후기 섹션 (상세 닫고 이동·펼침) */
       closePd(false);
       setTimeout(function(){
-        var rs=document.getElementById('reviews'); if(rs) rs.scrollIntoView({behavior:'smooth'});
+        var rs=document.getElementById('reviews'); if(rs) (window.goSection||function(){})(rs);
         var rw=rs&&rs.querySelector('.rev-stats'); var wrapEl=rw&&rw.parentElement;
         if(wrapEl){ wrapEl.classList.add('rev-open'); var mb=document.getElementById('revMore'); if(mb) mb.style.display='none'; }
       }, 250);

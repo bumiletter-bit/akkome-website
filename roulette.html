@@ -75,18 +75,16 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
 .limit-note{min-height:22px;text-align:center;margin-top:6px;font-size:13.5px;font-weight:700;color:rgba(255,255,255,.72)}
 .limit-note.done{color:#FFB4AB}
 
-/* ── 경품 패널 (산출물 홈 카드 문법 — 목록은 현행 SEGS로 JS 생성) ── */
+/* ── 경품 패널 "오늘의 경품" (산출물 홈 카드 문법 — 정적 마크업·등수 뱃지) ── */
 .panel{background:var(--bg);color:var(--text-dark);border-radius:24px 24px 0 0;margin-top:28px;padding:24px 16px 40px}
 .panel h2{margin:0 0 14px;font-size:18px;font-weight:800;letter-spacing:-.03em;display:inline-block;background:linear-gradient(transparent 60%,var(--yellow) 60%);padding:0 2px;border-radius:2px}
 .plist{display:flex;flex-direction:column;gap:10px}
 .p{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px}
 .p .ic{width:44px;height:44px;border-radius:12px;background:var(--yellow-soft);display:grid;place-items:center;font-size:21px;flex:none}
 .p .nm{font-size:14px;font-weight:800;letter-spacing:-.02em}
-.p .odds{margin-left:auto;flex:none;font-size:11px;font-weight:800;color:var(--navy);background:var(--navy-soft);padding:4px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+.p .ds{font-size:12px;font-weight:600;color:var(--text-mid)}
+.p .odds{margin-left:auto;flex:none;font-size:11px;font-weight:800;color:var(--navy);background:var(--navy-soft);padding:4px 10px;border-radius:999px}
 .note{margin-top:16px;font-size:11.5px;font-weight:600;color:var(--text-mid);line-height:1.7}
-/* [데모 전용] 참여기록 초기화 — 실서비스에는 없는 버튼 */
-.demo-reset{display:block;margin:16px auto 0;font-size:11.5px;font-weight:700;color:var(--text-light);text-decoration:underline;text-underline-offset:3px}
-.demo-reset:active{color:var(--navy)}
 
 .confetti{position:fixed;top:-30px;z-index:80;font-size:20px;pointer-events:none;animation:cfall linear forwards}
 @keyframes cfall{to{transform:translateY(105vh) rotate(540deg);opacity:.9}}
@@ -127,7 +125,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   <div class="hero">
     <span class="tag">✨ 하루 1번 무료 참여</span>
     <h1>아꼼이의 나침판을<br><em>돌려보세요!</em></h1>
-    <p>하루에 <b>1번</b> — 물방울과 귤 쿠폰이 기다려요 🍊</p>
+    <p>하루에 <b>1번</b> — 감귤 1박스부터 물방울까지, 모두 당첨! 🍊</p>
   </div>
 
   <!-- ===== 룰렛 스테이지 ===== -->
@@ -146,16 +144,17 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   <div class="result" id="result"></div>
   <p class="limit-note" id="limitNote"></p>
 
-  <!-- ===== 상품(칸) 안내 — 데모 확률 표기 (목록은 현행 SEGS로 JS 생성) ===== -->
+  <!-- ===== 오늘의 경품 (산출물 카드 문법 — 등수 뱃지, 확률 % 미표시) ===== -->
   <div class="panel">
-    <h2>🎁 나침판 구성 (데모 확률)</h2>
-    <div class="plist" id="oddsList"><!-- JS가 채움 --></div>
-    <p class="note">
-      ※ 프로토타입 데모 확률입니다. 실서비스 확률·당첨·지급은 전부 회사프로그램 서버가 결정합니다.<br>
-      ※ 참여는 하루 1회, 자정에 초기화됩니다. (데모: 기기 localStorage 날짜 비교로 시뮬레이션)
-    </p>
-    <!-- [데모 전용] 오늘 참여기록 지우고 다시 돌려보기 — 실서비스에는 없는 기능 -->
-    <button class="demo-reset" type="button" id="demoReset">[데모] 참여 기록 초기화 (다시 돌려보기)</button>
+    <h2>오늘의 경품</h2>
+    <div class="plist">
+      <div class="p"><span class="ic">📦</span><div><div class="nm">제주 감귤 1박스</div><div class="ds">매일 1분께 무료 지급 · 산지직송</div></div><span class="odds">1등</span></div>
+      <div class="p"><span class="ic">⬆️</span><div><div class="nm">업그레이드 이용권</div><div class="ds">3kg 주문이 5kg로 커져요</div></div><span class="odds">2등</span></div>
+      <div class="p"><span class="ic">🎟️</span><div><div class="nm">10% 할인 쿠폰</div><div class="ds">전 상품 사용 가능 · 7일 유효</div></div><span class="odds">3등</span></div>
+      <div class="p"><span class="ic">🎟️</span><div><div class="nm">5% 할인 쿠폰</div><div class="ds">전 상품 사용 가능 · 7일 유효</div></div><span class="odds">4등</span></div>
+      <div class="p"><span class="ic">💧</span><div><div class="nm">물방울 +50 / +100</div><div class="ds">귤나무 키우기에 바로 사용</div></div><span class="odds">5등</span></div>
+    </div>
+    <p class="note">· 매일 자정 초기화, 1일 1회 참여 · 경품은 마이페이지 &gt; 쿠폰함에 자동 지급 · 귤 1박스 당첨 시 배송지 입력 안내를 보내드려요.</p>
   </div>
 </div>
 
@@ -200,14 +199,15 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   "use strict";
 
   /* ---- 룰렛 6칸 정의 (원판에 그려지는 순서 = 시계방향, 0번이 12시 방향부터) ----
-     weight = 데모 확률(%) — ⚠️ 실서비스 확률은 서버 정책 (여기 값은 연출/데모용) */
+     ⚠️ weight = 임시 가중치 — 실확률은 룰렛 오픈 전 대표 확정·운영 화면(mall_game_config) 편집이 최종.
+        꽝 0%는 확정 (모든 칸이 당첨 — 빈 칸 없음). 추첨 자체도 실서비스에선 서버가 담당. */
   var SEGS = [
-    { label:"물방울 10",  emoji:"💧", type:"water",  amount:10,  weight:34, fill:"#F1F8E4", txt:"#5F9E1F" },
-    { label:"물방울 30",  emoji:"💧", type:"water",  amount:30,  weight:25, fill:"#FFFFFF", txt:"#101828" },
-    { label:"물방울 50",  emoji:"💧", type:"water",  amount:50,  weight:15, fill:"#F1F8E4", txt:"#5F9E1F" },
-    { label:"꽝",         emoji:"😢", type:"none",   amount:0,   weight:15, fill:"#F1F2F5", txt:"#98A0AE" },
-    { label:"물방울 100", emoji:"💧", type:"water",  amount:100, weight:8,  fill:"#FFFFFF", txt:"#101828" },
-    { label:"귤 1개 쿠폰", emoji:"🍊", type:"coupon", amount:1,   weight:3,  fill:"#FFF6D0", txt:"#1B3A6B" }
+    { key:"box",      label:"제주 감귤 1박스",   short:"감귤 1박스",   emoji:"📦", type:"prize", amount:0,   weight:1,  fill:"#FFF6D0", txt:"#1B3A6B" },
+    { key:"upgrade",  label:"업그레이드 이용권", short:"업그레이드권", emoji:"⬆️", type:"prize", amount:0,   weight:4,  fill:"#FFFFFF", txt:"#101828" },
+    { key:"coupon10", label:"10% 할인 쿠폰",    short:"10% 쿠폰",     emoji:"🎟️", type:"prize", amount:0,   weight:10, fill:"#FFF8DC", txt:"#1B3A6B" },
+    { key:"coupon5",  label:"5% 할인 쿠폰",     short:"5% 쿠폰",      emoji:"🎟️", type:"prize", amount:0,   weight:25, fill:"#FFFFFF", txt:"#101828" },
+    { key:"w50",      label:"물방울 +50",       short:"물방울 +50",   emoji:"💧", type:"water", amount:50,  weight:30, fill:"#EDF1F8", txt:"#1B3A6B" },
+    { key:"w100",     label:"물방울 +100",      short:"물방울 +100",  emoji:"💧", type:"water", amount:100, weight:30, fill:"#FFF6D0", txt:"#1B3A6B" }
   ];
   var SEG_ANGLE = 360 / SEGS.length;   // 60도
   var LS_KEY = "akm_roulette_last_date";   // ⚠️ 데모용 — 실서비스는 서버 참여기록으로 대체
@@ -262,7 +262,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
       txt.setAttribute("font-size", "11.5");
       txt.setAttribute("font-weight", "800");
       txt.setAttribute("fill", SEGS[i].txt);
-      txt.textContent = SEGS[i].label;
+      txt.textContent = SEGS[i].short || SEGS[i].label;   // 원판엔 짧은 라벨(칸 폭 한계)
       g.appendChild(emo); g.appendChild(txt);
       wheel.appendChild(g);
     }
@@ -272,26 +272,6 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
     hub.setAttribute("fill", "#FFFFFF");
     hub.setAttribute("stroke", "#ECEDF1");
     wheel.appendChild(hub);
-  }
-
-  /* ---- 확률 안내 목록 채우기 (산출물 카드 문법 · 데이터는 현행 SEGS) ---- */
-  function buildOdds(){
-    var ul = document.getElementById("oddsList");
-    for (var i = 0; i < SEGS.length; i++){
-      var li = document.createElement("div");
-      li.className = "p";
-      var ic = document.createElement("span");
-      ic.className = "ic";
-      ic.textContent = SEGS[i].emoji;
-      var nm = document.createElement("div");
-      nm.className = "nm";
-      nm.textContent = SEGS[i].label;
-      var odds = document.createElement("span");
-      odds.className = "odds";
-      odds.textContent = SEGS[i].weight + "%";
-      li.appendChild(ic); li.appendChild(nm); li.appendChild(odds);
-      ul.appendChild(li);
-    }
   }
 
   /* ---- 오늘 날짜 문자열 (기기 로컬 기준 — 자정 지나면 값이 바뀌어 자동 리셋) ---- */
@@ -337,7 +317,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
     return SEGS.length - 1;
   }
 
-  /* ---- 컨페티 (산출물 연출) — 꽝이 아닐 때만 ---- */
+  /* ---- 컨페티 (산출물 연출) — 전 칸 당첨이라 매 스핀 발사 ---- */
   function confetti(){
     var emo = ['🍊','🎉','💛','✨','💧'];
     for (var i = 0; i < 28; i++){
@@ -391,38 +371,38 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
     setTimeout(onDone, 4600);   // transitionend 미발화 대비 안전망
   }
 
-  /* ---- 결과 확정: 기록 저장 + 잔액 반영(데모) + 모달 + 컨페티/팝(산출물 연출) ---- */
+  /* ---- 결과 확정: 기록 저장 + 잔액 반영(프로토타입) + 모달 + 컨페티/팝(산출물 연출) ---- */
   function settle(idx){
     var seg = SEGS[idx];
     spinning = false;
 
     /* API: (서버 이관 지점) 참여 기록 저장 + 보상 지급은 서버가 이미 spin 응답 전에 처리함.
-       데모에선 localStorage 날짜 기록 + 화면 잔액만 갱신. */
+       프로토타입에선 localStorage 날짜 기록 + 화면 잔액만 갱신. */
     markPlayedToday();
 
     if (seg.type === "water"){
-      balance += seg.amount;   // ⚠️ 데모 — 실서비스: 서버 지갑 테이블이 진실
+      balance += seg.amount;   // ⚠️ 프로토타입 — 실서비스: 서버 지갑 테이블이 진실
       balanceEl.textContent = balance.toLocaleString("ko-KR");
       modalEmo.textContent = "💧";
-      modalTitle.textContent = "물방울 " + seg.amount + "개 당첨!";
-      modalDesc.textContent = "귤나무 키우기에 물 줄 물방울 " + seg.amount + "개를 받았어요. 내일 또 도전하세요!";
-    } else if (seg.type === "coupon"){
-      /* API: POST 응답에 쿠폰 코드 포함 — 발급·저장은 서버 쿠폰 테이블 담당 (데모는 표시만) */
-      modalEmo.textContent = "🍊";
-      modalTitle.textContent = "귤 1개 쿠폰 당첨!";
-      modalDesc.textContent = "다음 주문에 귤 1개를 더 담아드리는 쿠폰이에요. (데모 — 실발급은 서버)";
+      modalTitle.textContent = "물방울 +" + seg.amount + " 당첨!";
+      modalDesc.textContent = "귤나무 키우기에 바로 쓸 물방울 " + seg.amount + "개를 받았어요. 내일 또 도전하세요!";
     } else {
-      modalEmo.textContent = "😢";
-      modalTitle.textContent = "아쉽지만 꽝...";
-      modalDesc.textContent = "다음 기회에! 내일 자정이 지나면 다시 도전할 수 있어요.";
+      /* API: 쿠폰·이용권·감귤 1박스 발급은 서버 쿠폰 테이블 담당 (프로토타입은 안내만) */
+      modalEmo.textContent = seg.emoji;
+      modalTitle.textContent = seg.label + " 당첨!";
+      if (seg.key === "box"){
+        modalDesc.textContent = "매일 1분께만 드리는 제주 감귤 1박스! 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급되고, 배송지 입력 안내를 보내드려요.";
+      } else if (seg.key === "upgrade"){
+        modalDesc.textContent = "3kg 주문이 5kg로 커지는 이용권이에요. 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급돼요.";
+      } else {
+        modalDesc.textContent = "전 상품 사용 가능 · 7일 유효 쿠폰이에요. 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급돼요.";
+      }
     }
 
-    // 산출물 연출: 결과 팝 + 컨페티 (꽝 제외)
+    // 산출물 연출: 결과 팝 + 컨페티 (전 칸 당첨)
     resultEl.textContent = modalEmo.textContent + " " + modalTitle.textContent;
-    if (seg.type !== "none"){
-      resultEl.classList.add("win");
-      confetti();
-    }
+    resultEl.classList.add("win");
+    confetti();
 
     dim.classList.add("show");
     refreshLimitUI();
@@ -434,19 +414,9 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   dim.addEventListener("click", function(e){ if (e.target === dim) closeModal(); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeModal(); });
 
-  /* ---- [데모 전용] 참여기록 초기화 — 실서비스에는 존재하지 않는 기능 ---- */
-  document.getElementById("demoReset").addEventListener("click", function(){
-    try { localStorage.removeItem(LS_KEY); } catch (e) {}
-    resultEl.textContent = "";
-    resultEl.classList.remove("win");
-    refreshLimitUI();
-    limitNote.textContent = "참여 기록을 지웠어요 — 다시 돌려보세요! (데모 전용)";
-  });
-
   spinBtn.addEventListener("click", spin);
 
   buildWheel();
-  buildOdds();
   refreshLimitUI();
 })();
 </script>
