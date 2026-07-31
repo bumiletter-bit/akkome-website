@@ -1,478 +1,293 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F5F6F8">
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B3A6B">
 <title>제주아꼼이네 — 시즌 캘린더</title>
 <style>
-  /* ============================================================
-     제주아꼼이네 프로토타입 2차 — calendar.html (시즌 캘린더)
-     품목별 제철 1~12월 가로 바 · 스킨: home_v2 토큰 재사용 · 외부 리소스 0
-     ============================================================ */
-  :root{
-    --primary:       #1B3A6B;
-    --primary-dark:  #142C52;
-    --primary-light: #EDF1F8;
-    --primary-ring:  rgba(79,70,229,.15);
-    --bg:            #F5F6F8;
-    --card:          #FFFFFF;
-    --text-dark:     #101828;
-    --text-mid:      #667085;
-    --text-light:    #98A0AE;
-    --border:        #ECEDF1;
-    --border-soft:   #F1F2F5;
-    --danger:        #F04438;
-    --success:       #12B76A;
-    --amber:         #F59E0B;
-    --yellow:        #F5C800;
-    --yellow-soft:   #FFF6D0;
-    --navy:          #1B3A6B;
-    --radius:        14px;
-    --radius-box:    12px;
-    --radius-btn:    10px;
-    --shadow:        0 1px 3px rgba(16,24,40,.06);
-    --shadow-float:  0 4px 16px -6px rgba(16,24,40,.12);
-    --shadow-cta:    0 6px 16px -6px rgba(79,70,229,.55);
-    --header-grad:   linear-gradient(#FBFBFD,#F4F5F8);
-    --tabbar-h:      62px;
-  }
-  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html{ color-scheme: light only; }
-  html,body{ height:100%; }
-  body{
-    font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,
-      "Apple SD Gothic Neo","Malgun Gothic","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    background:#E9EAEF;
-    color:var(--text-dark);
-    line-height:1.45;
-    -webkit-font-smoothing:antialiased;
-  }
-  button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
-  a{ color:inherit; text-decoration:none; }
-
-  .app{
-    position:relative;
-    max-width:480px;
-    min-height:100dvh;
-    margin:0 auto;
-    background:var(--bg);
-    box-shadow:0 0 40px rgba(16,24,40,.12);
-    overflow-x:hidden;
-  }
-  .scroll{ padding-bottom:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px) + 20px); }
-
-  /* ---- 서브 헤더 ---- */
-  .subhead{
-    position:sticky; top:0; z-index:20;
-    background:var(--header-grad);
-    border-bottom:1px solid var(--border);
-    display:flex; align-items:center; gap:4px;
-    padding:calc(10px + env(safe-area-inset-top,0px)) 10px 10px;
-  }
-  .back-btn{
-    width:38px; height:38px; flex:none;
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px; font-weight:800; color:var(--text-dark);
-    border-radius:var(--radius-btn);
-  }
-  .back-btn:active{ background:var(--primary-light); color:var(--primary-dark); }
-  .subhead h1{ font-size:17px; font-weight:800; letter-spacing:-.02em; }
-
-  /* ---- 안내 배너 ---- */
-  .intro{
-    margin:16px 18px 0;
-    background:linear-gradient(120deg,var(--primary) 0%,var(--primary-dark) 100%);
-    color:#fff;
-    border-radius:var(--radius);
-    padding:16px 18px;
-    box-shadow:var(--shadow-cta);
-    display:flex; align-items:center; gap:12px;
-  }
-  .intro .emo{ font-size:34px; flex:none; }
-  .intro h2{ font-size:15.5px; font-weight:800; letter-spacing:-.02em; }
-  .intro p{ font-size:12px; font-weight:600; opacity:.85; margin-top:2px; }
-
-  /* ---- 캘린더 카드 ---- */
-  .cal-card{
-    margin:14px 14px 0;
-    background:var(--card);
-    border:1px solid var(--border-soft);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:16px 12px 14px;
-    overflow:hidden;
-  }
-  .cal-grid{
-    display:grid;
-    grid-template-columns:88px repeat(12, 1fr);
-    align-items:center;
-    row-gap:4px;
-  }
-  /* 월 헤더 */
-  .m-head{
-    font-size:9.5px; font-weight:700; color:var(--text-light);
-    text-align:center; padding-bottom:6px;
-    font-variant-numeric:tabular-nums;
-  }
-  .m-head.now{ color:var(--primary); font-weight:800; }
-  .corner{ padding-bottom:6px; }
-  /* 품목 라벨 */
-  .item-label{
-    display:flex; align-items:center; gap:5px;
-    font-size:11.5px; font-weight:700; letter-spacing:-.03em;
-    color:var(--text-dark);
-    padding:7px 2px 7px 0;
-    white-space:nowrap; overflow:hidden;
-  }
-  .item-label .emo{ font-size:15px; flex:none; }
-  .item-label .in-badge{
-    flex:none;
-    font-size:8.5px; font-weight:800; color:var(--navy);
-    background:var(--yellow);                 /* 노랑 = 배지 포인트 */
-    padding:1px 5px; border-radius:999px;
-  }
-  /* 월 셀(바 조각) */
-  .m-cell{ height:16px; position:relative; }
-  .m-cell i{
-    position:absolute; inset:2px 0;
-    background:var(--border-soft);
-  }
-  .m-cell.on i{ background:var(--primary); opacity:.85; }
-  .m-cell.first i{ border-radius:999px 0 0 999px; }
-  .m-cell.last i{ border-radius:0 999px 999px 0; }
-  .m-cell.first.last i{ border-radius:999px; }
-  /* 현재 월 세로 하이라이트 */
-  .m-cell.nowcol::after{
-    content:""; position:absolute; inset:-4px 1px;
-    border:1.5px dashed var(--amber);
-    border-radius:6px;
-    pointer-events:none;
-  }
-  .m-cell.nowcol.on i{ background:var(--amber); opacity:1; }
-
-  /* ---- 범례 ---- */
-  .legend{
-    display:flex; align-items:center; justify-content:center; gap:16px;
-    margin-top:14px; padding-top:12px;
-    border-top:1px solid var(--border-soft);
-    font-size:11px; font-weight:600; color:var(--text-mid);
-  }
-  .legend i{
-    display:inline-block; width:18px; height:8px; border-radius:999px;
-    vertical-align:middle; margin-right:5px;
-  }
-  .legend .lg-season i{ background:var(--primary); opacity:.85; }
-  .legend .lg-now i{ background:var(--amber); }
-
-  /* ---- 지금 제철 요약 카드 ---- */
-  .now-card{
-    margin:14px 18px 0;
-    background:var(--card);
-    border:1px solid var(--border-soft);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:16px 18px;
-  }
-  .now-card h3{
-    font-size:14.5px; font-weight:800; letter-spacing:-.02em;
-    display:flex; align-items:center; gap:6px; margin-bottom:10px;
-  }
-  .now-chips{ display:flex; flex-wrap:wrap; gap:8px; }
-  .now-chip{
-    display:inline-flex; align-items:center; gap:5px;
-    font-size:12.5px; font-weight:700; color:var(--navy);
-    background:var(--yellow-soft);
-    border:1px solid rgba(27,58,107,.15);
-    padding:7px 13px; border-radius:999px;
-  }
-  .now-chip:active{ transform:scale(.96); }
-  .now-hint{
-    margin-top:10px; font-size:11.5px; font-weight:600; color:var(--text-mid);
-  }
-
-  .foot-note{
-    text-align:center; padding:30px 20px 8px;
-    font-size:11.5px; color:var(--text-light); font-weight:600; letter-spacing:-.01em;
-  }
-  .foot-note b{ color:var(--text-mid); }
-
-  /* ---- 하단 고정 탭바 (공통) ---- */
-  .tabbar{
-    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:480px; z-index:50;
-    background:rgba(255,255,255,.96);
-    backdrop-filter:blur(8px);
-    border-top:1px solid var(--border);
-    box-shadow:0 -4px 16px -6px rgba(16,24,40,.12);
-    display:flex;
-    height:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px));
-    padding-bottom:env(safe-area-inset-bottom,0px);
-  }
-  .tab{
-    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-    color:var(--text-light); font-size:10.5px; font-weight:700; letter-spacing:-.02em;
-  }
-  .tab .t-ic{
-    font-size:21px; line-height:1; filter:grayscale(1) opacity(.55);
-    padding:2px 12px; border-radius:999px;
-  }
-  .tab.active{ color:var(--primary); }
-  .tab.active .t-ic{ filter:none; transform:scale(1.06); background:var(--primary-light); }
-  .tab:active{ color:var(--primary); }
-
-  /* ---- #107: 품목 클릭 상품 카드 · 시즌 준비 중 구간 ---- */
-  .item-label{ cursor:pointer; }
-  .item-label.sel{ color:var(--primary); font-weight:800; }
-  .season-detail{ margin:14px 18px 0; background:var(--card); border:1.5px solid var(--primary); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px 15px; }
-  .sd-top{ display:flex; gap:11px; align-items:flex-start; }
-  .sd-img{ width:86px; height:86px; border-radius:12px; object-fit:cover; flex:none; background:#F2F3F5; }
-  .sd-img.gray{ filter:grayscale(1); opacity:.6; }
-  .sd-name{ font-size:14.5px; font-weight:800; letter-spacing:-.02em; line-height:1.35; }
-  .sd-when{ margin-top:4px; font-size:12px; font-weight:700; color:var(--text-mid); }
-  .sd-when b{ color:#0B7A3E; }
-  .sd-meta{ margin-top:4px; font-size:11.5px; font-weight:700; color:var(--text-mid); }
-  .sd-meta .st{ color:#F5A623; }
-  .sd-btn{ margin-top:11px; width:100%; font-size:13px; font-weight:800; padding:11px 0; border-radius:12px; }
-  .sd-btn.buy{ background:#F5C800; color:#1B3A6B; }
-  .sd-btn.wait{ border:1.5px solid var(--primary); color:var(--primary-dark, #3D6B1E); background:#F6FBEF; }
-  .wait-sec{ margin:22px 18px 0; }
-  .wait-sec h3{ font-size:15px; font-weight:800; letter-spacing:-.02em; }
-  .wait-hint{ margin-top:3px; font-size:11.5px; color:var(--text-mid); }
-  .wait-grid{ margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .wait-card{ background:var(--card); border:1px solid var(--border-soft); border-radius:var(--radius); box-shadow:var(--shadow); padding:10px; text-align:left; }
-  .wait-card img{ width:100%; height:92px; object-fit:cover; border-radius:10px; filter:grayscale(1); opacity:.65; display:block; background:#F2F3F5; }
-  .wait-card .wc-name{ margin-top:7px; font-size:12px; font-weight:800; line-height:1.3; }
-  .wait-card .wc-when{ margin-top:2px; font-size:10.5px; font-weight:700; color:var(--text-mid); }
-  .wait-card .wc-btn{ margin-top:7px; width:100%; font-size:10.5px; font-weight:800; color:var(--primary-dark,#3D6B1E); border:1.5px solid var(--primary); background:#F6FBEF; padding:7px 0; border-radius:9px; }
-  .wait-cta{ margin-top:14px; width:100%; background:#F5C800; color:#1B3A6B; font-size:14px; font-weight:800; padding:14px 0; border-radius:14px; box-shadow:var(--shadow); }
-  .cal-modal{ position:fixed; inset:0; background:rgba(16,24,40,.5); z-index:120; display:none; align-items:center; justify-content:center; padding:30px; }
-  .cal-modal.show{ display:flex; }
-  .cal-modal .cm-box{ background:#fff; border-radius:18px; padding:22px 20px; max-width:300px; text-align:center; }
-  .cal-modal .cm-box h4{ font-size:15px; font-weight:800; }
-  .cal-modal .cm-box p{ margin-top:7px; font-size:12.5px; color:var(--text-mid); line-height:1.55; }
-  .cal-modal .cm-box button{ margin-top:14px; width:100%; background:#F5C800; color:#1B3A6B; font-weight:800; font-size:13px; padding:11px 0; border-radius:11px; }
-</style>
-</head>
-<body>
+/* ============================================================
+   제주아꼼이네 — calendar.html (시즌 캘린더)
+   디자인 = Jeju Akkome Design Polish 산출물 100% / 데이터·로직 = 현행 20종(#107)
+   ============================================================ */
+:root{
+  --yellow:#F5C800; --yellow-dark:#DDB400; --yellow-soft:#FFF8DC;
+  --navy:#1B3A6B; --navy-dark:#142C52; --navy-soft:#EDF1F8;
+  --bg:#F2F3F5; --card:#FFFFFF;
+  --text-dark:#15181C; --text-mid:#667085; --text-light:#98A0AE;
+  --border:#ECEDF1; --border-soft:#F1F2F5;
+  --green:#0B7A3E; --green-soft:#E7F6EC;
+  --radius:14px; --radius-btn:12px;
+  --shadow:0 1px 3px rgba(21,32,54,.07);
+  --tabbar-h:62px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{color-scheme:light only}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#E9EAEC;color:var(--text-dark);line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--navy);text-decoration:none}a:hover{color:var(--navy-dark)}
+.app{position:relative;max-width:480px;min-height:100dvh;margin:0 auto;background:var(--bg);box-shadow:0 0 40px rgba(21,32,54,.12);overflow-x:clip;padding-bottom:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px) + 20px)}
+.hd{display:flex;align-items:center;gap:6px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.hd .back{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;border-radius:12px}
+.hd .back:active{background:var(--navy-soft)}
+.hd .t{font-size:17px;font-weight:800;letter-spacing:-.02em}
+.now{margin:16px;background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+.now .tt{display:flex;align-items:center;gap:7px;font-size:16px;font-weight:800;letter-spacing:-.02em}
+.now .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.now .chips i,.now .chips a{font-style:normal;font-size:12px;font-weight:700;color:var(--green);background:var(--green-soft);padding:5px 12px;border-radius:999px}
+.now .chips a:active{transform:scale(.96)}
+.now .hint{margin-top:10px;font-size:11.5px;font-weight:600;color:var(--text-mid)}
+.legend{display:flex;gap:12px;margin:0 18px 8px;font-size:11px;font-weight:600;color:var(--text-mid);align-items:center}
+.legend i{width:14px;height:8px;border-radius:4px;display:inline-block;margin-right:4px;vertical-align:1px}
+.legend .ly{background:var(--yellow)}
+.legend .lg{background:#E2E6ED}
+.list{margin:0 16px;display:flex;flex-direction:column;gap:10px}
+.row{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow);padding:13px 14px}
+.row.sel{border-color:var(--navy)}
+.row .top{display:flex;align-items:center;gap:8px;cursor:pointer}
+.row .emo{font-size:19px}
+.row .nm{font-size:14px;font-weight:800;letter-spacing:-.02em}
+.row .st{margin-left:auto;flex:none;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:999px}
+.row .st.on{color:var(--green);background:var(--green-soft)}
+.row .st.off{color:var(--text-light);background:var(--border-soft)}
+.months{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:10px}
+.m{height:22px;border-radius:5px;background:#EDEFF2;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--text-light);position:relative}
+.m.in{background:var(--yellow);color:var(--navy)}
+.m.cur{outline:2px solid var(--navy);outline-offset:1px;z-index:1}
+.row .wait{margin-top:11px;width:100%;font-size:12px;font-weight:800;color:var(--navy);border:1.5px solid #E2E6ED;background:#fff;padding:9px 0;border-radius:10px}
+.row .wait:active{background:var(--navy-soft)}
+.row .wait.go{background:var(--yellow);border-color:var(--yellow);color:var(--navy)}
+.row .wait.go:active{background:var(--yellow-dark)}
+/* ---- 품목 클릭 상품 카드 (#107 — 현행 로직 이식·산출물 토큰으로 재도색) ---- */
+.season-detail{margin:0 16px 12px;background:var(--card);border:1.5px solid var(--navy);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 15px}
+.sd-top{display:flex;gap:11px;align-items:flex-start}
+.sd-img{width:86px;height:86px;border-radius:12px;object-fit:cover;flex:none;background:#F2F3F5}
+.sd-img.gray{filter:grayscale(1);opacity:.6}
+.sd-name{font-size:14.5px;font-weight:800;letter-spacing:-.02em;line-height:1.35}
+.sd-when{margin-top:4px;font-size:12px;font-weight:700;color:var(--text-mid)}
+.sd-when b{color:var(--green)}
+.sd-meta{margin-top:4px;font-size:11.5px;font-weight:700;color:var(--text-mid)}
+.sd-meta .st{color:#F5A623}
+.sd-btn{margin-top:11px;width:100%;font-size:13px;font-weight:800;padding:11px 0;border-radius:12px}
+.sd-btn.buy{background:var(--yellow);color:var(--navy)}
+.sd-btn.buy:active{background:var(--yellow-dark)}
+.sd-btn.wait{border:1.5px solid #E2E6ED;color:var(--navy);background:#fff}
+.sd-btn.wait:active{background:var(--navy-soft)}
+/* ---- 시즌 준비 중 구간 (#107 — 스냅샷 품절 상품·현행 로직 이식) ---- */
+.wait-sec{margin:22px 16px 0}
+.wait-sec h3{font-size:15px;font-weight:800;letter-spacing:-.02em}
+.wait-hint{margin-top:3px;font-size:11.5px;color:var(--text-mid);font-weight:600}
+.wait-grid{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wait-card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow);padding:10px;text-align:left}
+.wait-card img{width:100%;height:92px;object-fit:cover;border-radius:10px;filter:grayscale(1);opacity:.65;display:block;background:#F2F3F5}
+.wait-card .wc-name{margin-top:7px;font-size:12px;font-weight:800;line-height:1.3}
+.wait-card .wc-when{margin-top:2px;font-size:10.5px;font-weight:700;color:var(--text-mid)}
+.wait-card .wc-btn{margin-top:7px;width:100%;font-size:10.5px;font-weight:800;color:var(--navy);border:1.5px solid #E2E6ED;background:#fff;padding:7px 0;border-radius:9px}
+.wait-card .wc-btn:active{background:var(--navy-soft)}
+.wait-cta{margin-top:14px;width:100%;background:var(--yellow);color:var(--navy);font-size:14px;font-weight:800;padding:14px 0;border-radius:14px;box-shadow:var(--shadow)}
+.wait-cta:active{background:var(--yellow-dark)}
+footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:11.5px;font-weight:600;color:var(--text-light);text-align:center;line-height:1.6}
+footer b{color:var(--text-mid)}
+/* ---- 하단 고정 탭바 (현행 링크 구성 유지·산출물 토큰) ---- */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--border);box-shadow:0 -4px 16px -6px rgba(21,32,54,.12);display:flex;height:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-light);font-size:10.5px;font-weight:700;letter-spacing:-.02em}
+.tab .t-ic{font-size:21px;line-height:1;filter:grayscale(1) opacity(.55);padding:2px 12px;border-radius:999px}
+.tab.active{color:var(--navy)}
+.tab.active .t-ic{filter:none;transform:scale(1.06);background:var(--navy-soft)}
+.tab:active{color:var(--navy)}
+/* ---- 시즌 대기 모달 (산출물 문법 + 현행 문구) ---- */
+.modal-dim{position:fixed;inset:0;z-index:100;background:rgba(21,32,54,.55);display:flex;align-items:center;justify-content:center;padding:28px;opacity:0;pointer-events:none;transition:opacity .18s}
+.modal-dim.show{opacity:1;pointer-events:auto}
+.modal{width:100%;max-width:320px;background:#fff;border-radius:var(--radius);padding:28px 22px 20px;text-align:center;box-shadow:0 18px 50px rgba(21,32,54,.35)}
+.modal .face{width:84px;height:84px;margin:0 auto;border-radius:50%;background:#fff;border:3px solid var(--yellow);overflow:hidden}
+.modal .face img{width:100%;height:100%;object-fit:contain}
+.modal h3{margin-top:12px;font-size:18px;font-weight:800}
+.modal p{margin-top:8px;font-size:13.5px;color:var(--text-mid);font-weight:600;line-height:1.55}
+.modal button{margin-top:18px;width:100%;background:var(--yellow);color:var(--navy);font-size:15px;font-weight:800;padding:14px 0;border-radius:var(--radius-btn)}
+.modal button:active{background:var(--yellow-dark)}
+</style></head><body>
 <div class="app">
-  <div class="scroll">
-
-    <!-- ===== 서브 헤더 ===== -->
-    <header class="subhead">
-      <a class="back-btn" href="index_v5.html" aria-label="홈으로">‹</a>
-      <h1>시즌 캘린더</h1>
-    </header>
-
-    <!-- ===== 안내 배너 ===== -->
-    <div class="intro">
-      <span class="emo">🗓️</span>
-      <div>
-        <h2>제주 밭 달력</h2>
-        <p>품목마다 가장 맛있는 달을 아꼼이가 알려드려요</p>
-      </div>
-    </div>
-
-    <!-- ===== 품목별 제철 표 (1~12월 가로 바 — JS 렌더) ===== -->
-    <!-- API: GET /api/shop/seasons (품목별 제철 데이터 — 실서비스에서 서버 조회로 대체) -->
-    <div class="cal-card">
-      <div class="cal-grid" id="calGrid"></div>
-      <div class="legend">
-        <span class="lg-season"><i></i>제철</span>
-        <span class="lg-now"><i></i>이번 달 (<span id="lgNowM"></span>월)</span>
-      </div>
-    </div>
-
-    <!-- ===== 품목 클릭 → 상품 카드 (#107 — 시기 설명 + 시즌 대기/구매) ===== -->
-    <div class="season-detail" id="seasonDetail" hidden></div>
-
-    <!-- ===== 지금 제철 요약 ===== -->
-    <div class="now-card">
-      <h3>🍊 <span id="nowMTitle"></span>월, 지금 맛있는 것들</h3>
-      <div class="now-chips" id="nowChips"></div>
-      <div class="now-hint">칩을 누르면 쇼핑 목록으로 이동해요</div>
-    </div>
-
-    <!-- ===== 시즌 준비 중 상품들 (#107 — 홈에서 이주: 품절 = 대기 명단 수집기) ===== -->
-    <div class="wait-sec" id="waitSec" hidden>
-      <h3>🌙 시즌 준비 중 — 미리 대기 신청하세요</h3>
-      <p class="wait-hint">지금은 시즌이 아니에요. 대기 신청하면 시즌 오픈 때 알려드려요!</p>
-      <div class="wait-grid" id="waitGrid"></div>
-      <button class="wait-cta" type="button" data-wait-cta>🔔 시즌 대기 신청하러 가기</button>
-    </div>
-
-    <div class="foot-note">
-      제주 밭에서 우리집 식탁까지, <b>제주아꼼이네</b> 🍊<br>
-      (프로토타입 화면 — 실제 서비스 아님 · 상품 데이터 = 네이버 스토어 실측 스냅샷 2026-07-30)
-    </div>
+  <div class="hd">
+    <button class="back" onclick="location.href='index_v5.html'" aria-label="뒤로">‹</button>
+    <span class="t"><svg width="20" height="20" viewBox="0 0 24 24" style="vertical-align:-4px" aria-hidden="true"><rect x="3" y="4.5" width="18" height="17" rx="4" fill="#1B3A6B"/><rect x="4.6" y="6" width="14.8" height="4.6" rx="2.3" fill="#F5C800"/><rect x="7" y="2.2" width="2.6" height="4.6" rx="1.3" fill="#1B3A6B"/><rect x="14.4" y="2.2" width="2.6" height="4.6" rx="1.3" fill="#1B3A6B"/><circle cx="8.5" cy="14.4" r="1.5" fill="#fff" opacity=".85"/><circle cx="12" cy="14.4" r="1.5" fill="#F5C800"/><circle cx="15.5" cy="14.4" r="1.5" fill="#fff" opacity=".85"/><circle cx="8.5" cy="18" r="1.5" fill="#fff" opacity=".85"/></svg> 시즌 캘린더</span>
   </div>
 
-  <!-- ===== 하단 고정 탭바 (공통 — 활성 탭 없음: 캘린더는 홈 하위 화면) ===== -->
+  <div class="now">
+    <div class="tt">🍊 <span id="nowM"></span>월, 지금 맛있는 것들</div>
+    <div class="chips" id="nowChips"></div>
+    <div class="hint">칩을 누르면 쇼핑 목록으로 이동해요</div>
+  </div>
+
+  <div class="legend"><span><i class="ly"></i>시즌</span><span><i class="lg"></i>시즌 아님</span><span>· 네이비 테두리 = 이번 달</span></div>
+
+  <!-- 품목 클릭 → 상품 카드 (#107 — 시기 설명 + 시즌 대기/구매) -->
+  <div class="season-detail" id="seasonDetail" hidden></div>
+
+  <div class="list" id="list"></div>
+
+  <!-- 시즌 준비 중 상품들 (#107 — 품절 = 대기 명단 수집기) -->
+  <div class="wait-sec" id="waitSec" hidden>
+    <h3>🌙 시즌 준비 중 — 미리 대기 신청하세요</h3>
+    <p class="wait-hint">지금은 시즌이 아니에요. 대기 신청하면 시즌 오픈 때 알려드려요!</p>
+    <div class="wait-grid" id="waitGrid"></div>
+    <button class="wait-cta" type="button" data-wait-cta>🔔 시즌 대기 신청하러 가기</button>
+  </div>
+
+  <footer>시기는 해마다 날씨 따라 조금씩 달라져요 — 시즌 대기 신청하면 오픈 때 알려드려요!<br>
+    제주 밭에서 우리집 식탁까지, <b>제주아꼼이네</b> 🍊<br>
+    (프로토타입 화면 — 실제 서비스 아님 · 상품 데이터 = 네이버 스토어 실측 스냅샷 2026-07-30)</footer>
+
+  <!-- 하단 고정 탭바 (현행 구성 유지) -->
   <nav class="tabbar" aria-label="하단 메뉴">
-    <a class="tab active" href="index_v5.html">
-      <span class="t-ic">🏠</span>홈
-    </a>
-    <a class="tab" href="products_v5.html">
-      <span class="t-ic">🛒</span>쇼핑
-    </a>
-    <a class="tab" href="my.html">
-      <span class="t-ic">🌳</span>귤나무 키우기
-    </a>
-    <a class="tab" href="my.html#orders">
-      <span class="t-ic">📦</span>주문내역
-    </a>
-    <a class="tab" href="my.html">
-      <span class="t-ic">👤</span>마이
-    </a>
+    <a class="tab active" href="index_v5.html"><span class="t-ic">🏠</span>홈</a>
+    <a class="tab" href="products_v5.html"><span class="t-ic">🛒</span>쇼핑</a>
+    <a class="tab" href="my.html"><span class="t-ic">🌳</span>귤나무 키우기</a>
+    <a class="tab" href="my.html#orders"><span class="t-ic">📦</span>주문내역</a>
+    <a class="tab" href="my.html"><span class="t-ic">👤</span>마이</a>
   </nav>
+</div>
+
+<div class="modal-dim" id="modalDim" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="face"><img src="assets/akkomi.png" alt="아꼼이"></div>
+    <h3>🔔 시즌 대기 신청</h3>
+    <p>실서비스 오픈 준비 중이에요!<br>시즌이 열리면 알림톡으로 알려드릴 예정입니다 🍊</p>
+    <button type="button" id="modalClose">알겠어요!</button>
+  </div>
 </div>
 
 <script>
 (function(){
-  "use strict";
+"use strict";
 
-  /* ── 제철 시기표 v2 (#107 — 스토어 실상품 20종 전체와 매핑) ──
-     ⚠️ 시기(from~to)는 일반 상식 + 상품명 시즌 정보 기반 "추정 초안" — 근거 문서 없음. 대표 검수 필수.
-     실서비스: GET /api/shop/seasons 로 대체 + 데이터관리 화면에서 품목별 시기 편집(월 범위 2칸) 예정.
-     스키마: { name, emoji, from, to, cat, no } — no = 네이버 채널상품번호(스냅샷 연결·클릭 시 상품 카드) */
-  var SEASONS = [
-    { name:"하우스 감귤", emoji:"🍊", from:5,  to:9,  cat:"citrus",  no:6400134206 },
-    { name:"미니밤호박",  emoji:"🎃", from:7,  to:9,  cat:"veg",     no:5011476022 },
-    { name:"청귤(풋귤)",  emoji:"🍈", from:8,  to:9,  cat:"preorder",no:5731582511 },
-    { name:"황금향",      emoji:"🍊", from:7,  to:12, cat:"gift",    no:11126666859 },
-    { name:"혼합 선물세트",emoji:"🎁", from:8,  to:2,  cat:"gift",    no:10801253976 },
-    { name:"노지 감귤",   emoji:"🍊", from:11, to:2,  cat:"citrus",  no:6400134206 },
-    { name:"감귤밭 체험", emoji:"🧺", from:10, to:2,  cat:"citrus",  no:7673020911 },
-    { name:"홍귤(산하홍)",emoji:"🍊", from:11, to:12, cat:"citrus",  no:4773814370 },
-    { name:"레몬",        emoji:"🍋", from:11, to:1,  cat:"citrus",  no:5531798664 },
-    { name:"레드향",      emoji:"🍊", from:12, to:2,  cat:"citrus",  no:4787044506 },
-    { name:"한라봉",      emoji:"🍊", from:1,  to:3,  cat:"citrus",  no:4840212264 },
-    { name:"천혜향",      emoji:"🍊", from:1,  to:3,  cat:"citrus",  no:5128078653 },
-    { name:"블러드 오렌지",emoji:"🍊", from:2,  to:4,  cat:"citrus",  no:6445171353 },
-    { name:"카라향",      emoji:"🍊", from:3,  to:5,  cat:"citrus",  no:8302986279 },
-    { name:"자몽",        emoji:"🍊", from:3,  to:5,  cat:"citrus",  no:13175235737 },
-    { name:"취나물",      emoji:"🥬", from:3,  to:5,  cat:"veg",     no:13392734089 },
-    { name:"하귤",        emoji:"🍋", from:4,  to:6,  cat:"citrus",  no:8528902063 },
-    { name:"초당옥수수",  emoji:"🌽", from:6,  to:7,  cat:"veg",     no:6766868273 },
-    { name:"고깔양배추",  emoji:"🥬", from:12, to:3,  cat:"veg",     no:11928134543 },
-    { name:"브로콜리",    emoji:"🥦", from:11, to:3,  cat:"veg",     no:11928081841 }
-  ];
-  var NOW_MONTH = new Date().getMonth() + 1;
+/* ── 제철 시기표 v2 (#107 — 스토어 실상품 20종 전체와 매핑) ──
+   ⚠️ 시기(from~to)는 일반 상식 + 상품명 시즌 정보 기반 "추정 초안" — 근거 문서 없음. 대표 검수 필수.
+   실서비스: GET /api/shop/seasons 로 대체 + 데이터관리 화면에서 품목별 시기 편집(월 범위 2칸) 예정.
+   스키마: { name, emoji, from, to, cat, no } — no = 네이버 채널상품번호(스냅샷 연결·클릭 시 상품 카드) */
+var SEASONS = [
+  { name:"하우스 감귤", emoji:"🍊", from:5,  to:9,  cat:"citrus",  no:6400134206 },
+  { name:"미니밤호박",  emoji:"🎃", from:7,  to:9,  cat:"veg",     no:5011476022 },
+  { name:"청귤(풋귤)",  emoji:"🍈", from:8,  to:9,  cat:"preorder",no:5731582511 },
+  { name:"황금향",      emoji:"🍊", from:7,  to:12, cat:"gift",    no:11126666859 },
+  { name:"혼합 선물세트",emoji:"🎁", from:8,  to:2,  cat:"gift",    no:10801253976 },
+  { name:"노지 감귤",   emoji:"🍊", from:11, to:2,  cat:"citrus",  no:6400134206 },
+  { name:"감귤밭 체험", emoji:"🧺", from:10, to:2,  cat:"citrus",  no:7673020911 },
+  { name:"홍귤(산하홍)",emoji:"🍊", from:11, to:12, cat:"citrus",  no:4773814370 },
+  { name:"레몬",        emoji:"🍋", from:11, to:1,  cat:"citrus",  no:5531798664 },
+  { name:"레드향",      emoji:"🍊", from:12, to:2,  cat:"citrus",  no:4787044506 },
+  { name:"한라봉",      emoji:"🍊", from:1,  to:3,  cat:"citrus",  no:4840212264 },
+  { name:"천혜향",      emoji:"🍊", from:1,  to:3,  cat:"citrus",  no:5128078653 },
+  { name:"블러드 오렌지",emoji:"🍊", from:2,  to:4,  cat:"citrus",  no:6445171353 },
+  { name:"카라향",      emoji:"🍊", from:3,  to:5,  cat:"citrus",  no:8302986279 },
+  { name:"자몽",        emoji:"🍊", from:3,  to:5,  cat:"citrus",  no:13175235737 },
+  { name:"취나물",      emoji:"🥬", from:3,  to:5,  cat:"veg",     no:13392734089 },
+  { name:"하귤",        emoji:"🍋", from:4,  to:6,  cat:"citrus",  no:8528902063 },
+  { name:"초당옥수수",  emoji:"🌽", from:6,  to:7,  cat:"veg",     no:6766868273 },
+  { name:"고깔양배추",  emoji:"🥬", from:12, to:3,  cat:"veg",     no:11928134543 },
+  { name:"브로콜리",    emoji:"🥦", from:11, to:3,  cat:"veg",     no:11928081841 }
+];
+var M = new Date().getMonth() + 1;
 
-  function inSeason(m, s){
-    return (s.from <= s.to) ? (m >= s.from && m <= s.to)
-                            : (m >= s.from || m <= s.to);   /* 11~2월처럼 해 넘김 */
+function inS(m, s){
+  return (s.from <= s.to) ? (m >= s.from && m <= s.to)
+                          : (m >= s.from || m <= s.to);   /* 11~2월처럼 해 넘김 */
+}
+
+/* ---- 지금 제철 칩 → 쇼핑 목록 연결 (현행 로직) ---- */
+document.getElementById('nowM').textContent = M;
+var chips = '';
+for (var j = 0; j < SEASONS.length; j++){
+  if (inS(M, SEASONS[j])){
+    chips += '<a class="now-chip" href="products_v5.html?cat=' + SEASONS[j].cat + '">' +
+      SEASONS[j].emoji + ' ' + SEASONS[j].name + '</a>';
   }
+}
+document.getElementById('nowChips').innerHTML = chips;
 
-  /* ---- 표 렌더 ---- */
-  var html = '<span class="corner"></span>';
-  for (var m = 1; m <= 12; m++){
-    html += '<span class="m-head' + (m === NOW_MONTH ? ' now' : '') + '">' + m + '월</span>';
-  }
-  for (var i = 0; i < SEASONS.length; i++){
-    var s = SEASONS[i];
-    var nowIn = inSeason(NOW_MONTH, s);
-    html += '<span class="item-label" data-idx="' + i + '" role="button"><span class="emo">' + s.emoji + '</span>' + s.name +
-      (nowIn ? '<span class="in-badge">지금 제철</span>' : '') + '</span>';
-    for (var mm = 1; mm <= 12; mm++){
-      var on = inSeason(mm, s);
-      var cls = "m-cell";
-      if (on){
-        cls += " on";
-        if (!inSeason(mm === 1 ? 12 : mm - 1, s)) cls += " first";
-        if (!inSeason(mm === 12 ? 1 : mm + 1, s)) cls += " last";
-        /* 1·12월 경계는 항상 모서리 처리(표가 끊기므로) */
-        if (mm === 1) cls += " first";
-        if (mm === 12) cls += " last";
-      }
-      if (mm === NOW_MONTH) cls += " nowcol";
-      html += '<span class="' + cls + '"><i></i></span>';
+/* ---- 리스트 렌더 (산출물 디자인 — 지금 제철 먼저) ---- */
+var list = document.getElementById('list');
+SEASONS.map(function(s, i){ return { s: s, idx: i }; })
+  .sort(function(a, b){ return inS(M, b.s) - inS(M, a.s); })
+  .forEach(function(o){
+    var s = o.s, on = inS(M, s);
+    var cells = '';
+    for (var m = 1; m <= 12; m++){
+      cells += '<span class="m' + (inS(m, s) ? ' in' : '') + (m === M ? ' cur' : '') + '">' + m + '</span>';
     }
-  }
-  document.getElementById("calGrid").innerHTML = html;
-
-  /* ---- 지금 제철 칩 → 쇼핑 목록 연결 ---- */
-  var chips = "";
-  for (var j = 0; j < SEASONS.length; j++){
-    if (inSeason(NOW_MONTH, SEASONS[j])){
-      chips += '<a class="now-chip" href="products_v5.html?cat=' + SEASONS[j].cat + '">' +
-        SEASONS[j].emoji + ' ' + SEASONS[j].name + '</a>';
-    }
-  }
-  document.getElementById("nowChips").innerHTML = chips;
-
-  /* ---- #107: 월 표기 동적 ---- */
-  document.getElementById("lgNowM").textContent = NOW_MONTH;
-  document.getElementById("nowMTitle").textContent = NOW_MONTH;
-
-  /* ---- #107: 스냅샷 로드(그레이스풀) → 품목 클릭 카드 + 시즌 준비 중 구간 ---- */
-  var SNAP = null;
-  function whenLabel(s){
-    var t = s.from + "월~" + s.to + "월";
-    return inSeason(NOW_MONTH, s) ? t + " · <b>지금 제철!</b>" : t + " (시즌 전)";
-  }
-  function findItem(no){
-    if(!SNAP) return null;
-    for (var i = 0; i < SNAP.items.length; i++) if (String(SNAP.items[i].no) === String(no)) return SNAP.items[i];
-    return null;
-  }
-  function fmt(n){ return (n == null ? 0 : n).toLocaleString("ko-KR"); }
-  function openWaitModal(){ document.getElementById("calModal").classList.add("show"); }
-
-  function showSeason(idx){
-    var s = SEASONS[idx];
-    var it = findItem(s.no);
-    var box = document.getElementById("seasonDetail");
-    var labels = document.querySelectorAll(".item-label");
-    for (var i = 0; i < labels.length; i++) labels[i].classList.toggle("sel", labels[i].getAttribute("data-idx") == idx);
-    var sold = !it || it.soldout;
-    box.innerHTML = '<div class="sd-top">' +
-      (it ? '<img class="sd-img' + (sold ? ' gray' : '') + '" src="' + it.img + '" alt="">' : '<span class="sd-img" style="display:flex;align-items:center;justify-content:center;font-size:34px;">' + s.emoji + '</span>') +
-      '<div><div class="sd-name">' + s.emoji + ' ' + s.name + '</div>' +
-      '<div class="sd-when">🗓️ ' + whenLabel(s) + '</div>' +
-      (it ? '<div class="sd-meta"><span class="st">★</span>' + it.score + ' · 리뷰 ' + fmt(it.reviewCount) + (sold ? ' · 시즌 준비 중' : ' · 판매중') + '</div>' : '') +
-      '</div></div>' +
-      (sold ? '<button class="sd-btn wait" type="button" data-wait-cta>🔔 시즌 대기 신청 — 오픈 때 알려드려요</button>'
-            : '<a class="sd-btn buy" style="display:block;text-align:center;" href="index_v5.html">🍊 지금 구매하러 가기</a>');
-    box.hidden = false;
-  }
-  document.getElementById("calGrid").addEventListener("click", function(e){
-    var t = e.target.closest(".item-label");
-    if (t) showSeason(parseInt(t.getAttribute("data-idx"), 10));
+    var d = document.createElement('div');
+    d.className = 'row'; d.setAttribute('data-idx', o.idx);
+    d.innerHTML = '<div class="top" role="button"><span class="emo">' + s.emoji + '</span><span class="nm">' + s.name + '</span>' +
+      '<span class="st ' + (on ? 'on' : 'off') + '">' + (on ? '지금 제철' : '시즌 전') + '</span></div>' +
+      '<div class="months">' + cells + '</div>' +
+      (on ? '<button class="wait go" type="button" onclick="event.stopPropagation();location.href=\'index_v5.html#products\'">🛒 지금 맛보러 가기 ›</button>'
+          : '<button class="wait" type="button" data-wait-cta>🔔 시즌 대기 신청 — 오픈 때 알려드려요</button>');
+    list.appendChild(d);
   });
 
-  function renderWaitSec(){
-    if(!SNAP) return;                                    /* 스냅샷 못 읽으면(파일 직접 열기 등) 구간 비표시 — 그레이스풀 */
-    var dead = SNAP.items.filter(function(i){ return i.soldout; })
-      .sort(function(a,b){ return b.reviewCount - a.reviewCount; });
-    var byNo = {};
-    for (var i = 0; i < SEASONS.length; i++) if (!(SEASONS[i].no in byNo)) byNo[SEASONS[i].no] = SEASONS[i];
-    var html = "";
-    for (var j = 0; j < dead.length; j++){
-      var it = dead[j], s = byNo[it.no];
-      html += '<div class="wait-card"><img src="' + it.img + '" alt="" loading="lazy">' +
-        '<div class="wc-name">' + it.name.slice(0, 22) + '</div>' +
-        '<div class="wc-when">🗓️ ' + (s ? (s.from + "월~" + s.to + "월 예상") : "시즌 미정") + ' · ★' + it.score + '</div>' +
-        '<button class="wc-btn" type="button" data-wait-cta>🔔 시즌 대기 신청</button></div>';
-    }
-    document.getElementById("waitGrid").innerHTML = html;
-    document.getElementById("waitSec").hidden = false;
+/* ---- #107: 스냅샷 로드(그레이스풀) → 품목 클릭 카드 + 시즌 준비 중 구간 (현행 로직) ---- */
+var SNAP = null;
+function whenLabel(s){
+  var t = s.from + "월~" + s.to + "월";
+  return inS(M, s) ? t + " · <b>지금 제철!</b>" : t + " (시즌 전)";
+}
+function findItem(no){
+  if(!SNAP) return null;
+  for (var i = 0; i < SNAP.items.length; i++) if (String(SNAP.items[i].no) === String(no)) return SNAP.items[i];
+  return null;
+}
+function fmt(n){ return (n == null ? 0 : n).toLocaleString("ko-KR"); }
+
+function showSeason(idx){
+  var s = SEASONS[idx];
+  var it = findItem(s.no);
+  var box = document.getElementById("seasonDetail");
+  var rows = document.querySelectorAll(".row");
+  for (var i = 0; i < rows.length; i++) rows[i].classList.toggle("sel", rows[i].getAttribute("data-idx") == idx);
+  var sold = !it || it.soldout;
+  box.innerHTML = '<div class="sd-top">' +
+    (it ? '<img class="sd-img' + (sold ? ' gray' : '') + '" src="' + it.img + '" alt="">' : '<span class="sd-img" style="display:flex;align-items:center;justify-content:center;font-size:34px;">' + s.emoji + '</span>') +
+    '<div><div class="sd-name">' + s.emoji + ' ' + s.name + '</div>' +
+    '<div class="sd-when">🗓️ ' + whenLabel(s) + '</div>' +
+    (it ? '<div class="sd-meta"><span class="st">★</span>' + it.score + ' · 리뷰 ' + fmt(it.reviewCount) + (sold ? ' · 시즌 준비 중' : ' · 판매중') + '</div>' : '') +
+    '</div></div>' +
+    (sold ? '<button class="sd-btn wait" type="button" data-wait-cta>🔔 시즌 대기 신청 — 오픈 때 알려드려요</button>'
+          : '<a class="sd-btn buy" style="display:block;text-align:center;" href="index_v5.html">🍊 지금 구매하러 가기</a>');
+  box.hidden = false;
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+list.addEventListener("click", function(e){
+  if (e.target.closest("button,a")) return;
+  var t = e.target.closest(".row");
+  if (t) showSeason(parseInt(t.getAttribute("data-idx"), 10));
+});
+
+function renderWaitSec(){
+  if(!SNAP) return;                                    /* 스냅샷 못 읽으면(파일 직접 열기 등) 구간 비표시 — 그레이스풀 */
+  var dead = SNAP.items.filter(function(i){ return i.soldout; })
+    .sort(function(a,b){ return b.reviewCount - a.reviewCount; });
+  var byNo = {};
+  for (var i = 0; i < SEASONS.length; i++) if (!(SEASONS[i].no in byNo)) byNo[SEASONS[i].no] = SEASONS[i];
+  var html = "";
+  for (var j = 0; j < dead.length; j++){
+    var it = dead[j], s = byNo[it.no];
+    html += '<div class="wait-card"><img src="' + it.img + '" alt="" loading="lazy">' +
+      '<div class="wc-name">' + it.name.slice(0, 22) + '</div>' +
+      '<div class="wc-when">🗓️ ' + (s ? (s.from + "월~" + s.to + "월 예상") : "시즌 미정") + ' · ★' + it.score + '</div>' +
+      '<button class="wc-btn" type="button" data-wait-cta>🔔 시즌 대기 신청</button></div>';
   }
-  document.addEventListener("click", function(e){
-    if (e.target.closest("[data-wait-cta]")) openWaitModal();
-  });
+  document.getElementById("waitGrid").innerHTML = html;
+  document.getElementById("waitSec").hidden = false;
+}
 
-  var modal = document.createElement("div");
-  modal.className = "cal-modal"; modal.id = "calModal";
-  modal.innerHTML = '<div class="cm-box"><h4>🔔 시즌 대기 신청</h4><p>실서비스 오픈 준비 중이에요!<br>시즌이 열리면 알림톡으로 알려드릴 예정입니다 🍊</p><button type="button" id="calModalClose">알겠어요!</button></div>';
-  document.body.appendChild(modal);
-  modal.addEventListener("click", function(e){ if (e.target === modal || e.target.id === "calModalClose") modal.classList.remove("show"); });
+/* ---- 시즌 대기 모달 (산출물 문법 + 현행 문구) ---- */
+var dim = document.getElementById('modalDim');
+document.addEventListener('click', function(e){
+  if (e.target.closest('[data-wait-cta]')) dim.classList.add('show');
+});
+document.getElementById('modalClose').addEventListener('click', function(){ dim.classList.remove('show'); });
+dim.addEventListener('click', function(e){ if (e.target === dim) dim.classList.remove('show'); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') dim.classList.remove('show'); });
 
-  fetch("assets/data/store_snapshot_2026-07-30.json")
-    .then(function(r){ return r.json(); })
-    .then(function(d){ SNAP = d; renderWaitSec(); })
-    .catch(function(){ /* file:// 등 — 표·칩은 그대로 동작 */ });
+fetch("assets/data/store_snapshot_2026-07-30.json")
+  .then(function(r){ return r.json(); })
+  .then(function(d){ SNAP = d; renderWaitSec(); })
+  .catch(function(){ /* file:// 등 — 표·칩은 그대로 동작 */ });
 })();
 </script>
-</body>
-</html>
+</body></html>
