@@ -998,6 +998,11 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
 .tnav{font-weight:800;letter-spacing:-.02em}
 /* 터치 타깃 보강 */
 .heart{padding:10px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+/* #143: 상단 바 로테이션 (타이머 ↔ 오늘의 당첨자 — 페이드) */
+.cd-bar{position:relative;min-height:34px}
+.cd-slide{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;opacity:0;transition:opacity .45s ease;position:absolute;left:0;top:50%;transform:translateY(-50%);padding:0 12px;box-sizing:border-box;white-space:nowrap;overflow:hidden}
+.cd-slide.on{opacity:1;position:relative;top:auto;transform:none}
+.cd-slide-winner{font-size:clamp(10px,2.6vw,12px);font-weight:800;color:var(--navy);text-overflow:ellipsis}
 /* #139: hero-sub 원문 복원분 1줄 보정 */
 .hero-sub{white-space:nowrap;font-size:10.5px;letter-spacing:-.03em;overflow:hidden;text-overflow:ellipsis}
 .hd-ic{width:44px;height:44px;border-radius:14px}
@@ -1015,14 +1020,18 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
     <!-- ═════════ 1. 발송 마감 카운트다운 배너 (계승 ① — 기존 리뉴얼 countdown-bar) ═════════ -->
     <!-- API: GET /api/shop/shipping-cutoff (마감시각·발송 정책 — 현재는 클라이언트 자정 기준 계산) -->
     <div class="cd-bar" id="cdBar">
-      <span class="emoji">🚚</span>
-      <span class="label" id="cdLabel">발송 마감까지</span>
-      <div class="timer" id="cdTimer">
-        <span id="cdH">00</span><span class="sep">:</span>
-        <span id="cdM">00</span><span class="sep">:</span>
-        <span id="cdS">00</span>
+      <div class="cd-slide cd-slide-timer on" id="cdSlideTimer">
+        <span class="emoji">🚚</span>
+        <span class="label" id="cdLabel">발송 마감까지</span>
+        <div class="timer" id="cdTimer">
+          <span id="cdH">00</span><span class="sep">:</span>
+          <span id="cdM">00</span><span class="sep">:</span>
+          <span id="cdS">00</span>
+        </div>
+        <span class="msg" id="cdMsg">· 내일 발송</span>
       </div>
-      <span class="msg" id="cdMsg">· 내일 발송</span>
+      <!-- #143: 오늘의 당첨자 슬라이드 — 실당첨(공개 API) 있을 때만 로테이션 가동 -->
+      <div class="cd-slide cd-slide-winner" id="cdSlideWinner" aria-live="polite"></div>
     </div>
 
     <!-- ═════════ 2. 헤더 (배송지 + 아꼼이 + 오늘의 물방울) ═════════ -->
@@ -1733,6 +1742,29 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
     cdMsg.textContent = "· 내일 발송";
   }
   updateCD();
+  /* ── #143: 상단 바 로테이션 — 실당첨 데이터(공개 API·마스킹) 있을 때만 가동. 0건이면 타이머 단독(가짜 당첨자 금지) ── */
+  (function(){
+    var ROT = { timerMs: 8000, winnerMs: 4000 };   // 주기 설정값 (실측 후 조정 지점)
+    var API = 'https://jeju-acom-company.onrender.com/api/public/roulette-winners';
+    var slideT = document.getElementById('cdSlideTimer'), slideW = document.getElementById('cdSlideWinner');
+    if (!slideT || !slideW) return;
+    fetch(API).then(function(r){ return r.json(); }).then(function(d){
+      var ws = (d && d.winners) || [];
+      if (!ws.length) return;   // 룰렛 오픈 전·당첨자 없는 날 = 타이머만
+      var wi = 0;
+      function winnerText(w){ return '🎉 오늘의 나침반 당첨자 ' + w.name + '님 · ' + w.prize + ' 지급!'; }
+      function showWinner(){
+        slideW.textContent = winnerText(ws[wi % ws.length]); wi++;
+        slideT.classList.remove('on'); slideW.classList.add('on');
+        setTimeout(showTimer, ROT.winnerMs);
+      }
+      function showTimer(){
+        slideW.classList.remove('on'); slideT.classList.add('on');
+        setTimeout(showWinner, ROT.timerMs);
+      }
+      setTimeout(showWinner, ROT.timerMs);
+    }).catch(function(){ /* 네트워크 실패 = 타이머만 */ });
+  })();
   setInterval(updateCD, 1000);
 
   /* ══════════ ⑦ 계승: 상단 탭 → 섹션 스무스 스크롤 ══════════ */
