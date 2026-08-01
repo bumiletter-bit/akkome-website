@@ -2673,10 +2673,10 @@ try{
   }
   applyProfHeader();
   function esc(s){ return String(s).replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
-  function avHTML(id){ return id; }
+  function avHTML(id){ if(id==='AKKOMI') return '<img src="assets/akkomi.png" alt="아꼼이" style="width:1.25em; height:1.25em; object-fit:contain; vertical-align:-0.22em;">'; if(id==='AKKAEBI') return '👦'; return id; }   /* 아깨비: 임시 이모지 — 정식 일러스트 제공 시 교체 */
   var ID2EMOJI = {'gyul':'🍊','hobak':'🎃','uncle':'👨‍🌾','aunt':'👩‍🌾','newbie':'🧑‍🌾','harbang':'👴','halmang':'👵','haenyeo':'🤿','akkomi':'🍊'};
   if(ID2EMOJI[prof.avatar]) prof.avatar = ID2EMOJI[prof.avatar];
-  var AVATARS = [['👨‍🌾','농부 삼촌'],['👩‍🌾','농부 이모'],['🧑‍🌾','새내기 농부'],['👴','하르방'],['👵','할망'],['🍊','감귤'],['🎃','밤호박'],['🤿','해녀']];
+  var AVATARS = [['AKKOMI','아꼼이'],['AKKAEBI','아깨비'],['👨‍🌾','농부 삼촌'],['👩‍🌾','농부 이모'],['🧑‍🌾','새내기 농부'],['👴','하르방'],['👵','할망'],['🤿','해녀']];   /* 대표 지시(8/1): 감귤·호박 제외, 아꼼이(실이미지)·아깨비 추가 */
   var TAKEN = ['아꼼이','제주아꼼이네','아꼼이네','귤킹','제주농부'];
   var pfSel = prof.avatar, pfChecked = false, pfCheckedVal = '';
   function checkName(v){
