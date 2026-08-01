@@ -1879,6 +1879,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
       hsIdx = Math.max(0, Math.min(hsDots.length - 1, Math.round(hsScroll.scrollLeft / hsScroll.clientWidth)));
     }, { passive:true });
     setInterval(function(){
+      if (document.querySelector('.cv-dim.show, .pd-dim.show')) return;   /* #170: 오버레이 열림 중 배너 자동 슬라이드 정지 */
       if (Date.now() < hsAutoPause || hsBusy) return;
       hsIdx = (hsIdx + 1) % hsDots.length;
       hsBusy = true;
@@ -2253,7 +2254,7 @@ try{
         var i = Math.round(galEl.scrollLeft / galEl.clientWidth);
         galEl.scrollTo({ left: galEl.clientWidth * ((i+1) % gal.length), behavior: 'smooth' });
       }
-      pdAutoTimer = setInterval(autoTick, 1500);
+      pdAutoTimer = setInterval(function(){ if (document.querySelector('.cv-dim.show')) return; autoTick(); }, 1500);   /* #170: 상세 위에 다른 화면 열리면 갤러리 자동 정지 */
       function userPause(){ pausedUntil = Date.now() + 5000; }
       galEl.addEventListener('touchstart', userPause, { passive:true });
       galEl.addEventListener('pointerdown', userPause, { passive:true });
@@ -2270,6 +2271,7 @@ try{
       var fix = dim.querySelector('.pd-fix');
       if (fix) fix.scrollIntoView({ behavior:'smooth', block:'start' });
     });
+    dim.style.zIndex = String(window.__v5z = (window.__v5z || 150) + 1);   /* #170: 나중에 연 시트가 위 */
     dim.classList.add('show');
     dim.querySelector('.pd-body').scrollTop = 0;
     if (!(history.state && history.state.pd)) history.pushState({ pd: String(no) }, '', '#p/' + no);   // #117: 브라우저 back 지원
@@ -2330,7 +2332,7 @@ try{
 <style>
 /* ═══ 카테고리 화면 (감귤류·채소호박·선물세트) — 상세 시트와 동일한 풀스크린 전환 ═══ */
 .cv-dim{ position:fixed; inset:0; background:rgba(16,24,40,.3); z-index:125; opacity:0; pointer-events:none; transition:opacity .16s; display:flex; justify-content:center; }
-.cv-dim.show{ opacity:1; pointer-events:auto; }
+.cv-dim.show{ opacity:1; pointer-events:auto; background:var(--bg); }   /* #170: 열림 시 불투명 — 뒤 화면 비침·전환 틈 차단 */
 .cv-sheet{ width:100%; max-width:480px; background:var(--bg); height:100dvh; display:flex; flex-direction:column; transform:translateX(28px); transition:transform .18s; }
 .cv-dim.show .cv-sheet{ transform:none; }
 .cv-head{ flex:none; display:flex; align-items:center; gap:4px; background:#fff; padding:calc(10px + env(safe-area-inset-top,0px)) 12px 8px; }
@@ -2422,6 +2424,7 @@ try{
   function open(cat, fromPop){
     if(CATS[cat]) curCat = cat;
     render();
+    dim.style.zIndex = String(window.__v5z = (window.__v5z || 150) + 1);   /* #170 */
     dim.classList.add('show');
     document.getElementById('cvBody').scrollTop = 0;
     if(!fromPop && !(history.state && history.state.cv===curCat)) history.pushState({ cv:curCat }, '', '#c/'+curCat);
@@ -2658,7 +2661,17 @@ try{
   var PROF_KEY = 'akkome_profile_v1';
   var prof = { name:'아꼼이네 단골님', avatar:'🍊' };
   try{ var pp = JSON.parse(localStorage.getItem(PROF_KEY)); if(pp && pp.name) prof = pp; }catch(e){}
-  function saveProf(){ try{ localStorage.setItem(PROF_KEY, JSON.stringify(prof)); }catch(e){} }
+  function saveProf(){ try{ localStorage.setItem(PROF_KEY, JSON.stringify(prof)); }catch(e){} applyProfHeader(); }
+  /* #170-2: 프로필 저장 → 홈 헤더 아바타·라벨 반영 (저장 이력 없으면 기본 아꼼이 유지) */
+  function applyProfHeader(){
+    var saved = null; try{ saved = JSON.parse(localStorage.getItem(PROF_KEY)); }catch(e){}
+    if(!saved || !saved.name) return;   /* 미설정 = 현행 아꼼이 기본 */
+    var face = document.querySelector('.akkomi-face');
+    if(face) face.innerHTML = '<span style="display:flex; width:100%; height:100%; align-items:center; justify-content:center; font-size:26px;">'+avHTML(saved.avatar || '🍊')+'</span>';
+    var nm = document.querySelector('.akkomi-name');
+    if(nm) nm.textContent = saved.name;
+  }
+  applyProfHeader();
   function esc(s){ return String(s).replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
   function avHTML(id){ return id; }
   var ID2EMOJI = {'gyul':'🍊','hobak':'🎃','uncle':'👨‍🌾','aunt':'👩‍🌾','newbie':'🧑‍🌾','harbang':'👴','halmang':'👵','haenyeo':'🤿','akkomi':'🍊'};
@@ -2684,9 +2697,9 @@ try{
   }
 
   function renderMy(){
-    var cartN = cart.reduce(function(s,r){ return '<div style="font-size:11px; color:#9aa0ab; background:#F4F5F8; border-radius:10px; padding:8px 12px; margin-bottom:10px;">🧪 예시 화면 — 실서비스(회원 계정 연동) 전이라 아래 표시 내용은 데모입니다</div>'+
-      s+r.qty; }, 0);
-    return '<div class="vw-card my-prof"><span class="my-avatar">'+avHTML(prof.avatar)+'</span>'+
+    var cartN = cart.reduce(function(s,r){ return s+r.qty; }, 0);
+    return '<div style="font-size:11px; color:#9aa0ab; background:#F4F5F8; border-radius:10px; padding:8px 12px; margin-bottom:10px;">🧪 예시 화면 — 실서비스(회원 계정 연동) 전이라 아래 표시 내용은 데모입니다</div>'+
+      '<div class="vw-card my-prof"><span class="my-avatar">'+avHTML(prof.avatar)+'</span>'+
       '<div class="my-info"><b>'+esc(prof.name)+'</b><span>🍊 단골 등급 · 주문 12회</span></div>'+
       '<button class="my-edit" type="button" data-v-go="profile">프로필 관리</button></div>'+
       '<div class="my-tiles">'+
@@ -2716,6 +2729,7 @@ try{
   function open(v, fromPop){
     if(!VIEWS[v]) return;
     curView = v; render();
+    dim.style.zIndex = String(window.__v5z = (window.__v5z || 150) + 1);   /* #170 */
     dim.classList.add('show');
     document.getElementById('vwBody').scrollTop = 0;
     if(!fromPop && !(history.state && history.state.vw===v)) history.pushState({ vw:v }, '', '#v/'+v);
