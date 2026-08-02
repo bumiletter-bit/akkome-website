@@ -806,6 +806,11 @@
   .pd-detail .pd-txt p{ margin:0 0 4px; }
   .pd-detail .pd-txt b, .pd-detail .pd-txt strong{ font-weight:800; }
   .pd-foot-note{ margin-top:12px; font-size:10.5px; color:var(--text-light); line-height:1.5; }
+  .pd-rev-sec{ margin-top:14px; }
+  .pd-rev-head{ font-size:15px; font-weight:800; color:#15181C; margin-bottom:10px; }
+  .pd-rev-head .st{ color:#F5C800; }
+  .pd-rev-sec.folded{ max-height:560px; overflow:hidden; position:relative; }
+  .pd-rev-sec.folded::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:120px; background:linear-gradient(rgba(255,255,255,0), #fff 85%); pointer-events:none; }
   .pd-rev-card{ background:#fff; border:1px solid #EDEFF2; border-radius:12px; padding:12px 14px; margin-bottom:9px; }
   .pd-rev-top{ display:flex; align-items:center; gap:6px; font-size:13px; }
   .pd-rev-top .st{ color:#F5C800; } .pd-rev-top b{ font-weight:800; }
@@ -2214,7 +2219,7 @@ try{
         '<div class="pd-tabs">'+
         (detImgs.length?'<button class="pd-tab on" data-pane="det">상세정보</button>':'')+
         '<button class="pd-tab'+(detImgs.length?'':' on')+'" data-pane="opt">옵션 선택</button>'+
-        ((D.prodReviews && D.prodReviews[String(it.no)] && D.prodReviews[String(it.no)].length)?'<button class="pd-tab" data-pane="rev">리뷰</button>':'')+
+        
         (g?'<button class="pd-tab" data-pane="guide">드시는 법·보관법</button>':'')+'</div>'+
       '</div>'+
       '<div style="padding:0 18px calc(18px + env(safe-area-inset-bottom,0px));">'+
@@ -2225,13 +2230,15 @@ try{
       '<div class="pd-pane" data-pane-body="opt"'+(hasDet?' style="display:none"':'')+'>'+optRows+
       (it.soldout?'<button class="btn-wait-sm" type="button" data-wait="'+it.no+'">🔔 시즌 대기 신청 — 오픈 때 알려드려요</button>':'')+'</div>'+
       (function(){ var rv = D.prodReviews && D.prodReviews[String(it.no)]; if(!rv || !rv.length) return '';
-        return '<div class="pd-pane" data-pane-body="rev" style="display:none">'+
+        return '<div class="pd-pane pd-rev-sec folded" data-pane-body="det" id="pdRevPane"'+(detImgs.length||hasDet?'':' style="display:none"')+'>'+
+          '<div class="pd-rev-head"><span class="st">★</span><b>'+it.score+'</b> · 이 상품 리뷰 '+rv.length+'건</div>'+
           '<div class="pd-detail-note">이 상품의 네이버 스토어 실리뷰 '+rv.length+'건 (매일 갱신·마스킹 작성자)</div>'+
           rv.map(function(r){ return '<div class="pd-rev-card"><div class="pd-rev-top"><span class="st">★</span><b>'+r.score+'</b><span class="pd-rev-w">'+String(r.writer||'').replace(/</g,'&lt;')+'</span><span class="pd-rev-d">'+r.date+'</span></div>'+
             (r.opt?'<div class="pd-rev-opt">'+String(r.opt).replace(/</g,'&lt;')+'</div>':'')+
             '<p class="pd-rev-t">'+String(r.text).replace(/</g,'&lt;')+'</p></div>'; }).join('')+
           '<a class="pd-rev-more" href="https://brand.naver.com/jejuakkome/products/'+it.no+'" target="_blank" rel="noopener">전체 리뷰 '+F(it.reviewCount)+'건 네이버에서 보기 ›</a>'+
-        '</div>'; })()+
+        '</div>'+
+        '<button class="pd-more-btn" type="button" id="pdRevMore" data-rev-more>리뷰 더보기 ▼</button>'; })()+
       (g?'<div class="pd-pane" data-pane-body="guide" style="display:none"><div class="pd-guide">'+String(g).replace(/</g,'&lt;')+'</div></div>':'')+
       '<div class="pd-foot-note">실서비스 연결 전 프로토타입 — 가격·옵션·리뷰·상세는 네이버 스토어 실데이터 스냅샷(2026-07-30)입니다.</div><div style="height:74px;"></div></div>'+
       '<div class="pd-bar">'+
@@ -2325,6 +2332,16 @@ try{
       for(var j=0;j<panes.length;j++) panes[j].style.display = panes[j].getAttribute('data-pane-body')===key?'':'none';
       var moreBtn = document.getElementById('pdDetMore');
       if (moreBtn) moreBtn.style.display = key==='det' ? '' : 'none';   // #123-3: 더보기 버튼은 상세정보 탭에서만
+      var revMore = document.getElementById('pdRevMore');
+      if (revMore) revMore.style.display = key==='det' ? '' : 'none';   // 리뷰 섹션·더보기도 상세 흐름 소속
+    }
+    var rm = e.target.closest('[data-rev-more]');
+    if (rm) {   // 대표 지시(8/2): 리뷰 더보기 ▼ / 접기 ▲ — 상세정보 더보기와 동일 패턴
+      var rpane = document.getElementById('pdRevPane');
+      var rfolded = rpane.classList.toggle('folded');
+      rm.textContent = rfolded ? '리뷰 더보기 ▼' : '리뷰 접기 ▲';
+      if (rfolded) rpane.scrollIntoView({ block:'start' });
+      return;
     }
     var dm = e.target.closest('[data-det-more]');
     if (dm) {   // #123-3: 상세정보 더보기 ▼ / 접기 ▲
