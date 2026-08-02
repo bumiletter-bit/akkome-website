@@ -2314,7 +2314,16 @@ try{
   }
   dim.addEventListener('click', function(e){
     if(e.target.id==='pdClose'){ closePd(false); return; }
-    if(e.target.closest('[data-go-reviews]')){   /* #125-2: 리뷰수 → 홈 후기 섹션 (상세 닫고 이동·펼침) */
+    if(e.target.closest('[data-go-reviews]')){   /* 대표 지시(8/2): 리뷰수 → 상세 화면 안의 리뷰 섹션으로 스크롤·펼침 (상세 안 닫음) */
+      var rpane = document.getElementById('pdRevPane');
+      if (rpane) {
+        var detTab = dim.querySelector('.pd-tab[data-pane="det"]'); if (detTab && !detTab.classList.contains('on')) detTab.click();
+        rpane.classList.remove('folded');
+        var rmBtn = document.getElementById('pdRevMore'); if (rmBtn) rmBtn.textContent = '리뷰 접기 ▲';
+        setTimeout(function(){ rpane.scrollIntoView({ behavior:'smooth', block:'start' }); }, 60);
+        return;
+      }
+      /* 리뷰 데이터 없는 상품 폴백 — 기존 홈 후기 섹션 이동 */
       closePd(false);
       setTimeout(function(){
         var rs=document.getElementById('reviews'); if(rs) (window.goSection||function(){})(rs);
