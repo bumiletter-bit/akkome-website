@@ -1721,18 +1721,16 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
     if (!q || chatBusy) return;
     chatBusy = true;
     chatPush('me', chatEsc(q));
-    var thinking = chatPush('bot', '<span class=chat-typing>아꼼이가 확인 중이에요…</span>');
+    var thinking = chatPush('bot', '<span style="opacity:.6">아꼼이가 확인 중이에요…</span>');
     var ctxEl = document.getElementById('chatCtx');
-    var product = (ctxEl && ctxEl.style.display !== 'none') ? String(ctxEl.textContent||'').replace(/^📦s*/, '') : '';
+    var product = (ctxEl && ctxEl.style.display !== 'none') ? String(ctxEl.textContent||'').replace('📦 ', '') : '';
     fetch(CHAT_API, { method:'POST', headers:{'Content-Type':'application/json'},
                       body: JSON.stringify({ question: q, productName: product }) })
       .then(function(r){ return r.json(); })
       .then(function(d){
         thinking.remove();
-        if (d && d.answered && d.answer) chatPush('bot', chatEsc(d.answer).replace(/
-/g,'<br>'));
-        else chatPush('bot', chatEsc((d && d.message) || '지금은 답변을 준비하지 못했어요.').replace(/
-/g,'<br>'));
+        var txt = (d && d.answered && d.answer) ? d.answer : ((d && d.message) || '지금은 답변을 준비하지 못했어요.');
+        chatPush('bot', chatEsc(txt).replace(/\n/g, '<br>'));
       })
       .catch(function(){
         thinking.remove();
