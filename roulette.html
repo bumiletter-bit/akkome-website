@@ -71,9 +71,17 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
 .result{min-height:24px;text-align:center;margin-top:14px;font-size:15px;font-weight:800;color:var(--yellow)}
 .result.win{animation:winpulse 600ms ease-out}
 @keyframes winpulse{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1)}}
-/* 참여 상태 안내 (오늘 1회 제한) */
+/* 참여 상태 안내 — 지시 #184-4: 참여권(주문 연동) 기준 */
 .limit-note{min-height:22px;text-align:center;margin-top:6px;font-size:13.5px;font-weight:700;color:rgba(255,255,255,.72)}
-.limit-note.done{color:#FFB4AB}
+.limit-note.done{color:#FFD79A}
+.limit-note .go-shop{display:inline-block;margin-left:6px;background:var(--yellow);color:var(--navy);font-weight:800;font-size:12.5px;border-radius:999px;padding:5px 12px}
+/* 보유 횟수 배지 (상시 노출 · 0회면 회색) */
+.ticket-wrap{text-align:center;margin-top:18px}
+.ticket-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(245,200,0,.18);border:1.5px solid rgba(245,200,0,.4);color:var(--yellow);font-size:13px;font-weight:800;border-radius:999px;padding:6px 14px}
+.ticket-badge.zero{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.55)}
+/* 획득 경로 상시 안내 */
+.how-note{text-align:center;margin-top:10px;font-size:12px;font-weight:700;color:rgba(255,255,255,.6)}
+.how-note b{color:var(--yellow)}
 
 /* ── 경품 패널 "오늘의 경품" (산출물 홈 카드 문법 — 정적 마크업·등수 뱃지) ── */
 .panel{background:var(--bg);color:var(--text-dark);border-radius:24px 24px 0 0;margin-top:28px;padding:24px 16px 40px}
@@ -125,7 +133,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   <div class="hero">
     <span class="tag">✨ 하루 1번 무료 참여</span>
     <h1>아꼼이의 나침판을<br><em>돌려보세요!</em></h1>
-    <p>하루에 <b>1번</b> — 감귤 1박스부터 물방울까지, 모두 당첨! 🍊</p>
+    <p>주문 1건당 <b>1번</b> — 귤 1박스부터 물까지, <b>꽝 없이 모두 당첨</b>! 🍊</p>
   </div>
 
   <!-- ===== 룰렛 스테이지 ===== -->
@@ -140,21 +148,25 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   <!-- API: POST /api/game/roulette/spin
        실서비스: 이 버튼 클릭 시 서버에 스핀 요청 → 서버가 추첨·지급·기록 후
        당첨 칸 index만 응답 → 프론트는 받은 index로 회전 연출만 한다. -->
+  <!-- 지시 #184-4-1: 보유 횟수 배지 상시 노출 (0회면 회색) -->
+  <div class="ticket-wrap"><span class="ticket-badge" id="ticketBadge">🎟 룰렛 0회 보유</span></div>
   <button class="spin" type="button" id="spinBtn">돌리기<small>GO!</small></button>
   <div class="result" id="result"></div>
   <p class="limit-note" id="limitNote"></p>
+  <!-- 지시 #184-4-3: 획득 경로 상시 안내 -->
+  <p class="how-note">🎟 룰렛권 얻는 법 — <b>주문 1건 = 1회</b></p>
 
   <!-- ===== 오늘의 경품 (산출물 카드 문법 — 등수 뱃지, 확률 % 미표시) ===== -->
   <div class="panel">
     <h2>오늘의 경품</h2>
     <div class="plist">
-      <div class="p"><span class="ic">📦</span><div><div class="nm">제주 감귤 1박스</div><div class="ds">매일 1분께 무료 지급 · 산지직송</div></div><span class="odds">1등</span></div>
-      <div class="p"><span class="ic">⬆️</span><div><div class="nm">업그레이드 이용권</div><div class="ds">3kg 주문이 5kg로 커져요</div></div><span class="odds">2등</span></div>
-      <div class="p"><span class="ic">🎟️</span><div><div class="nm">10% 할인 쿠폰</div><div class="ds">전 상품 사용 가능 · 7일 유효</div></div><span class="odds">3등</span></div>
-      <div class="p"><span class="ic">🎟️</span><div><div class="nm">5% 할인 쿠폰</div><div class="ds">전 상품 사용 가능 · 7일 유효</div></div><span class="odds">4등</span></div>
-      <div class="p"><span class="ic">💧</span><div><div class="nm">물방울 +50 / +100</div><div class="ds">귤나무 키우기에 바로 사용</div></div><span class="odds">5등</span></div>
+      <div class="p"><span class="ic">📦</span><div><div class="nm">하우스귤 3kg 선물용 1박스</div><div class="ds">산지직송 · 당첨 시 배송지 안내</div></div><span class="odds">1등</span></div>
+      <div class="p"><span class="ic">⬆️</span><div><div class="nm">업그레이드 이용권</div><div class="ds">미니밤호박 3kg→5kg · 하우스귤 2.5kg→4.5kg 상향 발송</div></div><span class="odds">2등</span></div>
+      <div class="p"><span class="ic">🎟️</span><div><div class="nm">10% 할인 쿠폰</div><div class="ds">전 상품 사용 가능 · 30일 유효</div></div><span class="odds">3등</span></div>
+      <div class="p"><span class="ic">🎟️</span><div><div class="nm">5% 할인 쿠폰</div><div class="ds">전 상품 사용 가능 · 30일 유효</div></div><span class="odds">4등</span></div>
+      <div class="p"><span class="ic">💧</span><div><div class="nm">물 1개 / 3개</div><div class="ds">귤나무 키우기에 바로 사용 · 물 100개 = 하우스귤 3kg 1박스</div></div><span class="odds">5등</span></div>
     </div>
-    <p class="note">· 매일 자정 초기화, 1일 1회 참여 · 경품은 마이페이지 &gt; 쿠폰함에 자동 지급 · 귤 1박스 당첨 시 배송지 입력 안내를 보내드려요.</p>
+    <p class="note">· <b>꽝 없는 룰렛</b> — 모든 칸이 당첨입니다 · 룰렛권은 <b>주문 1건당 1회</b> 적립 · 경품은 마이페이지 &gt; 쿠폰함에 자동 지급 · 귤 1박스 당첨 시 배송지 입력 안내를 보내드려요.</p>
   </div>
 </div>
 
@@ -201,16 +213,21 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   /* ---- 룰렛 6칸 정의 (원판에 그려지는 순서 = 시계방향, 0번이 12시 방향부터) ----
      ⚠️ weight = 임시 가중치 — 실확률은 룰렛 오픈 전 대표 확정·운영 화면(mall_game_config) 편집이 최종.
         꽝 0%는 확정 (모든 칸이 당첨 — 빈 칸 없음). 추첨 자체도 실서비스에선 서버가 담당. */
+  /* 지시 #184(2026-08-04 대표 최종 확정): 합계 100%·꽝 없음. weight = 확률(%)×10 — mall_game_config의 파생값과 동일 규칙.
+     ⚠️ 여기 값은 프로토타입 표시용이고, 실서비스 정본은 회사프로그램 [게임 설정] 화면(DB)이다. */
   var SEGS = [
-    { key:"box",      label:"제주 감귤 1박스",   short:"감귤 1박스",   emoji:"📦", type:"prize", amount:0,   weight:1,  fill:"#FFF6D0", txt:"#1B3A6B" },
-    { key:"upgrade",  label:"업그레이드 이용권", short:"업그레이드권", emoji:"⬆️", type:"prize", amount:0,   weight:4,  fill:"#FFFFFF", txt:"#101828" },
-    { key:"coupon10", label:"10% 할인 쿠폰",    short:"10% 쿠폰",     emoji:"🎟️", type:"prize", amount:0,   weight:10, fill:"#FFF8DC", txt:"#1B3A6B" },
-    { key:"coupon5",  label:"5% 할인 쿠폰",     short:"5% 쿠폰",      emoji:"🎟️", type:"prize", amount:0,   weight:25, fill:"#FFFFFF", txt:"#101828" },
-    { key:"w50",      label:"물방울 +50",       short:"물방울 +50",   emoji:"💧", type:"water", amount:50,  weight:30, fill:"#EDF1F8", txt:"#1B3A6B" },
-    { key:"w100",     label:"물방울 +100",      short:"물방울 +100",  emoji:"💧", type:"water", amount:100, weight:30, fill:"#FFF6D0", txt:"#1B3A6B" }
+    { key:"box",      label:"하우스귤 3kg 선물용 1박스", short:"귤 1박스",     emoji:"📦", type:"prize", amount:0, weight:5,   pct:0.5, fill:"#FFF6D0", txt:"#1B3A6B" },
+    { key:"upgrade",  label:"업그레이드 이용권",        short:"업그레이드권", emoji:"⬆️", type:"prize", amount:0, weight:35,  pct:3.5, fill:"#FFFFFF", txt:"#101828" },
+    { key:"coupon10", label:"10% 할인 쿠폰",           short:"10% 쿠폰",     emoji:"🎟️", type:"prize", amount:0, weight:100, pct:10,  fill:"#FFF8DC", txt:"#1B3A6B" },
+    { key:"coupon5",  label:"5% 할인 쿠폰",            short:"5% 쿠폰",      emoji:"🎟️", type:"prize", amount:0, weight:280, pct:28,  fill:"#FFFFFF", txt:"#101828" },
+    { key:"w3",       label:"물 3개",                  short:"물 3개",       emoji:"💧", type:"water", amount:3, weight:80,  pct:8,   fill:"#EDF1F8", txt:"#1B3A6B" },
+    { key:"w1",       label:"물 1개",                  short:"물 1개",       emoji:"💧", type:"water", amount:1, weight:500, pct:50,  fill:"#FFF6D0", txt:"#1B3A6B" }
   ];
   var SEG_ANGLE = 360 / SEGS.length;   // 60도
-  var LS_KEY = "akm_roulette_last_date";   // ⚠️ 데모용 — 실서비스는 서버 참여기록으로 대체
+  /* 지시 #184: 참여권 = 주문 1건당 1회 (기존 '매일 1회 무료'는 폐지).
+     ⚠️ 데모용 localStorage — 실서비스는 서버가 주문 확정 시 참여권을 적립하고 잔량을 내려준다. */
+  var LS_TICKETS = "akm_spin_tickets";
+  var SPIN_PER_ORDER = 1;
 
   var wheel     = document.getElementById("wheel");
   var spinBtn   = document.getElementById("spinBtn");
@@ -285,23 +302,34 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   /* ---- 오늘 1회 제한 확인/표시
      ⚠️ 데모: localStorage 날짜 비교로 "자정 리셋"을 시뮬레이션.
      실서비스: 서버 참여기록(KST 기준)으로 판정 — localStorage는 지워지면 그만이라 못 믿음. ---- */
-  function alreadyPlayedToday(){
-    var v = null;
-    try { v = localStorage.getItem(LS_KEY); } catch (e) {}
-    return v === todayStr();
+  /* 지시 #184-4: 참여권 보유/소진 UX — "막힌 느낌"이 아니라 "길이 보이게" 한다.
+     0회일 때도 참여 불가 문구 대신 얻는 법 + 상품 보러가기 동선을 준다. */
+  function getTickets(){
+    var v = 0;
+    try { v = parseInt(localStorage.getItem(LS_TICKETS), 10); } catch (e) {}
+    return (isFinite(v) && v > 0) ? v : 0;
   }
-  function markPlayedToday(){
-    try { localStorage.setItem(LS_KEY, todayStr()); } catch (e) {}
+  function setTickets(n){
+    try { localStorage.setItem(LS_TICKETS, String(Math.max(0, n))); } catch (e) {}
   }
+  function useTicket(){ setTickets(getTickets() - 1); }
   function refreshLimitUI(){
-    if (alreadyPlayedToday()){
-      spinBtn.disabled = true;
-      limitNote.textContent = "오늘은 이미 참여했어요 — 내일 다시 도전하세요!";
-      limitNote.className = "limit-note done";
-    } else {
+    var t = getTickets();
+    var badge = document.getElementById("ticketBadge");
+    if (badge){
+      badge.textContent = "🎟 룰렛 " + t + "회 보유";
+      badge.className = "ticket-badge" + (t > 0 ? "" : " zero");
+    }
+    if (t > 0){
       spinBtn.disabled = false;
-      limitNote.textContent = "오늘의 기회가 남아있어요!";
+      spinBtn.innerHTML = '돌리기<small>' + t + '회 남음</small>';
+      limitNote.innerHTML = "지금 " + t + "회 돌릴 수 있어요!";
       limitNote.className = "limit-note";
+    } else {
+      spinBtn.disabled = true;
+      spinBtn.innerHTML = '돌리기<small>GO!</small>';
+      limitNote.innerHTML = '주문하시면 룰렛 1회가 쌓여요! <a class="go-shop" href="products_v5.html">상품 보러가기 →</a>';
+      limitNote.className = "limit-note done";
     }
   }
 
@@ -334,7 +362,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
 
   /* ---- 스핀 실행 ---- */
   function spin(){
-    if (spinning || alreadyPlayedToday()) return;
+    if (spinning || getTickets() <= 0) return;
     spinning = true;
     spinBtn.disabled = true;
     resultEl.textContent = "";
@@ -378,24 +406,24 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
 
     /* API: (서버 이관 지점) 참여 기록 저장 + 보상 지급은 서버가 이미 spin 응답 전에 처리함.
        프로토타입에선 localStorage 날짜 기록 + 화면 잔액만 갱신. */
-    markPlayedToday();
+    useTicket();
 
     if (seg.type === "water"){
       balance += seg.amount;   // ⚠️ 프로토타입 — 실서비스: 서버 지갑 테이블이 진실
       balanceEl.textContent = balance.toLocaleString("ko-KR");
       modalEmo.textContent = "💧";
-      modalTitle.textContent = "물방울 +" + seg.amount + " 당첨!";
-      modalDesc.textContent = "귤나무 키우기에 바로 쓸 물방울 " + seg.amount + "개를 받았어요. 내일 또 도전하세요!";
+      modalTitle.textContent = "물 " + seg.amount + "개 당첨!";
+      modalDesc.textContent = "귤나무 키우기에 바로 쓸 물 " + seg.amount + "개를 받았어요. 물 100개를 모으면 하우스귤 3kg 선물용 1박스를 드려요!";
     } else {
       /* API: 쿠폰·이용권·감귤 1박스 발급은 서버 쿠폰 테이블 담당 (프로토타입은 안내만) */
       modalEmo.textContent = seg.emoji;
       modalTitle.textContent = seg.label + " 당첨!";
       if (seg.key === "box"){
-        modalDesc.textContent = "매일 1분께만 드리는 제주 감귤 1박스! 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급되고, 배송지 입력 안내를 보내드려요.";
+        modalDesc.textContent = "하우스귤 3kg 선물용 1박스! 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급되고, 배송지 입력 안내를 보내드려요.";
       } else if (seg.key === "upgrade"){
-        modalDesc.textContent = "3kg 주문이 5kg로 커지는 이용권이에요. 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급돼요.";
+        modalDesc.textContent = "미니밤호박 3kg→5kg, 하우스귤 2.5kg→4.5kg로 상향 발송되는 이용권이에요. 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급돼요.";
       } else {
-        modalDesc.textContent = "전 상품 사용 가능 · 7일 유효 쿠폰이에요. 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급돼요.";
+        modalDesc.textContent = "전 상품 사용 가능 · 30일 유효 쿠폰이에요. 정식 오픈 후에는 마이페이지 > 쿠폰함에 자동 지급돼요.";
       }
     }
 

@@ -63,6 +63,9 @@ a{color:var(--navy);text-decoration:none}a:hover{color:var(--navy-dark)}
 .reward .ic{font-size:19px;flex:none}
 .reward b{color:var(--navy)}
 
+/* 지시 #184-4-5: 남은 물 개수 표시 */
+.water-left{margin-top:8px;font-size:12.5px;font-weight:700;color:var(--text-mid);text-align:right}
+.water-left b{color:var(--water,#3B82F6)}
 /* ── 물 주기 버튼 ── */
 .give{display:flex;gap:10px;margin:14px 16px 0}
 .give button{height:54px;border-radius:var(--radius-btn);font-size:16px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:transform 120ms ease-out,background .15s;letter-spacing:-.02em}
@@ -118,13 +121,15 @@ footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:
   <div class="prog">
     <div class="row"><span class="lbl">수확까지</span><span class="pct num"><span id="pct">62</span>%</span></div>
     <div class="bar"><i id="fill" style="width:62%"></i></div>
+    <!-- 지시 #184-4-5: 남은 물 개수를 숫자로 명확히 (물 100개 = 하우스귤 3kg 선물용 1박스) -->
+    <div class="water-left"><span id="waterNow">62</span> / <b id="waterGoal">100</b>개 · <b id="waterLeft">38</b>개만 더 모으면 수확!</div>
     <div class="stages">
       <span><span class="se">🌱</span>씨앗</span>
       <span><span class="se">🌿</span>새싹</span>
       <span class="on"><span class="se">🍊</span>열매</span>
       <span><span class="se">📦</span>수확</span>
     </div>
-    <div class="reward"><span class="ic">📦</span><span><b>수확 보상:</b> 제주 감귤 1박스 무료 배송 — 100% 도달 시 배송지 입력 안내를 드려요</span></div>
+    <div class="reward"><span class="ic">📦</span><span><b>수확 보상:</b> 하우스귤 3kg 선물용 1박스 무료 배송 — 물 100개를 모으면 배송지 입력 안내를 드려요</span></div>
   </div>
 
   <div class="give">
