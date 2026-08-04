@@ -100,14 +100,14 @@ footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--border);box-shadow:0 -4px 16px -6px rgba(21,32,54,.12);display:flex;height:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-light);font-size:10.5px;font-weight:700;letter-spacing:-.02em}
 .tab.active{color:var(--navy)}
-.tab.active .t-ic{filter:none;transform:scale(1.06);background:var(--navy-soft)}
+.tab.active .t-ic{filter:none;transform:scale(1.06);background:#FFF8DC}   /* #188-3: 공통 탭 — 홈 정본 기준 */
 .tab .t-ic{font-size:21px;line-height:1;filter:grayscale(1) opacity(.55);padding:2px 12px;border-radius:999px}
 .tab:active{color:var(--navy)}
 </style></head><body>
 <div class="app">
 
   <div class="hd">
-    <button class="back" onclick="location.href='index_v5.html'" aria-label="뒤로">‹</button>
+    <button class="back" onclick="location.href='index.html'" aria-label="뒤로">‹</button>
     <span class="t">귤나무 키우기</span>
     <span class="water">💧 <b class="num" id="wcount">1,250</b></span>
   </div>
@@ -152,7 +152,7 @@ footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:
     <div class="q"><span class="ic">📅</span><div><div class="nm">출석 체크</div><div class="ds">매일 접속만 해도</div></div><button class="btn done">완료 +20</button></div>
     <div class="q"><span class="ic">🎡</span><div><div class="nm">룰렛 돌리기</div><div class="ds">꽝 없는 리뉴얼 룰렛</div></div><button class="btn" onclick="location.href='roulette.html'">+50 받기</button></div>
     <div class="q"><span class="ic">📸</span><div><div class="nm">사진 후기 쓰기</div><div class="ds">구매한 상품 후기 남기면</div></div><button class="btn">+30 받기</button></div>
-    <div class="q"><span class="ic">🛒</span><div><div class="nm">오늘의 상품 구경</div><div class="ds">지금 맛있는 제주 보러가기</div></div><button class="btn" onclick="location.href='index_v5.html'">+10 받기</button></div>
+    <div class="q"><span class="ic">🛒</span><div><div class="nm">오늘의 상품 구경</div><div class="ds">지금 맛있는 제주 보러가기</div></div><button class="btn" onclick="location.href='index.html'">+10 받기</button></div>
   </section>
 
   <footer>물방울은 출석·후기·룰렛·구매로 모을 수 있어요<br>프로토타입 — 실제 서비스 아님</footer>

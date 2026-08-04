@@ -89,7 +89,7 @@ footer b{color:var(--text-mid)}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-light);font-size:10.5px;font-weight:700;letter-spacing:-.02em}
 .tab .t-ic{font-size:21px;line-height:1;filter:grayscale(1) opacity(.55);padding:2px 12px;border-radius:999px}
 .tab.active{color:var(--navy)}
-.tab.active .t-ic{filter:none;transform:scale(1.06);background:var(--navy-soft)}
+.tab.active .t-ic{filter:none;transform:scale(1.06);background:#FFF8DC}   /* #188-3: 공통 탭 — 홈 정본 기준 */
 .tab:active{color:var(--navy)}
 /* ---- 시즌 대기 모달 (산출물 문법 + 현행 문구) ---- */
 .modal-dim{position:fixed;inset:0;z-index:100;background:rgba(21,32,54,.55);display:flex;align-items:center;justify-content:center;padding:28px;opacity:0;pointer-events:none;transition:opacity .18s}
@@ -104,7 +104,7 @@ footer b{color:var(--text-mid)}
 </style></head><body>
 <div class="app">
   <div class="hd">
-    <button class="back" onclick="location.href='index_v5.html'" aria-label="뒤로">‹</button>
+    <button class="back" onclick="location.href='index.html'" aria-label="뒤로">‹</button>
     <span class="t"><svg width="20" height="20" viewBox="0 0 24 24" style="vertical-align:-4px" aria-hidden="true"><rect x="3" y="4.5" width="18" height="17" rx="4" fill="#1B3A6B"/><rect x="4.6" y="6" width="14.8" height="4.6" rx="2.3" fill="#F5C800"/><rect x="7" y="2.2" width="2.6" height="4.6" rx="1.3" fill="#1B3A6B"/><rect x="14.4" y="2.2" width="2.6" height="4.6" rx="1.3" fill="#1B3A6B"/><circle cx="8.5" cy="14.4" r="1.5" fill="#fff" opacity=".85"/><circle cx="12" cy="14.4" r="1.5" fill="#F5C800"/><circle cx="15.5" cy="14.4" r="1.5" fill="#fff" opacity=".85"/><circle cx="8.5" cy="18" r="1.5" fill="#fff" opacity=".85"/></svg> 시즌 캘린더</span>
   </div>
 
@@ -204,7 +204,7 @@ document.getElementById('nowM').textContent = M;
 var chips = '';
 for (var j = 0; j < SEASONS.length; j++){
   if (inS(M, SEASONS[j])){
-    chips += '<a class="now-chip" href="index_v5.html#p/' + SEASONS[j].no + '">' +
+    chips += '<a class="now-chip" href="index.html#p/' + SEASONS[j].no + '">' +
       SEASONS[j].emoji + ' ' + SEASONS[j].name + '</a>';
   }
 }
@@ -225,7 +225,7 @@ SEASONS.map(function(s, i){ return { s: s, idx: i }; })
     d.innerHTML = '<div class="top" role="button"><span class="emo">' + s.emoji + '</span><span class="nm">' + s.name + '</span>' +
       '<span class="st ' + (on ? 'on' : 'off') + '">' + (on ? '지금 제철' : '시즌 전') + '</span></div>' +
       '<div class="months">' + cells + '</div>' +
-      (on ? '<button class="wait go" type="button" onclick="event.stopPropagation();location.href=\'index_v5.html#products\'">🛒 지금 맛보러 가기 ›</button>'
+      (on ? '<button class="wait go" type="button" onclick="event.stopPropagation();location.href=\'index.html#c/citrus\'">🛒 지금 맛보러 가기 ›</button>'
           : '<button class="wait" type="button" data-wait-cta>🔔 시즌 대기 신청 — 오픈 때 알려드려요</button>');
     list.appendChild(d);
   });
@@ -257,7 +257,7 @@ function showSeason(idx){
     (it ? '<div class="sd-meta"><span class="st">★</span>' + it.score + ' · 리뷰 ' + fmt(it.reviewCount) + (sold ? ' · 시즌 준비 중' : ' · 판매중') + '</div>' : '') +
     '</div></div>' +
     (sold ? '<button class="sd-btn wait" type="button" data-wait-cta>🔔 시즌 대기 신청 — 오픈 때 알려드려요</button>'
-          : '<a class="sd-btn buy" style="display:block;text-align:center;" href="index_v5.html">🍊 지금 구매하러 가기</a>');
+          : '<a class="sd-btn buy" style="display:block;text-align:center;" href="index.html">🍊 지금 구매하러 가기</a>');
   box.hidden = false;
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }

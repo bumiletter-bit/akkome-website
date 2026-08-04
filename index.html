@@ -1291,7 +1291,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
     <section class="section" id="products">
       <div class="section-head">
         <h2>지금 맛있는 제주 <svg width="19" height="19" viewBox="0 0 24 24" style="vertical-align:-3px" aria-hidden="true"><circle cx="18.5" cy="5.5" r="3" fill="#F5C800"/><path d="M2 13c2.5 0 2.5-2.6 5-2.6s2.5 2.6 5 2.6 2.5-2.6 5-2.6 2.5 2.6 5 2.6" fill="none" stroke="#1B3A6B" stroke-width="2.2" stroke-linecap="round"/><path d="M2 18.5c2.5 0 2.5-2.6 5-2.6s2.5 2.6 5 2.6 2.5-2.6 5-2.6 2.5 2.6 5 2.6" fill="none" stroke="#1B3A6B" stroke-width="2.2" stroke-linecap="round"/></svg></h2>
-        <a class="more" href="index_v5.html#c/citrus">전체보기 ›</a>
+        <a class="more" href="index.html#c/citrus">전체보기 ›</a>
       </div>
       <div class="prod-grid">
 
@@ -1614,7 +1614,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
 
   <!-- ═════════ 12. 하단 고정 탭바 (공통 — 홈 활성) ═════════ -->
   <nav class="tabbar" aria-label="하단 메뉴">
-    <a class="tab active" href="index_v5.html" aria-current="page">
+    <a class="tab active" href="index.html" aria-current="page">
       <span class="t-ic">🏠</span>홈
     </a>
     <a class="tab" href="roulette.html?v=147">
@@ -2500,6 +2500,18 @@ try{
 /* ═══ 알림·장바구니·주문내역·마이 화면 ═══ */
 .hd-cnt{ position:absolute; top:5px; right:5px; min-width:16px; height:16px; border-radius:99px; background:var(--danger); color:#fff; font-size:9.5px; font-weight:800; font-style:normal; display:flex; align-items:center; justify-content:center; padding:0 4px; box-shadow:0 1px 3px rgba(240,68,56,.4); }
 .vw-card{ background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px; }
+
+/* 지시 #188-4: 마이 > 귤나무 진행 카드 (홈 정본 팔레트 토큰 사용) */
+.tree-card{ padding:14px 15px; }
+.tree-card .tc-top{ display:flex; align-items:center; gap:11px; }
+.tree-card .tc-emo{ font-size:30px; line-height:1; flex:none; }
+.tree-card .tc-txt b{ display:block; font-size:14.5px; font-weight:800; letter-spacing:-.02em; }
+.tree-card .tc-txt span{ display:block; margin-top:3px; font-size:12px; font-weight:600; color:var(--text-mid); }
+.tree-card .tc-bar{ margin-top:11px; height:12px; border-radius:999px; background:var(--border-soft,#F1F2F5); overflow:hidden; }
+.tree-card .tc-bar i{ display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--yellow,#FFD400),var(--yellow-dark,#E5BE00)); }
+.tree-card .tc-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:9px; }
+.tree-card .tc-foot span{ font-size:13px; font-weight:800; color:var(--primary,#3A4A2B); font-variant-numeric:tabular-nums; }
+.tree-card .tc-go{ font-size:12.5px; font-weight:800; color:var(--primary,#3A4A2B); background:var(--primary-light,#F1F4EC); border-radius:999px; padding:7px 13px; }
 .vw-sec{ font-size:12px; font-weight:800; color:var(--text-mid); margin:18px 2px 8px; letter-spacing:-.02em; }
 /* 알림 */
 .nt-set{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
@@ -2688,6 +2700,9 @@ try{
     '<div class="vw-sec" style="text-align:center;margin-top:20px">최근 3개월 주문내역이에요</div>';
   }
   /* ─ 프로필 (캐릭터·아이디 — localStorage 유지) ─ */
+
+  /* 지시 #188-4: 귤나무 상태 단일 소스 — 나무 화면(farm.html)과 같은 값을 봐야 하므로 여기서만 정의하고 파생값(퍼센트)은 계산한다. */
+  var TREE_STATE = { given: 62, goal: 100, pct: function(){ return Math.min(100, Math.round(this.given / this.goal * 100)); } };
   var PROF_KEY = 'akkome_profile_v1';
   var prof = { name:'아꼼이네 단골님', avatar:'🍊' };
   try{ var pp = JSON.parse(localStorage.getItem(PROF_KEY)); if(pp && pp.name) prof = pp; }catch(e){}
@@ -2736,7 +2751,7 @@ try{
       '<button type="button" data-modal><b class="num">💧 1,250</b><span>물방울</span></button>'+
       '<button type="button" data-modal><b class="num">3장</b><span>쿠폰</span></button>'+
       '<button type="button" data-modal><b class="num">2,400</b><span>포인트</span></button></div>'+
-      '<div class="vw-sec">쇼핑</div>'+
+      '<div class="vw-sec">귤나무</div>'+'<div class="vw-card tree-card">'+'<div class="tc-top"><span class="tc-emo">🌳</span>'+'<div class="tc-txt"><b>귤나무 키우기</b>'+'<span>물 '+TREE_STATE.given+' / '+TREE_STATE.goal+'개 · '+Math.max(0,TREE_STATE.goal-TREE_STATE.given)+'개만 더 모으면 수확!</span></div></div>'+'<div class="tc-bar"><i style="width:'+TREE_STATE.pct()+'%"></i></div>'+'<div class="tc-foot"><span>'+TREE_STATE.pct()+'%</span>'+'<a class="tc-go" href="farm.html">키우러 가기 →</a></div></div>'+'<div class="vw-sec">쇼핑</div>'+
       '<div class="vw-card my-menu">'+
       '<button type="button" data-v-go="orders"><span class="mi">📦</span>주문내역<span class="chev">›</span></button>'+
       '<button type="button" data-v-go="cart"><span class="mi">🛒</span>장바구니'+(cartN?'<span class="cnt">'+cartN+'</span>':'')+'<span class="chev">›</span></button>'+
