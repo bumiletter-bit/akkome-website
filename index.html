@@ -2389,7 +2389,16 @@ try{
    어느 경로로 끝나든 v5Render()는 정확히 한 번만 실행된다. */
 (function(){
   var done = false;
-  function go(tag){ if (done) return; done = true; try{ window.__v5DataMode = tag; }catch(_){} v5Render(); }
+  /* 🚨 지시 #195 회귀 교정: 카테고리 뷰(v5Cats)·마이/주문내역 뷰(v5Views)는 v5Render가 만드는 window.V5에 의존한다.
+     #192에서 렌더를 fetch 뒤로 미루면서 **두 블록이 먼저 실행돼 `if(!V5) return`으로 조용히 빠져나갔고**
+     (에러도 안 남는다) 카테고리 아이콘·마이 클릭이 통째로 죽었다. → 셋을 반드시 이 순서로 함께 실행한다. */
+  function go(tag){
+    if (done) return; done = true;
+    try{ window.__v5DataMode = tag; }catch(_){}
+    v5Render();
+    try{ v5Cats(); }catch(e){ console.error('v5Cats 실패:', e); }
+    try{ v5Views(); }catch(e){ console.error('v5Views 실패:', e); }
+  }
   var timer = setTimeout(function(){ go('static-timeout'); }, 1500);
   try{
     fetch(SNAP_URL).then(function(r){ return r.json(); }).then(function(snap){
@@ -2431,7 +2440,7 @@ try{
 </style>
 <script>
 /* ═══ 카테고리 화면 렌더러 — 아이콘(감귤류·채소호박·선물세트) 클릭 시 정리된 상품 목록 ═══ */
-(function(){
+function v5Cats(){
 "use strict";
 try{
   var D = window.STORE_DATA, V5 = window.V5; if(!D || !V5) return;
@@ -2537,7 +2546,7 @@ try{
     if(CATS[h]){ history.replaceState({ cv:h }, '', location.hash); open(h, true); }
   }
 }catch(err){ console.error('카테고리 화면 렌더러 실패:', err); }
-})();
+}
 </script>
 
 <style>
@@ -2662,7 +2671,7 @@ try{
 </style>
 <script>
 /* ═══ 알림·장바구니·주문내역·마이 화면 렌더러 ═══ */
-(function(){
+function v5Views(){
 "use strict";
 try{
   var D = window.STORE_DATA, V5 = window.V5; if(!D || !V5) return;
@@ -2934,7 +2943,7 @@ try{
     if(VIEWS[h]){ history.replaceState({ vw:h }, '', location.hash); open(h, true); }
   }
 }catch(err){ console.error('알림·장바구니·마이 화면 렌더러 실패:', err); }
-})();
+}
 </script>
 </body>
 </html>
