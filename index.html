@@ -345,11 +345,6 @@
     padding:3px 8px; border-radius:999px; box-shadow:var(--shadow);
   }
   .p-flag.red{ background:var(--danger); color:#fff; }
-  .heart{
-    position:absolute; right:6px; bottom:4px; font-size:19px; padding:6px;
-    filter:drop-shadow(0 1px 2px rgba(16,24,40,.18)); transition:transform .12s ease;
-  }
-  .heart:active{ transform:scale(1.25); }
   .prod-body{ padding:11px 12px 13px; }
   .prod-name{
     font-size:13.5px; font-weight:700; letter-spacing:-.02em; line-height:1.35; color:var(--text-dark);
@@ -714,6 +709,7 @@
   .chat-title{ flex:1; font-size:14.5px; font-weight:800; color:var(--text-dark); }
   .chat-title em{ font-style:normal; font-size:10px; font-weight:800; color:#B45309; background:var(--yellow-soft, #FFF3C4); padding:2px 7px; border-radius:999px; margin-left:5px; vertical-align:1px; }
   .chat-close{ font-size:15px; color:var(--text-mid); padding:6px; flex:none; }
+  .chat-ctx{ margin:0 14px 8px; padding:8px 12px; border-radius:10px; background:var(--primary-light,#F1F8E4); color:var(--primary-dark,#5F9E1F); font-size:12.5px; font-weight:800; }
   .chat-body{ padding:14px 16px; overflow-y:auto; display:flex; flex-direction:column; gap:9px; min-height:190px; }
   .chat-msg{ max-width:82%; padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.5; letter-spacing:-.01em; }
   .chat-msg.bot{ align-self:flex-start; background:#F2F3F5; color:var(--text-dark); border-top-left-radius:5px; }
@@ -729,7 +725,7 @@
   /* #103: 실상품 이미지 커버 (플래그·하트·메달은 위층) */
   .th-real{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:inherit; z-index:0; }
   .prod-thumb{ position:relative; overflow:hidden; }
-  .prod-thumb .p-flag, .prod-thumb .heart, .pick-medal{ position:relative; z-index:2; }
+  .prod-thumb .p-flag, .pick-medal{ position:relative; z-index:2; }
   .pick-2 .p-thumb{ position:relative; overflow:hidden; }
   .pick-2 .p-thumb .pick-medal{ position:absolute; }
 
@@ -1031,7 +1027,6 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
 /* 탭 메뉴 글씨 통일 (상단 탭) */
 .tnav{font-weight:800;letter-spacing:-.02em}
 /* 터치 타깃 보강 */
-.heart{padding:10px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
 /* #143: 상단 바 로테이션 (타이머 ↔ 오늘의 당첨자 — 페이드) */
 .cd-bar{position:relative;min-height:34px}
 .cd-slide{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;opacity:0;transition:opacity .45s ease;position:absolute;left:0;top:50%;transform:translateY(-50%);padding:0 12px;box-sizing:border-box;white-space:nowrap;overflow:hidden}
@@ -1043,7 +1038,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
 .hd-ic .dot{top:9px;right:10px}
 /* v5 오버라이드가 절대배치를 무효화한 것 복구 — 플래그/하트 코너 고정 */
 .prod-thumb .p-flag{position:absolute;top:8px;left:8px;z-index:2}
-.prod-thumb .heart{position:absolute;right:2px;bottom:2px;z-index:2}
+.prod-thumb
 .more{padding:8px 4px}
 </style>
 </head>
@@ -1298,7 +1293,6 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
         <a class="prod" href="#p/5011476022">
           <span class="prod-thumb th-1"><img class="th-real" src="https://shop-phinf.pstatic.net/20210619_218/1624038156347eohSD_JPEG/25174002035962405_1366346788.jpg" alt="">
             <span class="p-flag">특품</span>
-            <button class="heart" type="button" data-heart>🤍</button>
           </span>
           <span class="prod-body">
             <span class="prod-name">미니밤호박 특품 5kg</span>
@@ -1314,7 +1308,6 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
         <a class="prod" href="#p/5731582511">
           <span class="prod-thumb th-2"><img class="th-real" src="https://shop-phinf.pstatic.net/20210812_199/1628750101318d3uRO_JPEG/29885935109604932_1856009362.jpg" alt="">
             <span class="p-flag red">사전예약특가</span>
-            <button class="heart" type="button" data-heart>🤍</button>
           </span>
           <span class="prod-body">
             <span class="prod-name">★사전예약특가★ 청귤(풋귤) 5kg</span>
@@ -1330,7 +1323,6 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
         <a class="prod" href="#p/10801253976">
           <span class="prod-thumb th-3"><img class="th-real" src="https://shop-phinf.pstatic.net/20211020_42/1634711258352jFvC8_JPEG/35847042033711557_1466676793.jpg" alt="">
             <span class="p-flag">선물추천</span>
-            <button class="heart" type="button" data-heart>🤍</button>
           </span>
           <span class="prod-body">
             <span class="prod-name">제주 황금향 선물세트 3kg</span>
@@ -1346,7 +1338,6 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
         <a class="prod" href="#p/6400134206">
           <span class="prod-thumb th-4"><img class="th-real" src="https://shop-phinf.pstatic.net/20250306_214/1741226241090fOqjV_JPEG/6396102050673962_191128550.jpg" alt="">
             <span class="p-flag red">알뜰</span>
-            <button class="heart" type="button" data-heart>🤍</button>
           </span>
           <span class="prod-body">
             <span class="prod-name">하우스 감귤 못난이 4.5kg</span>
@@ -1639,6 +1630,8 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
         <span class="chat-title">아꼼이에게 물어보기 <em>준비 중</em></span>
         <button class="chat-close" type="button" id="chatClose" aria-label="닫기">✕</button>
       </div>
+      <!-- 지시 #191-2: 상품 상세에서 열었을 때 어떤 상품을 보고 있었는지 표기(기본 숨김) -->
+      <div class="chat-ctx" id="chatCtx" style="display:none"></div>
       <div class="chat-body" id="chatBody">
         <div class="chat-msg bot">안녕하세요! 제주아꼼이네 <b>아꼼이</b>입니다 🍊<br>배송·보관법·시즌 소식까지, 궁금한 건 뭐든 물어보십셔!</div>
         <div class="chat-chips" id="chatChips">
@@ -1700,6 +1693,8 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
       var src = document.querySelector(".akkomi-face img");
       if (src) face.appendChild(src.cloneNode(false));
     }
+    /* 지시 #191-2: #170 동적 z 스택을 따라 '가장 나중에 연 것이 위' — 상품 상세 시트 위에 정확히 뜨게(고정 z 재배정 금지) */
+    chatDim.style.zIndex = String(window.__v5z = (window.__v5z || 150) + 1);
     chatDim.classList.add("show");
   }
   function closeChat(){ chatDim.classList.remove("show"); }
@@ -1721,14 +1716,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
   });
 
   /* ══════════ 하트(찜) 토글 — 카드 링크 이동과 분리 ══════════ */
-  var hearts = document.querySelectorAll("[data-heart]");
-  for (var j = 0; j < hearts.length; j++){
-    hearts[j].addEventListener("click", function(e){
-      e.stopPropagation();
-      e.preventDefault();
-      this.textContent = (this.textContent === "🤍") ? "❤️" : "🤍";
-    });
-  }
+  /* 지시 #191: 찜(하트) 전면 제거(대표 확정) — 동적 렌더 카드의 하트엔 리스너가 안 붙어 카드 링크로 전파되던 결함도 함께 해소 */
 
   /* ══════════ 혜택 배너 점 표시 ══════════ */
   var bScroll = document.querySelector(".banner-scroll");
@@ -2008,7 +1996,7 @@ try{
     var flag = '<span class="p-flag'+(FLAGS[String(it.no)]==='사전예약특가'?' red':'')+'">'+(FLAGS[String(it.no)]||'제철')+'</span>';
     return '<a class="prod" href="#" data-pd="'+it.no+'">'+
       '<span class="prod-thumb"><img class="th-real" src="'+it.img+'" alt="">'+flag+
-      '<button class="heart" type="button" data-heart>🤍</button></span>'+
+      '</span>'+
       '<span class="prod-body"><span class="prod-name">'+sname(it)+'</span>'+
       '<span class="prod-price num price-wrap"><span class="price-rate">'+it.discRate+'%</span>'+priceLabel(it)+' <span class="price-org num">'+F(it.salePrice)+'원</span></span>'+
       '<span class="prod-meta rate-row"><span class="st">★</span>'+it.score+' · 리뷰 '+F(it.reviewCount)+'</span>'+
@@ -2230,23 +2218,13 @@ try{
       (g?'<div class="pd-pane" data-pane-body="guide" style="display:none"><div class="pd-guide">'+String(g).replace(/</g,'&lt;')+'</div></div>':'')+
       '<div class="pd-foot-note">실서비스 연결 전 프로토타입 — 가격·옵션·리뷰·상세는 네이버 스토어 실데이터 스냅샷(2026-07-30)입니다.</div><div style="height:74px;"></div></div>'+
       '<div class="pd-bar">'+
-        '<button class="pb-ic" type="button" id="pdLike" aria-label="찜">♡</button>'+
+        
         '<button class="pb-ic" type="button" data-open-chat aria-label="문의">💬</button>'+
         (it.soldout
           ?'<button class="pb-cta" type="button" data-wait="'+it.no+'">🔔 시즌 대기 신청</button>'
           :'<button class="pb-cta" type="button" id="pdOrder">구매하기</button>')+
       '</div>';
-    /* #168: 찜 토글 (로컬 저장) */
-    (function(){
-      var likeBtn = document.getElementById('pdLike');
-      if (!likeBtn) return;
-      var likes = {};
-      try { likes = JSON.parse(localStorage.getItem('v5likes') || '{}'); } catch(e){}
-      var k = String(it.no);
-      function paint(){ likeBtn.textContent = likes[k] ? '♥' : '♡'; likeBtn.classList.toggle('on', !!likes[k]); }
-      paint();
-      likeBtn.addEventListener('click', function(){ likes[k] = !likes[k]; if(!likes[k]) delete likes[k]; try{ localStorage.setItem('v5likes', JSON.stringify(likes)); }catch(e){} paint(); });
-    })();
+    /* 지시 #191: 찜 토글 제거(대표 확정) — 로컬 저장(v5likes)도 더 이상 쓰지 않음 */
     /* 갤러리 카운터·썸네일 동기화 + 주문하기 → 옵션 탭 */
     var galEl = document.getElementById('pdGal');
     if (pdAutoTimer) { clearInterval(pdAutoTimer); pdAutoTimer = null; }
@@ -2353,7 +2331,7 @@ try{
     var w = e.target.closest('[data-wait]');
     if(w){ e.preventDefault(); e.stopPropagation(); var md=document.getElementById('modalDim'); if(md) md.classList.add('show'); return; }
     var t = e.target.closest('[data-pd]');
-    if(t && !e.target.closest('[data-heart]')){ e.preventDefault(); openPd(t.getAttribute('data-pd')); }
+    if(t){ e.preventDefault(); openPd(t.getAttribute('data-pd')); }
   }, true);
 }catch(err){ console.error('v5 renderer 실패 — v4 정적 화면 유지:', err); }
 })();
@@ -2423,7 +2401,7 @@ try{
       '<span class="prod-thumb"><img class="th-real" loading="lazy" src="'+it.img+'" alt="">'+
       (so ? '<span class="cv-soflag">시즌 준비중</span>'
           : '<span class="p-flag'+((it.discRate||0)>=30?' red':'')+'">'+((it.discRate||0)>=30?'특가':'제철')+'</span>')+
-      '<button class="heart" type="button" data-heart>🤍</button></span>'+
+      '</span>'+
       '<span class="prod-body"><span class="prod-name">'+V5.sname(it)+'</span>'+
       (so ? '<span class="prod-price num" style="color:var(--text-light)">시즌 오픈 시 판매</span>'
           : '<span class="prod-price num price-wrap"><span class="price-rate">'+it.discRate+'%</span>'+V5.priceLabel(it)+' <span class="price-org num">'+V5.F(it.salePrice)+'원</span></span>')+
@@ -2847,9 +2825,20 @@ try{
     var oc = e.target.closest('[data-open-chat]');
     if(oc){
       e.preventDefault(); e.stopPropagation();
-      var wasOpen = dim.classList.contains('show');
-      if(wasOpen) close(false);
-      setTimeout(function(){ var ab = document.getElementById('askBar'); if(ab) ab.click(); }, wasOpen?250:0);
+      /* 지시 #191-2: 예전엔 상세를 닫고(close) 메인 챗을 열어 "상품을 보다가 메인으로 나가는" 동선이었다.
+         이제 상세를 그대로 둔 채 그 위에 챗 오버레이만 띄운다 — 닫으면 보던 상품 상세로 그대로 복귀. */
+      /* 이 핸들러가 속한 스코프의 dim은 상세 시트가 아니다(다른 오버레이) — 상세는 id로 직접 확인한다 */
+      var pdEl = document.getElementById('pdDim');
+      var pdOpen = !!(pdEl && pdEl.classList.contains('show'));
+      var titleEl = pdOpen ? document.querySelector('#pdBody .pd-name') : null;
+      var ab = document.getElementById('askBar'); if (ab) ab.click();
+      try {
+        var cn = document.getElementById('chatCtx');
+        if (cn) {
+          if (titleEl && titleEl.textContent.trim()) { cn.textContent = '📦 ' + titleEl.textContent.trim(); cn.style.display = ''; }
+          else { cn.style.display = 'none'; }
+        }
+      } catch (_) { /* 맥락 표기는 부가 기능 — 실패해도 챗은 열린다 */ }
       return;
     }
     var ac = e.target.closest('[data-add-cart]');
