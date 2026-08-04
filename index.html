@@ -1640,9 +1640,10 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
           <button type="button" data-q="청귤은 언제 나와요?">청귤은 언제 나와요?</button>
         </div>
       </div>
+      <!-- 지시 #195-3: 톡톡봇과 같은 CS 시나리오 DB에 연결 — 입력 활성화 -->
       <div class="chat-input">
-        <input type="text" disabled placeholder="아꼼이가 준비 중이에요 (실서비스 오픈 예정)">
-        <button type="button" disabled>전송</button>
+        <input type="text" id="chatInput" placeholder="궁금한 걸 물어보세요" autocomplete="off" maxlength="500">
+        <button type="button" id="chatSend">전송</button>
       </div>
     </div>
   </div>
@@ -1702,18 +1703,54 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
   document.getElementById("chatClose").addEventListener("click", closeChat);
   chatDim.addEventListener("click", function(e){ if (e.target === chatDim) closeChat(); });
   document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeChat(); });
+  /* ── 지시 #195-3: 자사몰 챗 = 톡톡봇과 같은 CS 시나리오 DB 응대 ──
+     회사프로그램 /api/public/shop-chat 호출(내부에서 qnaGenerate — 톡톡·상품문의·고객문의와 동일 원천).
+     ★ 재료가 없어 못 만들면 그럴듯한 문구를 지어내지 않고 사람 연결 안내로 넘긴다(#189 원칙). */
+  var CHAT_API = 'https://jeju-acom-company.onrender.com/api/public/shop-chat';
+  function chatPush(cls, html){
+    var d = document.createElement('div');
+    d.className = 'chat-msg ' + cls;
+    if (html.node) d.appendChild(html.node); else d.innerHTML = html;
+    chatBody.appendChild(d);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    return d;
+  }
+  function chatEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var chatBusy = false;
+  function chatAsk(q){
+    if (!q || chatBusy) return;
+    chatBusy = true;
+    chatPush('me', chatEsc(q));
+    var thinking = chatPush('bot', '<span class=chat-typing>아꼼이가 확인 중이에요…</span>');
+    var ctxEl = document.getElementById('chatCtx');
+    var product = (ctxEl && ctxEl.style.display !== 'none') ? String(ctxEl.textContent||'').replace(/^📦s*/, '') : '';
+    fetch(CHAT_API, { method:'POST', headers:{'Content-Type':'application/json'},
+                      body: JSON.stringify({ question: q, productName: product }) })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        thinking.remove();
+        if (d && d.answered && d.answer) chatPush('bot', chatEsc(d.answer).replace(/
+/g,'<br>'));
+        else chatPush('bot', chatEsc((d && d.message) || '지금은 답변을 준비하지 못했어요.').replace(/
+/g,'<br>'));
+      })
+      .catch(function(){
+        thinking.remove();
+        chatPush('bot', '연결이 원활하지 않아요. 잠시 후 다시 시도하시거나 전화(010-6687-4031)로 문의해주세요.');
+      })
+      .then(function(){ chatBusy = false; });
+  }
   document.getElementById("chatChips").addEventListener("click", function(e){
     var btn = e.target.closest("button[data-q]");
     if (!btn) return;
-    var me = document.createElement("div");
-    me.className = "chat-msg me"; me.textContent = btn.getAttribute("data-q");
-    chatBody.appendChild(me);
-    var bot = document.createElement("div");
-    bot.className = "chat-msg bot";
-    bot.innerHTML = "실서비스가 열리면 시나리오 DB에서 정확하게 답해드릴게요! 지금은 준비 중이에요 🍊<br>급하신 건 네이버 톡톡이나 [문의하기]로 물어보시면 지금도 바로 답해드려요!";
-    chatBody.appendChild(bot);
-    chatBody.scrollTop = chatBody.scrollHeight;
+    chatAsk(btn.getAttribute("data-q"));
   });
+  (function(){
+    var inp = document.getElementById('chatInput'), snd = document.getElementById('chatSend');
+    function go(){ var v = (inp.value||'').trim(); if(!v) return; inp.value=''; chatAsk(v); }
+    if (snd) snd.addEventListener('click', go);
+    if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') go(); });
+  })();
 
   /* ══════════ 하트(찜) 토글 — 카드 링크 이동과 분리 ══════════ */
   /* 지시 #191: 찜(하트) 전면 제거(대표 확정) — 동적 렌더 카드의 하트엔 리스너가 안 붙어 카드 링크로 전파되던 결함도 함께 해소 */
