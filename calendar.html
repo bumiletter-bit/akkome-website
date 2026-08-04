@@ -136,7 +136,7 @@ footer b{color:var(--text-mid)}
   <!-- 하단 고정 탭바 (현행 구성 유지) -->
   <nav class="tabbar" aria-label="하단 메뉴">
     <a class="tab active" href="index_v5.html"><span class="t-ic">🏠</span>홈</a>
-    <a class="tab" href="products_v5.html"><span class="t-ic">🛒</span>쇼핑</a>
+    <a class="tab" href="index_v5.html#c/citrus"><span class="t-ic">🛒</span>쇼핑</a>
     <a class="tab" href="my.html"><span class="t-ic">🌳</span>귤나무 키우기</a>
     <a class="tab" href="my.html#orders"><span class="t-ic">📦</span>주문내역</a>
     <a class="tab" href="my.html"><span class="t-ic">👤</span>마이</a>
@@ -194,7 +194,7 @@ document.getElementById('nowM').textContent = M;
 var chips = '';
 for (var j = 0; j < SEASONS.length; j++){
   if (inS(M, SEASONS[j])){
-    chips += '<a class="now-chip" href="products_v5.html?cat=' + SEASONS[j].cat + '">' +
+    chips += '<a class="now-chip" href="index_v5.html#p/' + SEASONS[j].no + '">' +
       SEASONS[j].emoji + ' ' + SEASONS[j].name + '</a>';
   }
 }

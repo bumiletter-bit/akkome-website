@@ -175,7 +175,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   <a class="tab" href="index_v5.html">
     <span class="t-ic">🏠</span>홈
   </a>
-  <a class="tab" href="products_v5.html">
+  <a class="tab" href="index_v5.html#c/citrus">
     <span class="t-ic">🛒</span>쇼핑
   </a>
   <a class="tab active" href="roulette.html" aria-current="page">
@@ -328,7 +328,8 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
     } else {
       spinBtn.disabled = true;
       spinBtn.innerHTML = '돌리기<small>GO!</small>';
-      limitNote.innerHTML = '주문하시면 룰렛 1회가 쌓여요! <a class="go-shop" href="products_v5.html">상품 보러가기 →</a>';
+      /* 지시 #185-2: 메인 카테고리와 같은 동선(v5 카테고리 풀스크린)으로 통일 — 구 쇼핑 페이지로 새지 않게 */
+      limitNote.innerHTML = '주문하시면 룰렛 1회가 쌓여요! <a class="go-shop" href="index_v5.html#c/citrus">상품 보러가기 →</a>';
       limitNote.className = "limit-note done";
     }
   }

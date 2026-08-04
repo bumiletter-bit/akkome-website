@@ -133,7 +133,7 @@ footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:
   </div>
 
   <div class="give">
-    <button class="w" id="waterBtn">💧 물 주기 −10</button>
+    <button class="w" id="waterBtn">💧 물 주기 −1</button>
     <button class="more" onclick="location.href='roulette.html'">물방울 더 모으기 ›</button>
   </div>
   <div class="toast" id="toast"></div>
@@ -152,8 +152,31 @@ footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:
 <script>
 (function(){
 "use strict";
-var water=1250,pct=62;
+/* 지시 #185-1: 나무에 준 물 '개수'를 상태로 삼고 퍼센트를 파생시킨다.
+   (기존엔 pct만 상태여서, #184에서 추가한 개수 표시가 갱신 대상에서 빠져 62에 멈춰 있었다 — 표시 불일치.)
+   GOAL은 실서비스에서 mall_game_config.tree_goal_water(현재 100)를 받아 채운다. */
+var GOAL=100;            // 나무 목표 물 개수 = 하우스귤 3kg 선물용 1박스
+var COST=1;              // 물 주기 1회에 쓰는 물 개수 (확정값: 물 100개 = 박스)
+var water=1250;          // 보유 물
+var given=62;            // 나무에 준 물 개수
+var pct=Math.min(100,Math.round(given/GOAL*100));
 var btn=document.getElementById('waterBtn');
+/* 개수·퍼센트·진행바를 한 곳에서 함께 갱신 — 두 UI가 갈라지지 않게 */
+function renderTree(){
+  pct=Math.min(100,Math.round(given/GOAL*100));
+  var left=Math.max(0,GOAL-given);
+  var $=function(id){return document.getElementById(id)};
+  $('pct').textContent=pct;
+  $('fill').style.width=pct+'%';
+  $('wcount').textContent=water.toLocaleString();
+  if($('waterNow'))  $('waterNow').textContent=given;
+  if($('waterGoal')) $('waterGoal').textContent=GOAL;
+  if($('waterLeft')) $('waterLeft').textContent=left;
+  var wl=document.querySelector('.water-left');
+  if(wl) wl.innerHTML= left>0
+    ? '<span id="waterNow">'+given+'</span> / <b id="waterGoal">'+GOAL+'</b>개 · <b id="waterLeft">'+left+'</b>개만 더 모으면 수확!'
+    : '<span id="waterNow">'+given+'</span> / <b id="waterGoal">'+GOAL+'</b>개 · <b>수확 준비 완료!</b> 🎉';
+}
 function confetti(){
   var emo=['🍊','🎉','💛','🍊','✨'];
   for(var i=0;i<26;i++){
@@ -167,22 +190,21 @@ function confetti(){
     setTimeout(function(el){return function(){el.remove()}}(s),3600);
   }
 }
+renderTree();   // #185-1: 초기 표시도 상태에서 계산(하드코딩 62 제거)
 btn.addEventListener('click',function(){
-  if(water<10||pct>=100)return;
-  water-=10;pct=Math.min(100,pct+1);
-  document.getElementById('wcount').textContent=water.toLocaleString();
-  document.getElementById('pct').textContent=pct;
-  document.getElementById('fill').style.width=pct+'%';
+  if(water<COST||given>=GOAL)return;
+  water-=COST;given=Math.min(GOAL,given+1);
+  renderTree();   // #185-1: 개수·퍼센트·진행바 동시 갱신
   var t=document.getElementById('tree');
   t.classList.add('pop');setTimeout(function(){t.classList.remove('pop')},300);
   var p=document.getElementById('plusone');
   p.classList.remove('fly');void p.offsetWidth;p.classList.add('fly');
   if(pct>=100){
-    document.getElementById('toast').textContent='🍊 수확 완료! 감귤 1박스 배송지 안내를 보내드릴게요!';
+    document.getElementById('toast').textContent='🍊 수확 완료! 하우스귤 3kg 선물용 1박스 배송지 안내를 보내드릴게요!';
     confetti();
     btn.disabled=true;btn.textContent='🎉 수확 완료!';
   }else{
-    document.getElementById('toast').textContent='귤나무가 쑥쑥 자라요! (+1%)';
+    document.getElementById('toast').textContent='귤나무가 쑥쑥 자라요! (물 '+given+'/'+GOAL+'개)';
   }
 });
 })();
