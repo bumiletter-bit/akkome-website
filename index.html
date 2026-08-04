@@ -368,7 +368,7 @@
   .bdg-exch{ background:var(--green); }
   .bdg-farm{ background:var(--amber); }
 
-  /* ============ ④ 계승: 제철상품 실시간 영상(숏클립) ============ */
+  /* ============ ④ 계승: 제철상품 영상(숏클립) ============ */
   .clips-scroll{
     display:flex; gap:12px; overflow-x:auto;
     scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
@@ -1362,12 +1362,12 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
       </div>
     </section>
 
-    <!-- ═════════ 9. 제철상품 실시간 영상 (계승 ④ — 최대 차별점) ═════════ -->
+    <!-- ═════════ 9. 제철상품 영상 (계승 ④ — 최대 차별점) ═════════ -->
     <!-- API: GET /api/shop/clips (숏클립 목록 — 기존 리뉴얼 SHORTCLIPS 배열 대체) -->
     <!-- 영상은 전부 플레이스홀더(썸네일 자리 + ▶). 실자산 경로는 각 카드 주석 참조 -->
     <section class="section" id="clips">
       <div class="section-head">
-        <h2><svg width="20" height="20" viewBox="0 0 24 24" style="vertical-align:-4px" aria-hidden="true"><rect x="2.5" y="4" width="19" height="16" rx="4.5" fill="#1B3A6B"/><path d="M10 8.6v6.8c0 .8.9 1.3 1.6.9l5.2-3.4c.6-.4.6-1.4 0-1.8l-5.2-3.4c-.7-.4-1.6.1-1.6.9z" fill="#F5C800"/></svg> 제철상품 실시간 영상</h2>
+        <h2><svg width="20" height="20" viewBox="0 0 24 24" style="vertical-align:-4px" aria-hidden="true"><rect x="2.5" y="4" width="19" height="16" rx="4.5" fill="#1B3A6B"/><path d="M10 8.6v6.8c0 .8.9 1.3 1.6.9l5.2-3.4c.6-.4.6-1.4 0-1.8l-5.2-3.4c-.7-.4-1.6.1-1.6.9z" fill="#F5C800"/></svg> 제철상품 영상</h2>
         <button class="more" type="button" data-modal>전체보기 ›</button>
       </div>
     </section>
@@ -2220,7 +2220,7 @@ try{
       (function(){ var rv = D.prodReviews && D.prodReviews[String(it.no)]; if(!rv || !rv.length) return '';
         return '<div class="pd-pane pd-rev-sec folded" data-pane-body="det" id="pdRevPane"'+(detImgs.length||hasDet?'':' style="display:none"')+'>'+
           '<div class="pd-rev-head"><span class="st">★</span><b>'+it.score+'</b> · 이 상품 리뷰 '+rv.length+'건</div>'+
-          '<div class="pd-detail-note">이 상품의 네이버 스토어 실리뷰 '+rv.length+'건 (매일 갱신·마스킹 작성자)</div>'+
+          '<div class="pd-detail-note">이 상품의 네이버 스토어 실리뷰 '+rv.length+'건 ('+ (D.at? String(D.at).slice(0,10)+' 수집 기준':'수집 기준일 확인 불가') +'·마스킹 작성자)</div>'+
           rv.map(function(r){ return '<div class="pd-rev-card"><div class="pd-rev-top"><span class="st">★</span><b>'+r.score+'</b><span class="pd-rev-w">'+String(r.writer||'').replace(/</g,'&lt;')+'</span><span class="pd-rev-d">'+r.date+'</span></div>'+
             (r.opt?'<div class="pd-rev-opt">'+String(r.opt).replace(/</g,'&lt;')+'</div>':'')+
             '<p class="pd-rev-t">'+String(r.text).replace(/</g,'&lt;')+'</p></div>'; }).join('')+
