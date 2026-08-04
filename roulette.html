@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1B3A6B">
-<title>제주아꼼이네 — 나침판 돌리기</title>
+<title>제주아꼼이네 — 나침반 돌리기</title>
 <!-- ============================================================================
   ⚠️⚠️⚠️  프로토타입 한정 (STEP2 실동작 데모)  ⚠️⚠️⚠️
   실서비스에서는 추첨 결과·쿠폰 발급·참여 기록 전부 "회사프로그램 서버"가 담당한다.
@@ -125,14 +125,14 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
   <!-- ===== 상단바: 뒤로가기(index_v5.html) · 제목 · 💧 잔액(더미) ===== -->
   <div class="hd">
     <a class="back" href="index_v5.html" aria-label="홈으로 돌아가기">‹</a>
-    <span class="t">🧭 나침판 돌리기</span>
+    <span class="t">🧭 나침반 돌리기</span>
     <!-- API: GET /api/game/wallet — 실서비스에선 서버가 주는 물방울 잔액 표시 (아래는 더미) -->
     <span class="water-chip">💧 <span id="waterBalance">1,250</span></span>
   </div>
 
   <div class="hero">
     <span class="tag">✨ 하루 1번 무료 참여</span>
-    <h1>아꼼이의 나침판을<br><em>돌려보세요!</em></h1>
+    <h1>아꼼이의 나침반을<br><em>돌려보세요!</em></h1>
     <p>주문 1건당 <b>1번</b> — 귤 1박스부터 물까지, <b>꽝 없이 모두 당첨</b>! 🍊</p>
   </div>
 
@@ -141,7 +141,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
     <div class="pin" aria-hidden="true"></div>
     <div class="disc">
       <!-- 룰렛 원판: 6칸 SVG (조각은 JS가 생성 — 외부 리소스 없음) -->
-      <svg id="wheel" viewBox="-100 -100 200 200" role="img" aria-label="나침판 룰렛 원판"></svg>
+      <svg id="wheel" viewBox="-100 -100 200 200" role="img" aria-label="나침반 룰렛 원판"></svg>
     </div>
     <div class="hub"><img src="assets/akkomi.png" alt="아꼼이"></div>
   </div>
@@ -171,20 +171,23 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
 </div>
 
 <!-- ===== 하단 탭바: 현행 구성 유지 ===== -->
-<nav class="tabbar" aria-label="하단 메뉴">
-  <a class="tab" href="index_v5.html">
-    <span class="t-ic">🏠</span>홈
-  </a>
-  <a class="tab" href="index_v5.html#c/citrus">
-    <span class="t-ic">🛒</span>쇼핑
-  </a>
-  <a class="tab active" href="roulette.html" aria-current="page">
-    <span class="t-ic">🧭</span>나침판
-  </a>
-  <a class="tab" href="my.html">
-    <span class="t-ic">👤</span>마이
-  </a>
-</nav>
+  <nav class="tabbar" aria-label="하단 메뉴">
+    <a class="tab" href="index.html">
+      <span class="t-ic">🏠</span>홈
+    </a>
+    <a class="tab active" href="roulette.html" aria-current="page">
+      <span class="t-ic"><img src="assets/roulette-icon.png" alt="" style="width:26px;height:26px;object-fit:contain;display:block"></span>나침반돌리기
+    </a>
+    <a class="tab" href="farm.html">
+      <span class="t-ic"><img src="assets/tree-icon.png" alt="" style="width:26px;height:26px;object-fit:contain;display:block"></span>귤나무 키우기
+    </a>
+    <a class="tab" href="index.html#v/orders">
+      <span class="t-ic">📦</span>주문내역
+    </a>
+    <a class="tab" href="index.html#v/my">
+      <span class="t-ic">👤</span>마이
+    </a>
+  </nav>
 
 <!-- ===== 결과 모달 ===== -->
 <div class="modal-dim" id="modalDim" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -368,7 +371,7 @@ a{color:var(--yellow);text-decoration:none}a:hover{color:var(--yellow-dark)}
     spinBtn.disabled = true;
     resultEl.textContent = "";
     resultEl.classList.remove("win");
-    limitNote.textContent = "나침판이 돌아가는 중... 🧭";
+    limitNote.textContent = "나침반이 돌아가는 중... 🧭";
     limitNote.className = "limit-note";
 
     /* API: POST /api/game/roulette/spin

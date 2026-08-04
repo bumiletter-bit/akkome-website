@@ -12,6 +12,7 @@
   --radius:14px; --radius-btn:12px;
   --shadow:0 1px 3px rgba(21,32,54,.07);
   --shadow-float:0 6px 18px -8px rgba(21,32,54,.16);
+  --tabbar-h:62px;   /* 지시 #186: 전 화면 공통 하단 탭 높이 */
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{color-scheme:light only}
@@ -21,7 +22,7 @@ body{
 }
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 a{color:var(--navy);text-decoration:none}a:hover{color:var(--navy-dark)}
-.app{position:relative;max-width:480px;min-height:100dvh;margin:0 auto;background:var(--bg);box-shadow:0 0 40px rgba(21,32,54,.12);overflow-x:clip;padding-bottom:32px}
+.app{position:relative;max-width:480px;min-height:100dvh;margin:0 auto;background:var(--bg);box-shadow:0 0 40px rgba(21,32,54,.12);overflow-x:clip;padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}
 .num{font-variant-numeric:tabular-nums}
 
 /* ── 헤더 (홈과 동일 문법: 흰 sticky·노랑 포인트) ── */
@@ -94,6 +95,14 @@ footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:
 /* ── 축하 이펙트 ── */
 .confetti{position:fixed;top:-30px;z-index:80;font-size:20px;pointer-events:none;animation:cfall linear forwards}
 @keyframes cfall{to{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+
+/* 지시 #186: 하단 탭 공통 스타일 (전 화면 동일 — calendar/my/roulette과 같은 규칙) */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--border);box-shadow:0 -4px 16px -6px rgba(21,32,54,.12);display:flex;height:calc(var(--tabbar-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-light);font-size:10.5px;font-weight:700;letter-spacing:-.02em}
+.tab.active{color:var(--navy)}
+.tab.active .t-ic{filter:none;transform:scale(1.06);background:var(--navy-soft)}
+.tab .t-ic{font-size:21px;line-height:1;filter:grayscale(1) opacity(.55);padding:2px 12px;border-radius:999px}
+.tab:active{color:var(--navy)}
 </style></head><body>
 <div class="app">
 
@@ -147,6 +156,24 @@ footer{padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));font-size:
   </section>
 
   <footer>물방울은 출석·후기·룰렛·구매로 모을 수 있어요<br>프로토타입 — 실제 서비스 아님</footer>
+
+  <nav class="tabbar" aria-label="하단 메뉴">
+    <a class="tab" href="index.html">
+      <span class="t-ic">🏠</span>홈
+    </a>
+    <a class="tab" href="roulette.html">
+      <span class="t-ic"><img src="assets/roulette-icon.png" alt="" style="width:26px;height:26px;object-fit:contain;display:block"></span>나침반돌리기
+    </a>
+    <a class="tab active" href="farm.html" aria-current="page">
+      <span class="t-ic"><img src="assets/tree-icon.png" alt="" style="width:26px;height:26px;object-fit:contain;display:block"></span>귤나무 키우기
+    </a>
+    <a class="tab" href="index.html#v/orders">
+      <span class="t-ic">📦</span>주문내역
+    </a>
+    <a class="tab" href="index.html#v/my">
+      <span class="t-ic">👤</span>마이
+    </a>
+  </nav>
 </div>
 
 <script>
