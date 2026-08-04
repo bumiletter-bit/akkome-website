@@ -1490,7 +1490,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
     <!-- API: GET /api/shop/reviews/summary (평균 평점·관심고객 수) , GET /api/shop/reviews?limit=3 -->
     <section class="section" id="reviews">
       <div class="section-head">
-        <h2>실시간 고객님들의 생생한 후기</h2>
+        <h2>고객님들의 생생한 후기</h2>
         <span class="upd" id="updateTime"></span>
       </div>
 
@@ -1614,19 +1614,19 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
 
   <!-- ═════════ 12. 하단 고정 탭바 (공통 — 홈 활성) ═════════ -->
   <nav class="tabbar" aria-label="하단 메뉴">
-    <a class="tab active" href="index.html" aria-current="page">
+    <a class="tab active" href="index_v5.html" aria-current="page">
       <span class="t-ic">🏠</span>홈
     </a>
-    <a class="tab" href="roulette.html">
+    <a class="tab" href="roulette.html?v=147">
       <span class="t-ic"><img src="assets/roulette-icon.png" alt="" style="width:26px;height:26px;object-fit:contain;display:block"></span>나침반돌리기
     </a>
-    <a class="tab" href="farm.html">
+    <a class="tab" href="farm.html?v=147">
       <span class="t-ic"><img src="assets/tree-icon.png" alt="" style="width:26px;height:26px;object-fit:contain;display:block"></span>귤나무 키우기
     </a>
-    <a class="tab" href="index.html#v/orders">
+    <a class="tab" href="#v/orders">
       <span class="t-ic">📦</span>주문내역
     </a>
-    <a class="tab" href="index.html#v/my">
+    <a class="tab" href="#v/my">
       <span class="t-ic">👤</span>마이
     </a>
   </nav>
@@ -1821,9 +1821,7 @@ img[src^="assets/exp"],img[src^="assets/ocean"]{background:repeating-linear-grad
   document.getElementById("starsRow").innerHTML = starSvg + starSvg + starSvg + starSvg + starSvg;
 
   /* ══════════ ⑥ 계승: 업데이트 시각 표시 ══════════ */
-  var today = new Date();
-  document.getElementById("updateTime").textContent =
-    pad2(today.getMonth() + 1) + "." + pad2(today.getDate()) + " 09:00 업데이트";
+  /* 지시 #187: 업데이트 시각은 STORE_DATA 정의 이후에 설정한다(아래 리뷰 통계 블록) — 여기서 실행하면 STORE_DATA가 아직 없어 실패 */
 
   /* ══════════ ⑥ 계승: 관심고객 카운터 (flip-digit 빌드 + 숫자 올라가는 애니메이션) ══════════
      API: GET /api/shop/reviews/summary → { avgRating, followers }               */
@@ -2122,8 +2120,9 @@ try{
   wrap.innerHTML = '<div class="rev-stats">'+
     '<div class="rev-stat"><b id="revInterest" data-base="'+D.store.interestCount+'">'+F(D.store.interestCount)+'</b><span>관심고객</span></div>'+
     '<div class="rev-stat"><b>★'+D.store.avgScore+'</b><span>스토어 평점</span></div>'+
-    '<div class="rev-stat"><b>99,999+</b><span>누적 리뷰</span></div></div>'+
-    '<div class="rev-trust">모든 후기는 네이버 스토어 실제 구매 고객이 남긴 리뷰입니다</div>'+
+    /* 지시 #187: 기존 '99,999+'는 상한이 아니라 통째로 박아넣은 문자열이었다 — 스냅샷 상품별 리뷰수 실합계로 교체 */
+    '<div class="rev-stat"><b>'+F((D.items||[]).reduce(function(a,b){return a+(Number(b.reviewCount)||0);},0))+'</b><span>누적 리뷰</span></div></div>'+
+    ''+ (function(){ var el=document.getElementById('updateTime'); if(el){ var at=D.at? new Date(D.at):null; var z=function(n){return String(n).padStart(2,'0');}; el.textContent=(at&&!isNaN(at))? (z(at.getMonth()+1)+'.'+z(at.getDate())+' '+z(at.getHours())+':'+z(at.getMinutes())+' 수집 기준') : '수집 시각 확인 불가'; } return ''; })() +'<div class="rev-trust">모든 후기는 네이버 스토어 실제 구매 고객이 남긴 리뷰입니다 · 매일 새벽 업데이트</div>'+
     '<div class="rev-roll" id="revRoll">'+rollPick(15).join('')+'</div>'+   /* #130·#131: 롤링 캐러셀 15건 — BEST/재구매 우선·상품 인터리브 */
     '<div class="rev-full">'+revCards.join('')+'</div>'+
     (revCards.length>3 ? '<button class="rev-more" type="button" id="revMore">후기 더보기 ('+revCards.length+'건 전체) ▾</button>' : '');
@@ -2152,18 +2151,7 @@ try{
     roll.addEventListener('pointerdown', rPause, { passive:true });
     roll.addEventListener('wheel', rPause, { passive:true });
   })();
-  /* #126: 관심고객 끝자리 실시간 연출 — 기준은 항상 스냅샷 실측값(재방문 시 실측부터·연출 누적 미저장). 30~90초 랜덤 +1, 평점은 고정 */
-  (function(){
-    var el = document.getElementById('revInterest');
-    if (!el) return;
-    var cur = Number(el.getAttribute('data-base')) || 0;
-    function tick(){
-      cur += 1;
-      el.textContent = F(cur);
-      setTimeout(tick, 30000 + Math.random() * 60000);
-    }
-    setTimeout(tick, 30000 + Math.random() * 60000);
-  })();
+  /* 지시 #187: 관심고객 "실시간 증가" 연출 제거 — 스냅샷 실측값에 30~90초마다 +1을 더해 실제보다 부풀려 보였음(가짜 데이터 표기 금지). 이제 실측값만 표시한다. */
 
   /* ── 4. 상세 시트: 옵션 | 상세정보(공개 상세 이미지 — #107 상세 2차) | 드시는 법 ── */
   var dim = document.createElement('div');
